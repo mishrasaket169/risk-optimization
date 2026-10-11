@@ -13,6 +13,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
@@ -89,19 +91,35 @@ public class RenderSnapshotsTest {
         BorderPane mainLayout = new BorderPane();
         mainLayout.getStyleClass().add("main-canvas");
 
-        // Top Section: Disclaimer + LRO Ecosystem Header Bar
-        VBox topContainer = new VBox();
+        // Top Section: Header Bar with Logo and increased height (+10%)
         HBox header = new HBox(16);
         header.getStyleClass().add("app-header");
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setPadding(new Insets(10, 20, 10, 20));
+        header.setPadding(new Insets(13, 20, 13, 20));
+        header.setPrefHeight(58);
+        header.setMinHeight(56);
 
-        // Brand Title & Badge
+        // Brand Logo + Title
+        HBox brandBox = new HBox(10);
+        brandBox.setAlignment(Pos.CENTER_LEFT);
+
+        try {
+            var is = getClass().getResourceAsStream("/com/lro/frontend/images/lro_logo.png");
+            if (is != null) {
+                ImageView logoView = new ImageView(new Image(is));
+                logoView.setFitHeight(34);
+                logoView.setFitWidth(34);
+                logoView.setPreserveRatio(true);
+                logoView.setSmooth(true);
+                brandBox.getChildren().add(logoView);
+            }
+        } catch (Exception ex) {
+            System.err.println("Warning: Could not load logo: " + ex.getMessage());
+        }
+
         Label brand = new Label("LRO ECOSYSTEM");
         brand.getStyleClass().add("brand-title");
-
-        Label badge = new Label("RESEARCH SIMULATOR");
-        badge.getStyleClass().add("brand-badge");
+        brandBox.getChildren().add(brand);
 
         // Module Switcher Tabs with authentic colors
         HBox switcher = new HBox(8);
@@ -127,9 +145,8 @@ public class RenderSnapshotsTest {
         Button btnHelp = new Button("📖 Glossary");
         btnHelp.getStyleClass().add("btn-secondary");
 
-        header.getChildren().addAll(brand, badge, switcher, spacerTop, clock, btnHelp);
-        topContainer.getChildren().addAll(UIComponents.createSimulatorNoticeBanner(), header);
-        mainLayout.setTop(topContainer);
+        header.getChildren().addAll(brandBox, switcher, spacerTop, clock, btnHelp);
+        mainLayout.setTop(header);
 
         // Left Navigation Rail
         VBox nav = new VBox();
@@ -177,38 +194,6 @@ public class RenderSnapshotsTest {
                     createNavRow("⚠️ Surveillance Alerts", false)
             );
         }
-
-        // Section 2: SYSTEM & GOVERNANCE
-        Label sysHdr = new Label("SYSTEM & GOVERNANCE");
-        sysHdr.getStyleClass().add("nav-section-header");
-        nav.getChildren().addAll(sysHdr, createNavRow("📖 Regulatory Glossary", false));
-
-        Region spacerNav = new Region();
-        VBox.setVgrow(spacerNav, Priority.ALWAYS);
-        nav.getChildren().add(spacerNav);
-
-        // Bottom Officer Card
-        HBox profileCard = new HBox(10);
-        profileCard.setAlignment(Pos.CENTER_LEFT);
-        profileCard.setPadding(new Insets(12, 10, 12, 10));
-        profileCard.setStyle("-fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0;");
-
-        StackPane avatar = new StackPane();
-        Circle avatarCircle = new Circle(16, Color.web("#EFF6FF"));
-        Label avatarInitials = new Label("RO");
-        avatarInitials.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: 800; -fx-font-size: 11px;");
-        avatar.getChildren().addAll(avatarCircle, avatarInitials);
-
-        VBox userDetails = new VBox(1);
-        Label userName = new Label("Chief Risk Officer");
-        userName.setStyle("-fx-text-fill: #0F172A; -fx-font-weight: 700; -fx-font-size: 12px;");
-        Label userRole = new Label("Treasury ALM Desk");
-        userRole.setStyle("-fx-text-fill: #64748B; -fx-font-size: 10px;");
-        userDetails.getChildren().addAll(userName, userRole);
-        HBox.setHgrow(userDetails, Priority.ALWAYS);
-
-        profileCard.getChildren().addAll(avatar, userDetails);
-        nav.getChildren().add(profileCard);
 
         mainLayout.setLeft(nav);
 

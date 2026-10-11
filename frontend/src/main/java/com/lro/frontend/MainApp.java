@@ -16,6 +16,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -69,10 +71,8 @@ public class MainApp extends Application {
         mainLayout = new BorderPane();
         mainLayout.getStyleClass().add("main-canvas");
 
-        // 1. Top Section (Notice Banner + Brand/Header Bar)
-        VBox topContainer = new VBox();
-        topContainer.getChildren().addAll(UIComponents.createSimulatorNoticeBanner(), createHeaderBar());
-        mainLayout.setTop(topContainer);
+        // 1. Top Section (Brand/Header Bar)
+        mainLayout.setTop(createHeaderBar());
 
         // 2. Left Navigation Rail
         navRail = new VBox(6);
@@ -128,14 +128,31 @@ public class MainApp extends Application {
         HBox header = new HBox(16);
         header.getStyleClass().add("app-header");
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setPadding(new Insets(10, 20, 10, 20));
+        header.setPadding(new Insets(13, 20, 13, 20));
+        header.setPrefHeight(58);
+        header.setMinHeight(56);
 
-        // Brand Title
+        // Brand Logo + Title
+        HBox brandBox = new HBox(10);
+        brandBox.setAlignment(Pos.CENTER_LEFT);
+
+        try {
+            var is = getClass().getResourceAsStream("/com/lro/frontend/images/lro_logo.png");
+            if (is != null) {
+                ImageView logoView = new ImageView(new Image(is));
+                logoView.setFitHeight(34);
+                logoView.setFitWidth(34);
+                logoView.setPreserveRatio(true);
+                logoView.setSmooth(true);
+                brandBox.getChildren().add(logoView);
+            }
+        } catch (Exception ex) {
+            System.err.println("Warning: Could not load logo: " + ex.getMessage());
+        }
+
         Label brand = new Label("LRO ECOSYSTEM");
         brand.getStyleClass().add("brand-title");
-
-        Label badge = new Label("RESEARCH SIMULATOR");
-        badge.getStyleClass().add("brand-badge");
+        brandBox.getChildren().add(brand);
 
         // App Switcher Module Tabs
         HBox switcher = new HBox(8);
@@ -163,7 +180,7 @@ public class MainApp extends Application {
                 "Simulated environment complying with RBI/Basel III framework principles."
         ));
 
-        header.getChildren().addAll(brand, badge, switcher, spacer, clockLabel, btnHelp);
+        header.getChildren().addAll(brandBox, switcher, spacer, clockLabel, btnHelp);
         return header;
     }
 
@@ -184,8 +201,7 @@ public class MainApp extends Application {
     }
 
     private void updateHeaderBar() {
-        VBox top = (VBox) mainLayout.getTop();
-        top.getChildren().set(1, createHeaderBar());
+        mainLayout.setTop(createHeaderBar());
     }
 
     private void refreshNavigationRail() {
@@ -231,47 +247,6 @@ public class MainApp extends Application {
                     createNavButton("🔔 Surveillance Alerts", "ALERTS")
             );
         }
-
-        // Section 2: SYSTEM & GOVERNANCE
-        Label accHdr = new Label("SYSTEM & GOVERNANCE");
-        accHdr.getStyleClass().add("nav-section-header");
-        Button helpBtn = createNavButton("📖 Regulatory Glossary", "GLOSSARY");
-        helpBtn.setOnAction(e -> UIComponents.showGlossaryDialog(
-                "Liquidity Risk Optimizer Overview",
-                "Educational and research simulation platform modelling bank balance sheets, continuous double-auction market matching, and liquidity risk optimization.",
-                "Three integrated modules: Bank Simulator, Exchange Simulator, and LRO Decision Support Engine.",
-                "Simulated environment complying with RBI/Basel III framework principles."
-        ));
-
-        navRail.getChildren().addAll(accHdr, helpBtn);
-
-        // Spacer pushing user profile to bottom
-        Region spacer = new Region();
-        VBox.setVgrow(spacer, Priority.ALWAYS);
-        navRail.getChildren().add(spacer);
-
-        // Bottom Officer Card
-        HBox profileCard = new HBox(10);
-        profileCard.setAlignment(Pos.CENTER_LEFT);
-        profileCard.setPadding(new Insets(12, 10, 12, 10));
-        profileCard.setStyle("-fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0;");
-
-        StackPane avatar = new StackPane();
-        Circle avatarCircle = new Circle(16, Color.web("#EFF6FF"));
-        Label avatarInitials = new Label("RO");
-        avatarInitials.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: 800; -fx-font-size: 11px;");
-        avatar.getChildren().addAll(avatarCircle, avatarInitials);
-
-        VBox userDetails = new VBox(1);
-        Label userName = new Label("Chief Risk Officer");
-        userName.setStyle("-fx-text-fill: #0F172A; -fx-font-weight: 700; -fx-font-size: 12px;");
-        Label userRole = new Label("Treasury ALM Desk");
-        userRole.setStyle("-fx-text-fill: #64748B; -fx-font-size: 10px;");
-        userDetails.getChildren().addAll(userName, userRole);
-        HBox.setHgrow(userDetails, Priority.ALWAYS);
-
-        profileCard.getChildren().addAll(avatar, userDetails);
-        navRail.getChildren().add(profileCard);
     }
 
     private Button createNavButton(String title, String navTag) {

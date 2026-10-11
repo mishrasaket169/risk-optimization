@@ -149,40 +149,7 @@ public class BankViews {
 
         tableCard.getChildren().addAll(tableHeader, table);
 
-        // Row 4: Institutional Solvency & Liquidity Profile Summary Box
-        HBox summaryPanel = new HBox(16);
-        summaryPanel.setPadding(new Insets(14, 18, 14, 18));
-        summaryPanel.setStyle("-fx-background-color: #F8FAFC; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;");
-
-        VBox leftSummary = new VBox(6);
-        HBox.setHgrow(leftSummary, Priority.ALWAYS);
-        Label sumTitle = new Label("Institutional Solvency & Liquidity Profile");
-        sumTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
-
-        String profileDesc = profile.healthStatus().equals("Distressed")
-                ? "WARNING: This simulated institution exhibits elevated credit impairment (14.80% Gross NPA), compressed Net Interest Margin, and heightened 1-day cash-flow deficit. Simulates Prompt Corrective Action (PCA) stress conditions."
-                : "STABLE: Healthy capital adequacy, robust deposit stickiness, low delinquency (<2.5%), and strong sovereign G-Sec liquid asset buffer exceeding mandatory SLR requirements.";
-
-        Label sumDesc = new Label(profileDesc);
-        sumDesc.setWrapText(true);
-        sumDesc.setStyle("-fx-text-fill: " + (profile.healthStatus().equals("Distressed") ? "#DC2626" : "#475569") + "; -fx-font-size: 12px;");
-
-        leftSummary.getChildren().addAll(sumTitle, sumDesc);
-
-        Button btnNewAcc = new Button("+ Open Demo Account");
-        btnNewAcc.getStyleClass().add("btn-primary");
-        btnNewAcc.setOnAction(e -> showOpenAccountModal(selectedBankId));
-
-        Button btnPostTxn = new Button("⚡ Record Demo Cash Flow");
-        btnPostTxn.getStyleClass().add("btn-secondary");
-        btnPostTxn.setOnAction(e -> showPostTransactionModal(selectedBankId));
-
-        HBox actions = new HBox(10, btnNewAcc, btnPostTxn);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-
-        summaryPanel.getChildren().addAll(leftSummary, actions);
-
-        centerCol.getChildren().addAll(kpiRow, chartCard, tableCard, summaryPanel);
+        centerCol.getChildren().addAll(kpiRow, chartCard, tableCard);
 
         // =========================================================================
         // RIGHT COLUMN (Bank Simulator Widgets: Branch Reach & Deposit Mix)
