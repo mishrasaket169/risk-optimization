@@ -17,16 +17,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.time.Instant;
 
 /**
- * Main JavaFX Desktop Application Shell implementing the shared multi-app ecosystem:
- * (A) Bank Simulator
- * (B) Exchange Simulator
- * (C) Liquidity Risk Optimizer (LRO)
+ * Main JavaFX Desktop Application Shell implementing the LRO Financial Ecosystem:
+ * (A) Bank Simulator (Green Theme)
+ * (B) Exchange Simulator (Royal Blue Theme)
+ * (C) Liquidity Risk Optimizer (Amber Theme)
+ * Fully aligned with official LRO branding, selection states, and color scheme.
  */
 public class MainApp extends Application {
 
@@ -36,7 +39,7 @@ public class MainApp extends Application {
         LIQUIDITY_OPTIMIZER
     }
 
-    private AppMode currentApp = AppMode.LIQUIDITY_OPTIMIZER;
+    private AppMode currentApp = AppMode.BANK_SIMULATOR;
     private String selectedBankId = "BANK-01-LRG";
     private String selectedInstrument = "RELIANCE";
     private String currentNavTag = "DASHBOARD";
@@ -64,7 +67,7 @@ public class MainApp extends Application {
         initServices();
 
         mainLayout = new BorderPane();
-        mainLayout.setStyle("-fx-background-color: #F8FAFC;");
+        mainLayout.getStyleClass().add("main-canvas");
 
         // 1. Top Section (Notice Banner + Brand/Header Bar)
         VBox topContainer = new VBox();
@@ -72,9 +75,10 @@ public class MainApp extends Application {
         mainLayout.setTop(topContainer);
 
         // 2. Left Navigation Rail
-        navRail = new VBox(8);
+        navRail = new VBox(6);
         navRail.getStyleClass().add("nav-rail");
         navRail.setPrefWidth(240);
+        navRail.setMinWidth(240);
         mainLayout.setLeft(navRail);
 
         // 3. Center Content Area
@@ -96,16 +100,16 @@ public class MainApp extends Application {
         refreshNavigationRail();
         refreshCurrentView();
 
-        Scene scene = new Scene(mainLayout, 1400, 880);
+        Scene scene = new Scene(mainLayout, 1420, 900);
         try {
             scene.getStylesheets().add(getClass().getResource("/com/lro/frontend/css/style.css").toExternalForm());
         } catch (Exception ex) {
-            System.err.println("Warning: style.css not found on classpath, using inline styles: " + ex.getMessage());
+            System.err.println("Warning: style.css not found on classpath: " + ex.getMessage());
         }
 
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(1100);
-        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(1150);
+        primaryStage.setMinHeight(720);
         primaryStage.show();
     }
 
@@ -131,15 +135,15 @@ public class MainApp extends Application {
         brand.getStyleClass().add("brand-title");
 
         Label badge = new Label("RESEARCH SIMULATOR");
-        badge.setStyle("-fx-background-color: #F1F5F9; -fx-text-fill: #475569; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 3 8; -fx-background-radius: 4; -fx-border-color: #E2E8F0; -fx-border-radius: 4;");
+        badge.getStyleClass().add("brand-badge");
 
-        // App Switcher Tabs
+        // App Switcher Module Tabs
         HBox switcher = new HBox(8);
         switcher.setAlignment(Pos.CENTER_LEFT);
 
-        Button btnBank = createTabButton("🏦 Bank Simulator", AppMode.BANK_SIMULATOR, "#059669");
-        Button btnExch = createTabButton("📈 Exchange Simulator", AppMode.EXCHANGE_SIMULATOR, "#4F46E5");
-        Button btnLro = createTabButton("⚡ Liquidity Optimizer", AppMode.LIQUIDITY_OPTIMIZER, "#D97706");
+        Button btnBank = createTabButton("🏦 Bank Simulator", AppMode.BANK_SIMULATOR, "tab-btn-bank-active");
+        Button btnExch = createTabButton("📈 Exchange Simulator", AppMode.EXCHANGE_SIMULATOR, "tab-btn-exchange-active");
+        Button btnLro = createTabButton("⚡ Liquidity Optimizer", AppMode.LIQUIDITY_OPTIMIZER, "tab-btn-lro-active");
 
         switcher.getChildren().addAll(btnBank, btnExch, btnLro);
 
@@ -163,18 +167,15 @@ public class MainApp extends Application {
         return header;
     }
 
-    private Button createTabButton(String label, AppMode mode, String color) {
+    private Button createTabButton(String label, AppMode mode, String activeClass) {
         Button btn = new Button(label);
-        btn.setStyle(currentApp == mode
-                ? "-fx-background-color: " + color + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;"
-                : "-fx-background-color: #F1F5F9; -fx-text-fill: #475569; -fx-border-color: #E2E8F0; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 6 14; -fx-cursor: hand;");
+        boolean isActive = currentApp == mode;
+        btn.getStyleClass().add(isActive ? activeClass : "tab-btn-inactive");
         btn.setOnAction(e -> {
             if (this.currentApp != mode) {
                 this.currentApp = mode;
                 this.currentNavTag = "DASHBOARD";
-                // Update header switcher styles
-                VBox top = (VBox) mainLayout.getTop();
-                top.getChildren().set(1, createHeaderBar());
+                updateHeaderBar();
                 refreshNavigationRail();
                 refreshCurrentView();
             }
@@ -182,11 +183,16 @@ public class MainApp extends Application {
         return btn;
     }
 
+    private void updateHeaderBar() {
+        VBox top = (VBox) mainLayout.getTop();
+        top.getChildren().set(1, createHeaderBar());
+    }
+
     private void refreshNavigationRail() {
         navRail.getChildren().clear();
 
         Label header = new Label();
-        header.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #64748B; -fx-padding: 0 10 6 10;");
+        header.getStyleClass().add("nav-section-header");
 
         if (currentApp == AppMode.BANK_SIMULATOR) {
             header.setText("BANK SIMULATOR NAVIGATION");
@@ -225,20 +231,61 @@ public class MainApp extends Application {
                     createNavButton("🔔 Surveillance Alerts", "ALERTS")
             );
         }
+
+        // Section 2: SYSTEM & GOVERNANCE
+        Label accHdr = new Label("SYSTEM & GOVERNANCE");
+        accHdr.getStyleClass().add("nav-section-header");
+        Button helpBtn = createNavButton("📖 Regulatory Glossary", "GLOSSARY");
+        helpBtn.setOnAction(e -> UIComponents.showGlossaryDialog(
+                "Liquidity Risk Optimizer Overview",
+                "Educational and research simulation platform modelling bank balance sheets, continuous double-auction market matching, and liquidity risk optimization.",
+                "Three integrated modules: Bank Simulator, Exchange Simulator, and LRO Decision Support Engine.",
+                "Simulated environment complying with RBI/Basel III framework principles."
+        ));
+
+        navRail.getChildren().addAll(accHdr, helpBtn);
+
+        // Spacer pushing user profile to bottom
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+        navRail.getChildren().add(spacer);
+
+        // Bottom Officer Card
+        HBox profileCard = new HBox(10);
+        profileCard.setAlignment(Pos.CENTER_LEFT);
+        profileCard.setPadding(new Insets(12, 10, 12, 10));
+        profileCard.setStyle("-fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0;");
+
+        StackPane avatar = new StackPane();
+        Circle avatarCircle = new Circle(16, Color.web("#EFF6FF"));
+        Label avatarInitials = new Label("RO");
+        avatarInitials.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: 800; -fx-font-size: 11px;");
+        avatar.getChildren().addAll(avatarCircle, avatarInitials);
+
+        VBox userDetails = new VBox(1);
+        Label userName = new Label("Chief Risk Officer");
+        userName.setStyle("-fx-text-fill: #0F172A; -fx-font-weight: 700; -fx-font-size: 12px;");
+        Label userRole = new Label("Treasury ALM Desk");
+        userRole.setStyle("-fx-text-fill: #64748B; -fx-font-size: 10px;");
+        userDetails.getChildren().addAll(userName, userRole);
+        HBox.setHgrow(userDetails, Priority.ALWAYS);
+
+        profileCard.getChildren().addAll(avatar, userDetails);
+        navRail.getChildren().add(profileCard);
     }
 
     private Button createNavButton(String title, String navTag) {
         Button btn = new Button(title);
         btn.setMaxWidth(Double.MAX_VALUE);
         boolean isActive = currentNavTag.equalsIgnoreCase(navTag);
-        btn.setStyle(isActive
-                ? "-fx-background-color: #EFF6FF; -fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-alignment: BASELINE_LEFT; -fx-padding: 8 12; -fx-background-radius: 6; -fx-border-color: #BFDBFE; -fx-border-radius: 6;"
-                : "-fx-background-color: transparent; -fx-text-fill: #475569; -fx-alignment: BASELINE_LEFT; -fx-padding: 8 12; -fx-background-radius: 6;");
+        btn.getStyleClass().add(isActive ? "nav-item-active" : "nav-item");
 
         btn.setOnAction(e -> {
-            this.currentNavTag = navTag;
-            refreshNavigationRail();
-            refreshCurrentView();
+            if (!navTag.equals("GLOSSARY")) {
+                this.currentNavTag = navTag;
+                refreshNavigationRail();
+                refreshCurrentView();
+            }
         });
         return btn;
     }

@@ -38,14 +38,14 @@ public class BankViews {
 
         BankProfile profile = bankService.getBankProfile(selectedBankId).orElseThrow();
 
-        // 1. Bank Selector Bar
+        // 1. Bank Selector Bar (LRO Card Style)
         HBox selectorBar = new HBox(12);
         selectorBar.setAlignment(Pos.CENTER_LEFT);
-        selectorBar.setPadding(new Insets(10, 16, 10, 16));
-        selectorBar.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;");
+        selectorBar.getStyleClass().add("lro-card");
+        selectorBar.setPadding(new Insets(12, 16, 12, 16));
 
         Label selLabel = new Label("Selected Financial Institution:");
-        selLabel.setStyle("-fx-text-fill: #1E293B; -fx-font-weight: bold;");
+        selLabel.setStyle("-fx-text-fill: #0F172A; -fx-font-weight: bold;");
 
         ComboBox<String> bankCombo = new ComboBox<>();
         for (BankProfile p : bankService.getAllBankProfiles()) {
@@ -60,35 +60,101 @@ public class BankViews {
             }
         });
 
-        Label statusChip = UIComponents.createStatusChip(profile.healthStatus(), profile.healthStatus());
+        Label statusChip = UIComponents.createStatusPill(profile.healthStatus(), profile.healthStatus());
         Label tierLabel = new Label("(" + profile.tierDescription() + ")");
         tierLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
 
         selectorBar.getChildren().addAll(selLabel, bankCombo, statusChip, tierLabel);
 
-        // 2. High-Level KPI Cards
-        HBox kpiRow1 = new HBox(12);
-        kpiRow1.getChildren().addAll(
+        // 2. Main Grid: Center Content (KPIs + Chart + Table) & Right Widget Column
+        HBox mainGrid = new HBox(20);
+        mainGrid.setAlignment(Pos.TOP_LEFT);
+
+        // =========================================================================
+        // CENTER COLUMN (Bank Simulator Dashboard Center)
+        // =========================================================================
+        VBox centerCol = new VBox(16);
+        HBox.setHgrow(centerCol, Priority.ALWAYS);
+
+        // Row 1: 3 LRO KPI Cards matching Bank Simulator metrics
+        HBox kpiRow = new HBox(12);
+        kpiRow.getChildren().addAll(
                 UIComponents.createKpiCard("Total Assets", Formatters.formatINRCrores(profile.totalAssets()), "Verified Book Size", "Total resources owned by the bank including loans and investments.", "#0284C7"),
                 UIComponents.createKpiCard("Total Deposits", Formatters.formatINRCrores(profile.totalDeposits()), "Customer CASA & FDs", "Core funding source from retail and corporate depositors.", "#059669"),
-                UIComponents.createKpiCard("Gross Loan Portfolio", Formatters.formatINRCrores(profile.totalLoans()), "Sanctioned Credit Assets", "Total outstanding advances to retail, SME and corporate borrowers.", "#6366F1"),
-                UIComponents.createKpiCard("Gross NPA Ratio", Formatters.formatPercent(profile.grossNpaRatio()), profile.healthStatus().equals("Distressed") ? "PCA Watchlist" : "Optimal Quality", "Share of loans overdue >90 days under RBI IRAC prudential norms.", profile.grossNpaRatio().doubleValue() > 5.0 ? "#DC2626" : "#059669")
+                UIComponents.createKpiCard("Gross Loan Portfolio", Formatters.formatINRCrores(profile.totalLoans()), "Sanctioned Credit Assets", "Total outstanding advances to retail, SME and corporate borrowers.", "#4F46E5")
         );
 
-        HBox kpiRow2 = new HBox(12);
-        kpiRow2.getChildren().addAll(
-                UIComponents.createKpiCard("Liquid Cash & RBI Balance", Formatters.formatINRCrores(profile.cashBalance()), "CRR & Clearing Vault", "Physical currency and deposits maintained with RBI.", "#0284C7"),
-                UIComponents.createKpiCard("Treasury Securities", Formatters.formatINRCrores(profile.securitiesHoldings()), "G-Secs, T-Bills, Bonds", "Sovereign and corporate fixed income securities for SLR and trading.", "#D97706"),
-                UIComponents.createKpiCard("Net Interest Margin (NIM)", Formatters.formatPercent(profile.netInterestMargin()), "Annualized Yield Spread", "Difference between interest income on loans and interest paid on deposits.", "#DB2777"),
-                UIComponents.createKpiCard("Synthetic Customers", Formatters.formatQuantity(profile.customerCount()), "Deterministic Seed Base", "Number of fictional customer entities generated for this bank profile.", "#475569")
+        // Row 2: Asset & Liability Flow Dynamic Chart Card
+        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        double[] advances = {4200, 5800, 6400, 7500, 8100, 6900, 7800};
+        double[] deposits = {3800, 5100, 5900, 4505, 7400, 6100, 7200};
+        VBox chartNode = UIComponents.createDualBarChart(days, deposits, advances, "Wed", "₹4,505 Cr", "#059669");
+
+        VBox chartCard = UIComponents.createChartCard(
+                "Asset & Liability Flow Statistics",
+                Formatters.formatINRCrores(profile.cashBalance().divide(BigDecimal.valueOf(10), BigDecimal.ROUND_HALF_UP)),
+                "+2.32%",
+                "Total net flow in week",
+                "Week",
+                chartNode
         );
 
-        // 3. Operational Quick Action & Summary Panel
+        // Row 3: Data Table Card (Accounts & Credit Lines)
+        VBox tableCard = new VBox(12);
+        tableCard.getStyleClass().add("lro-card");
+
+        HBox tableHeader = new HBox();
+        tableHeader.setAlignment(Pos.CENTER_LEFT);
+        Label tblTitle = new Label("Customer Accounts & Credit Lines");
+        tblTitle.getStyleClass().add("card-title");
+        HBox.setHgrow(tblTitle, Priority.ALWAYS);
+
+        Label viewAll = new Label("View All ↗");
+        viewAll.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: 700; -fx-font-size: 11px; -fx-cursor: hand;");
+        tableHeader.getChildren().addAll(tblTitle, viewAll);
+
+        TableView<AccountRecord> table = new TableView<>();
+        table.setPrefHeight(230);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        TableColumn<AccountRecord, String> colAccId = new TableColumn<>("Account ID");
+        colAccId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().accountId()));
+
+        TableColumn<AccountRecord, String> colCustId = new TableColumn<>("Customer ID");
+        colCustId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().customerId()));
+
+        TableColumn<AccountRecord, String> colType = new TableColumn<>("Account Type");
+        colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().accountType()));
+
+        TableColumn<AccountRecord, String> colBal = new TableColumn<>("Available Balance");
+        colBal.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().availableBalance())));
+
+        TableColumn<AccountRecord, String> colStatus = new TableColumn<>("Status");
+        colStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().status()));
+        colStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(UIComponents.createStatusPill(item, item.equalsIgnoreCase("Active") ? "success" : "process"));
+                }
+            }
+        });
+
+        table.getColumns().addAll(colAccId, colCustId, colType, colBal, colStatus);
+        List<AccountRecord> accs = bankService.getAccounts(selectedBankId, "");
+        table.getItems().setAll(accs.size() > 5 ? accs.subList(0, 5) : accs);
+
+        tableCard.getChildren().addAll(tableHeader, table);
+
+        // Row 4: Institutional Solvency & Liquidity Profile Summary Box
         HBox summaryPanel = new HBox(16);
-        summaryPanel.setPadding(new Insets(16));
-        summaryPanel.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;");
+        summaryPanel.setPadding(new Insets(14, 18, 14, 18));
+        summaryPanel.setStyle("-fx-background-color: #F8FAFC; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;");
 
-        VBox leftSummary = new VBox(8);
+        VBox leftSummary = new VBox(6);
         HBox.setHgrow(leftSummary, Priority.ALWAYS);
         Label sumTitle = new Label("Institutional Solvency & Liquidity Profile");
         sumTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
@@ -111,12 +177,56 @@ public class BankViews {
         btnPostTxn.getStyleClass().add("btn-secondary");
         btnPostTxn.setOnAction(e -> showPostTransactionModal(selectedBankId));
 
-        HBox actions = new HBox(8, btnNewAcc, btnPostTxn);
+        HBox actions = new HBox(10, btnNewAcc, btnPostTxn);
         actions.setAlignment(Pos.CENTER_RIGHT);
 
         summaryPanel.getChildren().addAll(leftSummary, actions);
 
-        root.getChildren().addAll(selectorBar, kpiRow1, kpiRow2, summaryPanel);
+        centerCol.getChildren().addAll(kpiRow, chartCard, tableCard, summaryPanel);
+
+        // =========================================================================
+        // RIGHT COLUMN (Bank Simulator Widgets: Branch Reach & Deposit Mix)
+        // =========================================================================
+        VBox rightCol = new VBox(16);
+        rightCol.setPrefWidth(310);
+        rightCol.setMinWidth(290);
+
+        // Widget 1: Regional Branch Network
+        VBox regWidget = UIComponents.createRegionalExposureWidget(
+                "Branch Network & Reach",
+                "Period August 2026",
+                "Western Zone Metro",
+                "92% Quality",
+                "12,000 Accounts",
+                "#059669"
+        );
+
+        // Widget 2: Deposit Composition
+        List<UIComponents.SourceItem> sources = List.of(
+                new UIComponents.SourceItem("Savings CASA", "25,000", "#0284C7"),
+                new UIComponents.SourceItem("Term Deposits", "12,500", "#059669"),
+                new UIComponents.SourceItem("NRI & Demat", "4,500", "#4F46E5")
+        );
+        VBox sourceWidget = UIComponents.createDonutSourceWidget(
+                "Deposit Composition",
+                "Core retail vs wholesale mix",
+                "Total Book",
+                "₹72.5K Cr",
+                sources,
+                "See Details ↗",
+                () -> UIComponents.showGlossaryDialog(
+                        "Deposit Composition Analysis",
+                        "Breakdown of retail and corporate customer deposit accounts determining funding stickiness and run-off vulnerability under liquidity stress.",
+                        "Core Deposits = Savings Accounts + Retail Term Deposits",
+                        "High CASA ratios reduce funding cost and bolster regulatory NSFR."
+                ),
+                "#059669"
+        );
+
+        rightCol.getChildren().addAll(regWidget, sourceWidget);
+
+        mainGrid.getChildren().addAll(centerCol, rightCol);
+        root.getChildren().addAll(selectorBar, mainGrid);
         return root;
     }
 

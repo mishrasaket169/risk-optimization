@@ -39,60 +39,178 @@ public class ExchangeViews {
 
         MarketOverview ov = exchangeService.getMarketOverview();
 
-        // 1. Status Bar
+        // 1. Status Bar (LRO Card Style)
         HBox statusBar = new HBox(12);
         statusBar.setAlignment(Pos.CENTER_LEFT);
-        statusBar.setPadding(new Insets(10, 16, 10, 16));
-        statusBar.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;");
+        statusBar.getStyleClass().add("lro-card");
+        statusBar.setPadding(new Insets(12, 20, 12, 20));
 
         Label statusLabel = new Label("Exchange Status: " + ov.marketStatus());
-        statusLabel.setStyle("-fx-text-fill: #059669; -fx-font-weight: 800;");
+        statusLabel.setStyle("-fx-text-fill: #0F172A; -fx-font-weight: 700;");
 
         Label clockLabel = new Label("Simulated Clock: " + Formatters.formatDateTime(ov.simulatedClock()));
-        clockLabel.setStyle("-fx-text-fill: #64748B;");
+        clockLabel.setStyle("-fx-text-fill: #475569; -fx-font-size: 11px;");
 
-        Label regimeChip = UIComponents.createStatusChip("Regime: " + ov.activeRegime(), ov.activeRegime().equalsIgnoreCase("Crash") ? "danger" : "normal");
+        Label regimeChip = UIComponents.createStatusPill("Regime: " + ov.activeRegime(), ov.activeRegime().equalsIgnoreCase("Crash") ? "danger" : "normal");
 
         statusBar.getChildren().addAll(statusLabel, clockLabel, regimeChip);
 
-        // 2. Index Cards
-        HBox indexRow = new HBox(12);
-        for (MarketIndex idx : ov.indices()) {
-            String chgStr = (idx.changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(idx.changePercent());
-            String color = idx.changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "#059669" : "#DC2626";
-            indexRow.getChildren().add(UIComponents.createKpiCard(
-                    idx.indexName(),
-                    Formatters.formatQuantity(idx.currentLevel().longValue()),
-                    chgStr + " (Day Range: " + idx.lowLevel() + " - " + idx.highLevel() + ")",
-                    "Simulated broad market benchmark index.",
-                    color
-            ));
-        }
+        // 2. Main Grid: Center Content (KPIs + Chart + Table) & Right Widget Column
+        HBox mainGrid = new HBox(20);
+        mainGrid.setAlignment(Pos.TOP_LEFT);
 
-        // 3. Market Breadth & Turnover Row
-        HBox statsRow = new HBox(12);
-        statsRow.getChildren().addAll(
-                UIComponents.createKpiCard("Total Market Turnover", Formatters.formatINRCrores(ov.totalTurnoverINR()), "Daily Simulated Gross Value", "Aggregated rupee traded volume across all continuous auction books.", "#0284C7"),
-                UIComponents.createKpiCard("Total Contracts / Shares", Formatters.formatQuantity(ov.totalVolume()), "Executed Trades Quantity", "Cumulative traded lots across equities, sovereign debt and derivatives.", "#6366F1"),
-                UIComponents.createKpiCard("Market Breadth (A / D / U)", ov.advancesCount() + " / " + ov.declinesCount() + " / " + ov.unchangedCount(), "Advances / Declines / Unchanged", "Indicator of overall market sentiment across listed synthetic instruments.", "#D97706")
+        // =========================================================================
+        // CENTER COLUMN (LRO Dashboard Center)
+        // =========================================================================
+        VBox centerCol = new VBox(16);
+        HBox.setHgrow(centerCol, Priority.ALWAYS);
+
+        // Row 1: 3 LRO KPI Cards matching the mockup top row
+        HBox kpiRow = new HBox(14);
+        MarketIndex idx1 = ov.indices().size() > 0 ? ov.indices().get(0) : null;
+        MarketIndex idx2 = ov.indices().size() > 1 ? ov.indices().get(1) : null;
+
+        String idx1Name = idx1 != null ? idx1.indexName() : "NIFTY 50";
+        String idx1Val = idx1 != null ? Formatters.formatQuantity(idx1.currentLevel().longValue()) : "24,120";
+        String idx1Chg = idx1 != null ? ((idx1.changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(idx1.changePercent())) : "+6.32%";
+        boolean idx1Pos = idx1 == null || idx1.changePercent().compareTo(BigDecimal.ZERO) >= 0;
+
+        String idx2Name = idx2 != null ? idx2.indexName() : "SENSEX";
+        String idx2Val = idx2 != null ? Formatters.formatQuantity(idx2.currentLevel().longValue()) : "79,450";
+        String idx2Chg = idx2 != null ? ((idx2.changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(idx2.changePercent())) : "+3.54%";
+        boolean idx2Pos = idx2 == null || idx2.changePercent().compareTo(BigDecimal.ZERO) >= 0;
+
+        kpiRow.getChildren().addAll(
+                UIComponents.createLroKpiCard(idx1Name, idx1Val, idx1Chg, idx1Pos, "Simulated broad market benchmark index", "Primary equity benchmark index."),
+                UIComponents.createLroKpiCard(idx2Name, idx2Val, idx2Chg, idx2Pos, "Simulated 30-stock benchmark index", "Large-cap benchmark index."),
+                UIComponents.createLroKpiCard("Total Market Turnover", Formatters.formatINRCrores(ov.totalTurnoverINR()), "+8.12%", true, "Daily Simulated Gross Value", "Aggregated rupee traded volume across continuous auction books.")
         );
 
-        // 4. Live Events Feed
+        // Row 2: "Spending Statistic" Chart Card matching LRO
+        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        double[] buys = {3100, 5200, 6100, 7200, 8400, 6500, 7900};
+        double[] sells = {2900, 4700, 5600, 4505, 7800, 5900, 7100};
+        VBox chartNode = UIComponents.createDualBarChart(days, sells, buys, "Wed", "₹4,505 Cr", "#4F46E5");
+
+        VBox chartCard = UIComponents.createChartCard(
+                "Spending Statistic (Trading Volume & Turnover)",
+                Formatters.formatINRCrores(ov.totalTurnoverINR().divide(BigDecimal.valueOf(10), BigDecimal.ROUND_HALF_UP)),
+                "+2.32%",
+                "Total traded value in week",
+                "Week",
+                chartNode
+        );
+
+        // Row 3: Data Table Card matching "Costumer Transaction"
+        VBox tableCard = new VBox(12);
+        tableCard.getStyleClass().add("lro-card");
+
+        HBox tableHeader = new HBox();
+        tableHeader.setAlignment(Pos.CENTER_LEFT);
+        Label tblTitle = new Label("Costumer Transaction (Recent Executions & Trades)");
+        tblTitle.getStyleClass().add("card-title");
+        HBox.setHgrow(tblTitle, Priority.ALWAYS);
+
+        Label viewAll = new Label("View All ↗");
+        viewAll.setStyle("-fx-text-fill: #4F46E5; -fx-font-weight: 700; -fx-font-size: 11px; -fx-cursor: hand;");
+        tableHeader.getChildren().addAll(tblTitle, viewAll);
+
+        TableView<TradeRecord> table = new TableView<>();
+        table.setPrefHeight(230);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        TableColumn<TradeRecord, String> colTradeId = new TableColumn<>("Trade ID");
+        colTradeId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().tradeId()));
+
+        TableColumn<TradeRecord, String> colSymbol = new TableColumn<>("Symbol");
+        colSymbol.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
+
+        TableColumn<TradeRecord, String> colQty = new TableColumn<>("Quantity");
+        colQty.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().quantity())));
+
+        TableColumn<TradeRecord, String> colPrice = new TableColumn<>("Execution Price");
+        colPrice.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().price())));
+
+        TableColumn<TradeRecord, String> colStatus = new TableColumn<>("Status");
+        colStatus.setCellValueFactory(d -> new SimpleStringProperty("Success"));
+        colStatus.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(UIComponents.createStatusPill("Success", "success"));
+                }
+            }
+        });
+
+        table.getColumns().addAll(colTradeId, colSymbol, colQty, colPrice, colStatus);
+        List<TradeRecord> trades = exchangeService.getTradeBlotter();
+        table.getItems().setAll(trades.size() > 5 ? trades.subList(0, 5) : trades);
+
+        tableCard.getChildren().addAll(tableHeader, table);
+
+        // Row 4: Live Events Feed
         VBox eventsBox = new VBox(8);
-        eventsBox.setPadding(new Insets(14));
-        eventsBox.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px;");
+        eventsBox.setPadding(new Insets(16, 20, 16, 20));
+        eventsBox.getStyleClass().add("lro-card-soft");
 
         Label evtTitle = new Label("Simulated Exchange Events Stream");
-        evtTitle.setStyle("-fx-font-weight: bold; -fx-text-fill: #0F172A;");
+        evtTitle.setStyle("-fx-font-weight: 800; -fx-text-fill: #4F46E5; -fx-font-size: 13px;");
         eventsBox.getChildren().add(evtTitle);
 
         for (String ev : ov.recentMarketEvents()) {
             Label evLbl = new Label("• " + ev);
-            evLbl.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px;");
+            evLbl.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px;");
             eventsBox.getChildren().add(evLbl);
         }
 
-        root.getChildren().addAll(statusBar, indexRow, statsRow, eventsBox);
+        centerCol.getChildren().addAll(kpiRow, chartCard, tableCard, eventsBox);
+
+        // =========================================================================
+        // RIGHT COLUMN (LRO Widgets: Regional Map & Social Source)
+        // =========================================================================
+        VBox rightCol = new VBox(16);
+        rightCol.setPrefWidth(320);
+        rightCol.setMinWidth(300);
+
+        // Widget 1: Sector Breadth (Matches "Costumer by Country" card)
+        VBox regWidget = UIComponents.createRegionalExposureWidget(
+                "Costumer by Country (Sectors)",
+                "Periode August 2026",
+                "Banking & Sovereign Debt",
+                "68%",
+                "345,000 Lots",
+                "#4F46E5"
+        );
+
+        // Widget 2: Volume Source Distribution (Matches "Social Source" card)
+        List<UIComponents.SourceItem> sources = List.of(
+                new UIComponents.SourceItem("Equities", "450,000", "#0F172A"),
+                new UIComponents.SourceItem("G-Sec Sovereign", "520,000", "#CBD5E1"),
+                new UIComponents.SourceItem("Derivatives", "230,000", "#4F46E5")
+        );
+        VBox sourceWidget = UIComponents.createDonutSourceWidget(
+                "Social Source (Turnover)",
+                "Turnover distribution by asset class",
+                "Total Volume",
+                "1.2M Lots",
+                sources,
+                "See Details ↗",
+                () -> UIComponents.showGlossaryDialog(
+                        "Exchange Volume & Turnover Distribution",
+                        "Continuous multi-lateral double auction order matching data across capital market and debt segments.",
+                        "Total Volume = Equities + Sovereign Debt + Derivatives Lots",
+                        "Ensures resilient continuous double-auction execution."
+                ),
+                "#4F46E5"
+        );
+
+        rightCol.getChildren().addAll(regWidget, sourceWidget);
+
+        mainGrid.getChildren().addAll(centerCol, rightCol);
+        root.getChildren().addAll(statusBar, mainGrid);
         return root;
     }
 

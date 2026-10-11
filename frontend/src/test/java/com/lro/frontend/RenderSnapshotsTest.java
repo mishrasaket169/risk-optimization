@@ -1,0 +1,260 @@
+package com.lro.frontend;
+
+import com.lro.frontend.bank.service.MockBankService;
+import com.lro.frontend.common.Formatters;
+import com.lro.frontend.common.UIComponents;
+import com.lro.frontend.exchange.service.MockExchangeService;
+import com.lro.frontend.lro.service.MockLroService;
+import com.lro.frontend.views.BankViews;
+import com.lro.frontend.views.ExchangeViews;
+import com.lro.frontend.views.LroViews;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import org.junit.jupiter.api.Test;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.time.Instant;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+public class RenderSnapshotsTest {
+
+    private static final String ARTIFACTS_DIR = "C:/Users/Saket/.gemini/antigravity-ide/brain/6d741ffa-dbac-4ad8-85cd-fd1426c21b21/";
+
+    @Test
+    void renderAllThreeViews() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            Platform.startup(() -> {
+                try {
+                    renderFullAppScreenshots();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        } catch (IllegalStateException alreadyStarted) {
+            Platform.runLater(() -> {
+                try {
+                    renderFullAppScreenshots();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        boolean done = latch.await(25, TimeUnit.SECONDS);
+        System.out.println("Snapshots rendered successfully: " + done);
+    }
+
+    private void renderFullAppScreenshots() throws Exception {
+        MockBankService bankService = new MockBankService();
+        MockExchangeService exchangeService = new MockExchangeService();
+        MockLroService lroService = new MockLroService();
+
+        BankViews bankViews = new BankViews(bankService, () -> {});
+        ExchangeViews exchangeViews = new ExchangeViews(exchangeService, () -> {});
+        LroViews lroViews = new LroViews(lroService, bankService, () -> {});
+
+        String cssPath = getClass().getResource("/com/lro/frontend/css/style.css").toExternalForm();
+
+        // 1. Bank Simulator Shell
+        BorderPane bankShell = buildFullShell("BANK", bankViews.buildDashboard("BANK-01-LRG", id -> {}));
+        saveSceneSnapshot(bankShell, cssPath, ARTIFACTS_DIR + "lro_bank_full_app.png");
+
+        // 2. Exchange Simulator Shell
+        BorderPane exchShell = buildFullShell("EXCHANGE", exchangeViews.buildOverview());
+        saveSceneSnapshot(exchShell, cssPath, ARTIFACTS_DIR + "lro_exchange_full_app.png");
+
+        // 3. Liquidity Optimizer Shell
+        BorderPane lroShell = buildFullShell("LRO", lroViews.buildDashboard("BANK-01-LRG", id -> {}));
+        saveSceneSnapshot(lroShell, cssPath, ARTIFACTS_DIR + "lro_optimizer_full_app.png");
+    }
+
+    private BorderPane buildFullShell(String mode, Pane viewContent) {
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.getStyleClass().add("main-canvas");
+
+        // Top Section: Disclaimer + LRO Ecosystem Header Bar
+        VBox topContainer = new VBox();
+        HBox header = new HBox(16);
+        header.getStyleClass().add("app-header");
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.setPadding(new Insets(10, 20, 10, 20));
+
+        // Brand Title & Badge
+        Label brand = new Label("LRO ECOSYSTEM");
+        brand.getStyleClass().add("brand-title");
+
+        Label badge = new Label("RESEARCH SIMULATOR");
+        badge.getStyleClass().add("brand-badge");
+
+        // Module Switcher Tabs with authentic colors
+        HBox switcher = new HBox(8);
+        switcher.setAlignment(Pos.CENTER_LEFT);
+
+        Button btnBank = new Button("🏦 Bank Simulator");
+        btnBank.getStyleClass().add("BANK".equals(mode) ? "tab-btn-bank-active" : "tab-btn-inactive");
+
+        Button btnExch = new Button("📈 Exchange Simulator");
+        btnExch.getStyleClass().add("EXCHANGE".equals(mode) ? "tab-btn-exchange-active" : "tab-btn-inactive");
+
+        Button btnLro = new Button("⚡ Liquidity Optimizer");
+        btnLro.getStyleClass().add("LRO".equals(mode) ? "tab-btn-lro-active" : "tab-btn-inactive");
+
+        switcher.getChildren().addAll(btnBank, btnExch, btnLro);
+
+        Region spacerTop = new Region();
+        HBox.setHgrow(spacerTop, Priority.ALWAYS);
+
+        Label clock = new Label("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
+        clock.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
+
+        Button btnHelp = new Button("📖 Glossary");
+        btnHelp.getStyleClass().add("btn-secondary");
+
+        header.getChildren().addAll(brand, badge, switcher, spacerTop, clock, btnHelp);
+        topContainer.getChildren().addAll(UIComponents.createSimulatorNoticeBanner(), header);
+        mainLayout.setTop(topContainer);
+
+        // Left Navigation Rail
+        VBox nav = new VBox();
+        nav.getStyleClass().add("nav-rail");
+        nav.setPrefWidth(240);
+        nav.setMinWidth(240);
+
+        Label navHeader = new Label();
+        navHeader.getStyleClass().add("nav-section-header");
+
+        if ("BANK".equals(mode)) {
+            navHeader.setText("BANK SIMULATOR NAVIGATION");
+            nav.getChildren().addAll(
+                    navHeader,
+                    createNavRow("🏛 Institution Dashboard", true),
+                    createNavRow("👥 Customer Directory", false),
+                    createNavRow("💳 Accounts & CASA", false),
+                    createNavRow("💰 Fixed Deposits", false),
+                    createNavRow("📊 Loans & NPA Management", false),
+                    createNavRow("🏛 Treasury & G-Sec Holdings", false),
+                    createNavRow("📖 General Ledger", false),
+                    createNavRow("⌛ Cash-Flow Maturity Ladder", false)
+            );
+        } else if ("EXCHANGE".equals(mode)) {
+            navHeader.setText("EXCHANGE SIMULATOR NAVIGATION");
+            nav.getChildren().addAll(
+                    navHeader,
+                    createNavRow("📈 Market Overview", true),
+                    createNavRow("📖 Instrument Catalogue", false),
+                    createNavRow("⚡ Trading Order Ticket", false),
+                    createNavRow("📊 Market Depth Order Book", false),
+                    createNavRow("📋 Order & Trade Blotters", false),
+                    createNavRow("⚖ Market Regime Controls", false)
+            );
+        } else {
+            navHeader.setText("LIQUIDITY OPTIMIZER (LRO)");
+            nav.getChildren().addAll(
+                    navHeader,
+                    createNavRow("📈 Liquidity Dashboard", true),
+                    createNavRow("💳 Portfolio & Haircuts", false),
+                    createNavRow("⌛ Maturity Mismatch Ladder", false),
+                    createNavRow("🤖 ML Model Transparency", false),
+                    createNavRow("📋 Approval Review Queue", false),
+                    createNavRow("⚡ Stress Testing Workspace", false),
+                    createNavRow("⚠️ Surveillance Alerts", false)
+            );
+        }
+
+        // Section 2: SYSTEM & GOVERNANCE
+        Label sysHdr = new Label("SYSTEM & GOVERNANCE");
+        sysHdr.getStyleClass().add("nav-section-header");
+        nav.getChildren().addAll(sysHdr, createNavRow("📖 Regulatory Glossary", false));
+
+        Region spacerNav = new Region();
+        VBox.setVgrow(spacerNav, Priority.ALWAYS);
+        nav.getChildren().add(spacerNav);
+
+        // Bottom Officer Card
+        HBox profileCard = new HBox(10);
+        profileCard.setAlignment(Pos.CENTER_LEFT);
+        profileCard.setPadding(new Insets(12, 10, 12, 10));
+        profileCard.setStyle("-fx-border-color: #E2E8F0; -fx-border-width: 1 0 0 0;");
+
+        StackPane avatar = new StackPane();
+        Circle avatarCircle = new Circle(16, Color.web("#EFF6FF"));
+        Label avatarInitials = new Label("RO");
+        avatarInitials.setStyle("-fx-text-fill: #2563EB; -fx-font-weight: 800; -fx-font-size: 11px;");
+        avatar.getChildren().addAll(avatarCircle, avatarInitials);
+
+        VBox userDetails = new VBox(1);
+        Label userName = new Label("Chief Risk Officer");
+        userName.setStyle("-fx-text-fill: #0F172A; -fx-font-weight: 700; -fx-font-size: 12px;");
+        Label userRole = new Label("Treasury ALM Desk");
+        userRole.setStyle("-fx-text-fill: #64748B; -fx-font-size: 10px;");
+        userDetails.getChildren().addAll(userName, userRole);
+        HBox.setHgrow(userDetails, Priority.ALWAYS);
+
+        profileCard.getChildren().addAll(avatar, userDetails);
+        nav.getChildren().add(profileCard);
+
+        mainLayout.setLeft(nav);
+
+        // Center View wrapped in clean scroll pane
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: #F8FAFC; -fx-background-color: transparent;");
+        scrollPane.setContent(viewContent);
+        mainLayout.setCenter(scrollPane);
+
+        return mainLayout;
+    }
+
+    private Button createNavRow(String title, boolean isActive) {
+        Button btn = new Button(title);
+        btn.setMaxWidth(Double.MAX_VALUE);
+        btn.getStyleClass().add(isActive ? "nav-item-active" : "nav-item");
+        return btn;
+    }
+
+    private void saveSceneSnapshot(Pane content, String cssPath, String outputPath) throws Exception {
+        Scene scene = new Scene(content, 1420, 920);
+        if (cssPath != null) {
+            scene.getStylesheets().add(cssPath);
+        }
+
+        content.applyCss();
+        content.layout();
+
+        WritableImage image = scene.snapshot(null);
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        PixelReader pr = image.getPixelReader();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                bi.setRGB(x, y, pr.getArgb(x, y));
+            }
+        }
+
+        File outFile = new File(outputPath);
+        if (outFile.getParentFile() != null) {
+            outFile.getParentFile().mkdirs();
+        }
+        ImageIO.write(bi, "png", outFile);
+        System.out.println("Snapshot successfully written to: " + outFile.getAbsolutePath());
+    }
+}

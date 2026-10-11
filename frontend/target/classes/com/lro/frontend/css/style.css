@@ -1,6 +1,7 @@
 /* ==========================================================================
-   Liquidity Risk Optimizer (LRO) - Professional Light & Bright Design System
-   High-contrast, clean slate foundation with vibrant financial color accents
+   Liquidity Risk Optimizer (LRO) - Official Ecosystem Design System
+   Exact color scheme, selection states, typography, and module accents
+   from the 3 core applications: Bank Simulator, Exchange Simulator, and LRO
    ========================================================================== */
 
 .root {
@@ -10,6 +11,11 @@
     -fx-control-inner-background: #FFFFFF;
     -fx-text-fill: #0F172A;
     -fx-accent: #2563EB;
+}
+
+/* Background Canvas */
+.main-canvas {
+    -fx-background-color: #F8FAFC;
 }
 
 /* App Header & Brand Bar */
@@ -30,22 +36,73 @@
     -fx-font-size: 10px;
     -fx-font-weight: bold;
     -fx-padding: 3 8;
-    -fx-background-radius: 4;
+    -fx-background-radius: 4px;
     -fx-background-color: #F1F5F9;
     -fx-text-fill: #475569;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 4px;
 }
 
-/* App Specific Theme Accents */
-.theme-bank {
-    -fx-accent-color: #059669;
+.page-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #0F172A;
 }
 
-.theme-exchange {
-    -fx-accent-color: #4F46E5;
+/* App Switcher Module Tabs */
+.app-switcher-container {
+    -fx-spacing: 6px;
+    -fx-alignment: CENTER_LEFT;
 }
 
-.theme-lro {
-    -fx-accent-color: #D97706;
+.tab-btn-inactive {
+    -fx-background-color: #F1F5F9;
+    -fx-text-fill: #475569;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+
+.tab-btn-inactive:hover {
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #0F172A;
+}
+
+.tab-btn-bank-active {
+    -fx-background-color: #059669;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(5,150,105,0.25), 6, 0, 0, 2);
+}
+
+.tab-btn-exchange-active {
+    -fx-background-color: #4F46E5;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(79,70,229,0.25), 6, 0, 0, 2);
+}
+
+.tab-btn-lro-active {
+    -fx-background-color: #D97706;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(217,119,6,0.25), 6, 0, 0, 2);
 }
 
 /* Left Navigation Rail */
@@ -56,37 +113,182 @@
     -fx-padding: 16 12;
 }
 
-.nav-button {
+.nav-section-header {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748B;
+    -fx-padding: 12 10 6 10;
+}
+
+.nav-item {
     -fx-background-color: transparent;
     -fx-text-fill: #475569;
     -fx-font-size: 13px;
     -fx-font-weight: 600;
     -fx-alignment: BASELINE_LEFT;
-    -fx-padding: 10 14;
-    -fx-background-radius: 8;
+    -fx-padding: 9 12;
+    -fx-background-radius: 8px;
     -fx-cursor: hand;
 }
 
-.nav-button:hover {
+.nav-item:hover {
     -fx-background-color: #F1F5F9;
     -fx-text-fill: #0F172A;
 }
 
-.nav-button-active {
+/* Selection Color: Soft Blue Pill with Bold Royal Blue Text */
+.nav-item-active {
     -fx-background-color: #EFF6FF;
     -fx-text-fill: #2563EB;
-    -fx-font-weight: 800;
+    -fx-font-weight: bold;
+    -fx-alignment: BASELINE_LEFT;
+    -fx-padding: 9 12;
+    -fx-background-radius: 8px;
     -fx-border-color: #BFDBFE;
-    -fx-border-radius: 8;
-    -fx-border-width: 1;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
 }
 
-/* Data Tables */
+/* Badges */
+.badge-blue {
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1D4ED8;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 7;
+}
+
+.badge-amber {
+    -fx-background-color: #FEF3C7;
+    -fx-text-fill: #D97706;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 7;
+}
+
+.badge-red {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #DC2626;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 6;
+}
+
+/* Card Panels */
+.lro-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 8, 0, 0, 2);
+}
+
+.lro-card-soft {
+    -fx-background-color: #F8FAFC;
+    -fx-background-radius: 8px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 16;
+}
+
+.card-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0F172A;
+}
+
+.card-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #64748B;
+}
+
+/* KPI Cards */
+.kpi-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 14 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 6, 0, 0, 2);
+}
+
+/* Percentage Delta Badges */
+.delta-green {
+    -fx-background-color: #DCFCE7;
+    -fx-text-fill: #15803D;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 7;
+}
+
+.delta-red {
+    -fx-background-color: #FEE2E2;
+    -fx-text-fill: #B91C1C;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 7;
+}
+
+.delta-blue {
+    -fx-background-color: #DBEAFE;
+    -fx-text-fill: #1D4ED8;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10px;
+    -fx-padding: 2 7;
+}
+
+/* Segmented Filter Pills (Day, Week, Year) */
+.filter-pill-container {
+    -fx-background-color: #F1F5F9;
+    -fx-background-radius: 14px;
+    -fx-padding: 2px;
+}
+
+.filter-pill-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #64748B;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 12px;
+    -fx-padding: 4 10;
+    -fx-cursor: hand;
+}
+
+.filter-pill-btn-active {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #0F172A;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12px;
+    -fx-padding: 4 10;
+    -fx-effect: dropshadow(gaussian, rgba(15,23,42,0.06), 4, 0, 0, 1);
+}
+
+/* Floating Dark Tooltip */
+.dark-tooltip-pill {
+    -fx-background-color: #0F172A;
+    -fx-background-radius: 6px;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 3);
+}
+
+/* Tables */
 .table-view {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #E2E8F0;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
     -fx-table-cell-border-color: #F1F5F9;
 }
 
@@ -98,8 +300,7 @@
 
 .table-view .column-header {
     -fx-background-color: transparent;
-    -fx-border-color: #E2E8F0;
-    -fx-border-width: 0 1 0 0;
+    -fx-border-color: transparent;
     -fx-padding: 10 8;
 }
 
@@ -136,8 +337,53 @@
 .table-cell {
     -fx-text-fill: #1E293B;
     -fx-font-size: 12px;
-    -fx-padding: 8;
+    -fx-padding: 8 10;
     -fx-alignment: CENTER_LEFT;
+}
+
+/* Status Chips / Pills */
+.pill-success {
+    -fx-background-color: #DCFCE7;
+    -fx-border-color: #86EFAC;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #15803D;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
+}
+
+.pill-process {
+    -fx-background-color: #DBEAFE;
+    -fx-border-color: #93C5FD;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #1D4ED8;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
+}
+
+.pill-canceled {
+    -fx-background-color: #FEE2E2;
+    -fx-border-color: #FCA5A5;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #B91C1C;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
+}
+
+.pill-warning {
+    -fx-background-color: #FEF9C3;
+    -fx-border-color: #FDE047;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-text-fill: #A16207;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 8;
 }
 
 /* Buttons */
@@ -146,8 +392,8 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 6;
+    -fx-padding: 7 14;
+    -fx-background-radius: 6px;
     -fx-cursor: hand;
 }
 
@@ -155,13 +401,30 @@
     -fx-background-color: #1D4ED8;
 }
 
+.btn-secondary {
+    -fx-background-color: #F1F5F9;
+    -fx-text-fill: #334155;
+    -fx-border-color: #CBD5E1;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-font-weight: 600;
+    -fx-font-size: 12px;
+    -fx-padding: 7 14;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #0F172A;
+}
+
 .btn-success {
     -fx-background-color: #059669;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 6;
+    -fx-padding: 7 14;
+    -fx-background-radius: 6px;
     -fx-cursor: hand;
 }
 
@@ -174,30 +437,13 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 6;
+    -fx-padding: 7 14;
+    -fx-background-radius: 6px;
     -fx-cursor: hand;
 }
 
 .btn-danger:hover {
     -fx-background-color: #B91C1C;
-}
-
-.btn-secondary {
-    -fx-background-color: #F1F5F9;
-    -fx-text-fill: #334155;
-    -fx-border-color: #CBD5E1;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
-    -fx-font-weight: 600;
-    -fx-font-size: 12px;
-    -fx-padding: 8 14;
-    -fx-cursor: hand;
-}
-
-.btn-secondary:hover {
-    -fx-background-color: #E2E8F0;
-    -fx-text-fill: #0F172A;
 }
 
 /* Form Controls */
@@ -207,8 +453,8 @@
     -fx-background-color: #FFFFFF;
     -fx-text-fill: #0F172A;
     -fx-border-color: #CBD5E1;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
     -fx-padding: 6 10;
     -fx-font-size: 12px;
 }
@@ -227,33 +473,13 @@
 .combo-box-popup .list-view {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #CBD5E1;
-    -fx-border-radius: 6;
-    -fx-background-radius: 6;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
 }
 
 .combo-box-popup .list-cell:hover {
     -fx-background-color: #EFF6FF;
     -fx-text-fill: #1D4ED8;
-}
-
-/* Card Panel Containers */
-.card-panel {
-    -fx-background-color: #FFFFFF;
-    -fx-background-radius: 8;
-    -fx-border-color: #E2E8F0;
-    -fx-border-radius: 8;
-    -fx-padding: 16;
-}
-
-.card-title {
-    -fx-font-size: 14px;
-    -fx-font-weight: 700;
-    -fx-text-fill: #0F172A;
-}
-
-.card-subtitle {
-    -fx-font-size: 11px;
-    -fx-text-fill: #64748B;
 }
 
 /* ScrollBars */
@@ -264,7 +490,7 @@
 
 .scroll-bar .thumb {
     -fx-background-color: #CBD5E1;
-    -fx-background-radius: 4;
+    -fx-background-radius: 4px;
 }
 
 .scroll-bar .thumb:hover {
