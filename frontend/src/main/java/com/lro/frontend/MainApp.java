@@ -27,7 +27,8 @@ import javafx.util.Duration;
 import java.time.Instant;
 
 /**
- * Main JavaFX Desktop Application Shell implementing the LRO Financial Ecosystem:
+ * Main JavaFX Desktop Application Shell implementing the LRO Financial
+ * Ecosystem:
  * (A) Bank Simulator (Green Theme)
  * (B) Exchange Simulator (Royal Blue Theme)
  * (C) Liquidity Risk Optimizer (Amber Theme)
@@ -165,7 +166,8 @@ public class MainApp extends Application {
         switcher.setAlignment(Pos.CENTER_LEFT);
 
         Button btnBank = createTabButton("🏦 Bank Simulator", AppMode.BANK_SIMULATOR, "tab-btn-bank-active");
-        Button btnExch = createTabButton("📈 Exchange Simulator", AppMode.EXCHANGE_SIMULATOR, "tab-btn-exchange-active");
+        Button btnExch = createTabButton("📈 Exchange Simulator", AppMode.EXCHANGE_SIMULATOR,
+                "tab-btn-exchange-active");
         Button btnLro = createTabButton("⚡ Liquidity Optimizer", AppMode.LIQUIDITY_OPTIMIZER, "tab-btn-lro-active");
 
         switcher.getChildren().addAll(btnBank, btnExch, btnLro);
@@ -175,7 +177,8 @@ public class MainApp extends Application {
 
         // Status & Clock
         clockLabel = new Label("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
-        clockLabel.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
+        clockLabel.setStyle(
+                "-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
 
         Button btnHelp = new Button("📖 Glossary");
         btnHelp.getStyleClass().add("btn-secondary");
@@ -183,8 +186,7 @@ public class MainApp extends Application {
                 "Liquidity Risk Optimizer Overview",
                 "Educational and research simulation platform modelling bank balance sheets, continuous double-auction market matching, and liquidity risk optimization.",
                 "Three integrated modules: Bank Simulator, Exchange Simulator, and LRO Decision Support Engine.",
-                "Simulated environment complying with RBI/Basel III framework principles."
-        ));
+                "Simulated environment complying with RBI/Basel III framework principles."));
 
         header.getChildren().addAll(brandBox, switcher, spacer, clockLabel, btnHelp);
         return header;
@@ -222,13 +224,12 @@ public class MainApp extends Application {
                     header,
                     createNavButton("🏛", "Institution Dashboard", "DASHBOARD"),
                     createNavButton("👥", "Customer Directory", "CUSTOMERS"),
-                    createNavButton("💳", "Accounts & CASA", "ACCOUNTS"),
+                    createNavButton("💳", "Accounts", "ACCOUNTS"),
                     createNavButton("💰", "Fixed Deposits", "DEPOSITS"),
-                    createNavButton("📊", "Loans & NPA Management", "LOANS"),
-                    createNavButton("🏛", "Treasury & G-Sec Holdings", "TREASURY"),
+                    createNavButton("📊", "Loans", "LOANS"),
+                    createNavButton("🏛", "Bonds & Equity", "TREASURY"),
                     createNavButton("📖", "General Ledger", "LEDGER"),
-                    createNavButton("⌛", "Cash-Flow Maturity Ladder", "LADDER")
-            );
+                    createNavButton("⌛", "Cash-Flow Maturity Ladder", "LADDER"));
         } else if (currentApp == AppMode.EXCHANGE_SIMULATOR) {
             header.setText("EXCHANGE SIMULATOR NAVIGATION");
             navRail.getChildren().addAll(
@@ -238,8 +239,7 @@ public class MainApp extends Application {
                     createNavButton("🎟", "Trading Order Ticket", "TICKET"),
                     createNavButton("📊", "Market Depth Order Book", "DEPTH"),
                     createNavButton("📜", "Order & Trade Blotters", "BLOTTER"),
-                    createNavButton("⚙", "Market Regime Controls", "REGIMES")
-            );
+                    createNavButton("⚙", "Market Regime Controls", "REGIMES"));
         } else {
             header.setText("LIQUIDITY OPTIMIZER (LRO)");
             navRail.getChildren().addAll(
@@ -250,8 +250,7 @@ public class MainApp extends Application {
                     createNavButton("🤖", "ML Model Transparency", "INSIGHTS"),
                     createNavButton("📝", "Approval Review Queue", "RECOMMENDATIONS"),
                     createNavButton("⚡", "Stress Testing Workspace", "STRESS"),
-                    createNavButton("🔔", "Surveillance Alerts", "ALERTS")
-            );
+                    createNavButton("🔔", "Surveillance Alerts", "ALERTS"));
         }
     }
 
@@ -268,14 +267,14 @@ public class MainApp extends Application {
         iconLbl.setPrefWidth(26);
         iconLbl.setMaxWidth(26);
         iconLbl.setAlignment(Pos.CENTER);
-        iconLbl.setStyle(isActive 
-                ? "-fx-text-fill: #2563EB; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;" 
+        iconLbl.setStyle(isActive
+                ? "-fx-text-fill: #2563EB; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;"
                 : "-fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
 
         String cleanTitle = title.replaceAll("[\\uFE00-\\uFE0F]", "").trim();
         Label textLbl = new Label(cleanTitle);
-        textLbl.setStyle(isActive 
-                ? "-fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-font-size: 13px;" 
+        textLbl.setStyle(isActive
+                ? "-fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-font-size: 13px;"
                 : "-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-size: 13px;");
         HBox.setHgrow(textLbl, Priority.ALWAYS);
 
