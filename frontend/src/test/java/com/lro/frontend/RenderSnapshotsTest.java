@@ -95,7 +95,7 @@ public class RenderSnapshotsTest {
         HBox header = new HBox(16);
         header.getStyleClass().add("app-header");
         header.setAlignment(Pos.CENTER_LEFT);
-        header.setPadding(new Insets(13, 20, 13, 20));
+        header.setPadding(new Insets(13, 22, 13, 22));
         header.setPrefHeight(58);
         header.setMinHeight(56);
 
@@ -107,11 +107,17 @@ public class RenderSnapshotsTest {
             var is = getClass().getResourceAsStream("/com/lro/frontend/images/lro_logo.png");
             if (is != null) {
                 ImageView logoView = new ImageView(new Image(is));
-                logoView.setFitHeight(34);
-                logoView.setFitWidth(34);
+                logoView.setFitHeight(26);
+                logoView.setFitWidth(26);
                 logoView.setPreserveRatio(true);
                 logoView.setSmooth(true);
-                brandBox.getChildren().add(logoView);
+
+                StackPane logoBox = new StackPane(logoView);
+                logoBox.setMinWidth(26);
+                logoBox.setPrefWidth(26);
+                logoBox.setMaxWidth(26);
+                logoBox.setAlignment(Pos.CENTER);
+                brandBox.getChildren().add(logoBox);
             }
         } catch (Exception ex) {
             System.err.println("Warning: Could not load logo: " + ex.getMessage());
@@ -151,8 +157,8 @@ public class RenderSnapshotsTest {
         // Left Navigation Rail
         VBox nav = new VBox();
         nav.getStyleClass().add("nav-rail");
-        nav.setPrefWidth(240);
-        nav.setMinWidth(240);
+        nav.setPrefWidth(260);
+        nav.setMinWidth(260);
 
         Label navHeader = new Label();
         navHeader.getStyleClass().add("nav-section-header");
@@ -161,37 +167,37 @@ public class RenderSnapshotsTest {
             navHeader.setText("BANK SIMULATOR NAVIGATION");
             nav.getChildren().addAll(
                     navHeader,
-                    createNavRow("🏛 Institution Dashboard", true),
-                    createNavRow("👥 Customer Directory", false),
-                    createNavRow("💳 Accounts & CASA", false),
-                    createNavRow("💰 Fixed Deposits", false),
-                    createNavRow("📊 Loans & NPA Management", false),
-                    createNavRow("🏛 Treasury & G-Sec Holdings", false),
-                    createNavRow("📖 General Ledger", false),
-                    createNavRow("⌛ Cash-Flow Maturity Ladder", false)
+                    createNavRow("🏛", "Institution Dashboard", true),
+                    createNavRow("👥", "Customer Directory", false),
+                    createNavRow("💳", "Accounts & CASA", false),
+                    createNavRow("💰", "Fixed Deposits", false),
+                    createNavRow("📊", "Loans & NPA Management", false),
+                    createNavRow("🏛", "Treasury & G-Sec Holdings", false),
+                    createNavRow("📖", "General Ledger", false),
+                    createNavRow("⌛", "Cash-Flow Maturity Ladder", false)
             );
         } else if ("EXCHANGE".equals(mode)) {
             navHeader.setText("EXCHANGE SIMULATOR NAVIGATION");
             nav.getChildren().addAll(
                     navHeader,
-                    createNavRow("📈 Market Overview", true),
-                    createNavRow("📖 Instrument Catalogue", false),
-                    createNavRow("⚡ Trading Order Ticket", false),
-                    createNavRow("📊 Market Depth Order Book", false),
-                    createNavRow("📋 Order & Trade Blotters", false),
-                    createNavRow("⚖ Market Regime Controls", false)
+                    createNavRow("🌐", "Market Overview", true),
+                    createNavRow("📋", "Instrument Catalogue", false),
+                    createNavRow("🎟", "Trading Order Ticket", false),
+                    createNavRow("📊", "Market Depth Order Book", false),
+                    createNavRow("📜", "Order & Trade Blotters", false),
+                    createNavRow("⚙", "Market Regime Controls", false)
             );
         } else {
             navHeader.setText("LIQUIDITY OPTIMIZER (LRO)");
             nav.getChildren().addAll(
                     navHeader,
-                    createNavRow("📈 Liquidity Dashboard", true),
-                    createNavRow("💳 Portfolio & Haircuts", false),
-                    createNavRow("⌛ Maturity Mismatch Ladder", false),
-                    createNavRow("🤖 ML Model Transparency", false),
-                    createNavRow("📋 Approval Review Queue", false),
-                    createNavRow("⚡ Stress Testing Workspace", false),
-                    createNavRow("⚠️ Surveillance Alerts", false)
+                    createNavRow("🎯", "Liquidity Dashboard", true),
+                    createNavRow("💼", "Portfolio & Haircuts", false),
+                    createNavRow("⏳", "Maturity Mismatch Ladder", false),
+                    createNavRow("🤖", "ML Model Transparency", false),
+                    createNavRow("📝", "Approval Review Queue", false),
+                    createNavRow("⚡", "Stress Testing Workspace", false),
+                    createNavRow("🔔", "Surveillance Alerts", false)
             );
         }
 
@@ -207,10 +213,33 @@ public class RenderSnapshotsTest {
         return mainLayout;
     }
 
-    private Button createNavRow(String title, boolean isActive) {
-        Button btn = new Button(title);
+    private Button createNavRow(String iconText, String title, boolean isActive) {
+        Button btn = new Button();
         btn.setMaxWidth(Double.MAX_VALUE);
+        btn.setAlignment(Pos.CENTER_LEFT);
         btn.getStyleClass().add(isActive ? "nav-item-active" : "nav-item");
+
+        String cleanIcon = iconText.replaceAll("[\\p{M}\\uFE00-\\uFE0F]", "").trim();
+        Label iconLbl = new Label(cleanIcon);
+        iconLbl.setMinWidth(26);
+        iconLbl.setPrefWidth(26);
+        iconLbl.setMaxWidth(26);
+        iconLbl.setAlignment(Pos.CENTER);
+        iconLbl.setStyle(isActive 
+                ? "-fx-text-fill: #2563EB; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;" 
+                : "-fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
+
+        String cleanTitle = title.replaceAll("[\\uFE00-\\uFE0F]", "").trim();
+        Label textLbl = new Label(cleanTitle);
+        textLbl.setStyle(isActive 
+                ? "-fx-text-fill: #2563EB; -fx-font-weight: bold; -fx-font-size: 13px;" 
+                : "-fx-text-fill: #475569; -fx-font-weight: 600; -fx-font-size: 13px;");
+        HBox.setHgrow(textLbl, Priority.ALWAYS);
+
+        HBox row = new HBox(10, iconLbl, textLbl);
+        row.setAlignment(Pos.CENTER_LEFT);
+        btn.setGraphic(row);
+        btn.setText(null);
         return btn;
     }
 

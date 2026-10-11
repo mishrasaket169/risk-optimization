@@ -124,11 +124,14 @@
 
 .nav-item {
     -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
     -fx-text-fill: #475569;
     -fx-font-size: 13px;
     -fx-font-weight: 600;
-    -fx-alignment: BASELINE_LEFT;
-    -fx-padding: 9 12;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 10;
     -fx-background-radius: 8px;
     -fx-cursor: hand;
 }
@@ -143,8 +146,8 @@
     -fx-background-color: #EFF6FF;
     -fx-text-fill: #2563EB;
     -fx-font-weight: bold;
-    -fx-alignment: BASELINE_LEFT;
-    -fx-padding: 9 12;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 10;
     -fx-background-radius: 8px;
     -fx-border-color: #BFDBFE;
     -fx-border-radius: 8px;

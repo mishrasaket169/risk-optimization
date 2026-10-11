@@ -382,7 +382,7 @@ public final class UIComponents {
         titleBox.getChildren().addAll(lblTitle, lblSub);
         HBox.setHgrow(titleBox, Priority.ALWAYS);
 
-        Label gear = new Label("⚙️");
+        Label gear = new Label("⚙");
         gear.setStyle("-fx-font-size: 12px; -fx-cursor: hand;");
         top.getChildren().addAll(titleBox, gear);
 
