@@ -19,11 +19,17 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 ### `customers`
 - `customer_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic customer identifier (e.g. `CUST-LRG-1001`).
 - `full_name` (`VARCHAR(128)` NOT NULL): Synthetic customer legal name.
-- `segment` (`VARCHAR(32)` NOT NULL): `Retail`, `SME`, `Corporate`, `Wealth`.
+- `segment` (`VARCHAR(32)` NOT NULL): Randomly distributed across `Retail`, `SME`, `Corporate`, `Wealth`.
 - `kyc_status` (`VARCHAR(32)` NOT NULL): `Verified`, `Not Verified`.
 - `location_category` (`VARCHAR(32)` NOT NULL): `Tier 1`, `Tier 2`, `Tier 3`, `Rural`.
 - `risk_category` (`VARCHAR(16)` NOT NULL): Internal credit score tier (`Low`, `Medium`, `High`).
 - `branch_name` (`VARCHAR(64)` NOT NULL): Originating bank branch name.
+- **Population Scale**:
+  - `bank_large`: 10,000 customers
+  - `bank_medium`: 7,500 customers
+  - `bank_small`: 5,000 customers
+  - `bank_distressed`: 4,000 customers
+
 
 ### `accounts`
 - `account_id` (`VARCHAR(32)` PRIMARY KEY): Synthetic account number (e.g. `ACC-LRG-00001`).
