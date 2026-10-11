@@ -11,8 +11,17 @@ public interface BankService {
     Optional<BankProfile> getBankProfile(String bankId);
     List<CustomerRecord> getCustomers(String bankId, String query, String segmentFilter);
     List<AccountRecord> getAccounts(String bankId, String query);
+    default List<AccountRecord> getAccounts(String bankId, String query, String accountTypeFilter) {
+        return getAccounts(bankId, query);
+    }
     List<DepositRecord> getDeposits(String bankId);
+    default List<DepositRecord> getDeposits(String bankId, String query) {
+        return getDeposits(bankId);
+    }
     List<LoanRecord> getLoans(String bankId, String npaFilter);
+    default List<LoanRecord> getLoans(String bankId, String query, String npaFilter) {
+        return getLoans(bankId, npaFilter);
+    }
     List<TreasuryHolding> getTreasuryHoldings(String bankId);
     List<LedgerEntry> getLedgerEntries(String bankId);
     List<CashFlowBucket> getCashFlowLadder(String bankId);

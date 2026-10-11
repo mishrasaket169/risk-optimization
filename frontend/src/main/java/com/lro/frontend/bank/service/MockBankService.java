@@ -112,121 +112,249 @@ public class MockBankService implements BankService {
         }
     }
 
-    private void seedCustomers(String bankId, String health) {
-        List<CustomerRecord> list = new ArrayList<>();
-        String[] retailNames = {"Aarav Sharma", "Priya Nair", "Rohan Mehta", "Ananya Deshmukh", "Vikram Sen", "Sunita Patil"};
-        String[] smeNames = {"Omkar Logistics Pvt Ltd", "Ganesh Auto Spares", "Shree Textiles LLP", "Sai Electronics & Tech"};
-        String[] corpNames = {"Surya Infrastructure Corp", "Titanium Solar Ventures Ltd", "Kaveri Agro Exports Ltd"};
+    private int getCustomerTargetCount(String bankId) {
+        return switch (bankId) {
+            case "BANK-01-LRG" -> 10000;
+            case "BANK-02-MED" -> 7500;
+            case "BANK-03-SML" -> 5000;
+            case "BANK-04-DST" -> 4000;
+            default -> 5000;
+        };
+    }
 
-        int id = 1;
-        for (int i = 0; i < retailNames.length; i++) {
-            String kyc = (i % 3 == 0 && health.equals("Distressed")) ? "Not Verified" : "Verified";
-            String loc = switch (i % 4) {
+    private int getAccountTargetCount(String bankId) {
+        return switch (bankId) {
+            case "BANK-01-LRG" -> 25000;
+            case "BANK-02-MED" -> 15000;
+            case "BANK-03-SML" -> 12000;
+            case "BANK-04-DST" -> 8000;
+            default -> 10000;
+        };
+    }
+
+    private int getLoanTargetCount(String bankId) {
+        return switch (bankId) {
+            case "BANK-01-LRG" -> 12000;
+            case "BANK-02-MED" -> 8000;
+            case "BANK-03-SML" -> 5000;
+            case "BANK-04-DST" -> 4000;
+            default -> 5000;
+        };
+    }
+
+    private void seedCustomers(String bankId, String health) {
+        int targetCount = getCustomerTargetCount(bankId);
+        List<CustomerRecord> list = new ArrayList<>(targetCount);
+
+        String[] firstNames = {
+            "Aarav", "Priya", "Rohan", "Ananya", "Vikram", "Sunita", "Rajesh", "Sneha", "Aditya", "Pooja",
+            "Amit", "Neha", "Deepak", "Kavita", "Suresh", "Meera", "Sanjay", "Divya", "Manoj", "Ritu",
+            "Arjun", "Ishita", "Nikhil", "Tanvi", "Rahul", "Swati", "Vivek", "Kiran", "Ashok", "Shweta"
+        };
+        String[] lastNames = {
+            "Sharma", "Nair", "Mehta", "Deshmukh", "Sen", "Patil", "Verma", "Iyer", "Kulkarni", "Gupta",
+            "Joshi", "Rao", "Reddy", "Agarwal", "Malhotra", "Singhania", "Bansal", "Choudhury", "Bhattacharya", "Chauhan",
+            "Pillai", "Menon", "Trivedi", "Mishra", "Saxena", "Bhatia", "Chatterjee", "Pandey", "Kapoor", "Dhawan"
+        };
+        String[] smePrefixes = {
+            "Omkar", "Ganesh", "Shree", "Sai", "Bharat", "Balaji", "Durga", "Krishna", "Tirupati", "Vardhman",
+            "Apex", "Zenith", "Sunrise", "Shakti", "Navkar", "Pinnacle", "Arihant", "Mahalaxmi", "Radhe", "Kuber"
+        };
+        String[] smeSuffixes = {
+            "Logistics Pvt Ltd", "Auto Spares", "Textiles LLP", "Electronics & Tech", "Precision Engg",
+            "Impex Solutions", "Agro Commodities", "Steels & Tubes", "Packagings", "Chemicals Ltd"
+        };
+        String[] corpNames = {
+            "Surya Infrastructure Corp", "Titanium Solar Ventures Ltd", "Kaveri Agro Exports Ltd",
+            "Apex Petrochem Industries", "Reliance Horizon Global", "Tata Dynamic Technologies",
+            "Mahindra Engineering Works", "Larsen Industrial Systems", "Godrej Frontier Logistics",
+            "Adani Port & Power Ltd", "Wipro Cloud Infrastructure", "Infosys Digital Labs",
+            "Hindalco Smelting Works", "Vedanta Minerals Corp", "JSW Steel Works Ltd"
+        };
+        String[] branches = {
+            "Fort Nariman Point Branch", "MIDC Andheri Branch", "Corporate Finance Branch",
+            "Bandra Kurla Complex Branch", "Connaught Place Branch", "MG Road Bangalore Branch",
+            "Banjara Hills Hyderabad Branch", "Salt Lake Sector V Branch", "Shivaji Nagar Pune Branch",
+            "Ashram Road Ahmedabad Branch"
+        };
+
+        for (int id = 1; id <= targetCount; id++) {
+            int segmentMod = id % 10;
+            String segment;
+            String name;
+            BigDecimal relVal;
+            String risk;
+            int accountsCount;
+
+            if (segmentMod < 7) {
+                segment = "Retail";
+                String fn = firstNames[(id - 1) % firstNames.length];
+                String ln = lastNames[((id - 1) / firstNames.length) % lastNames.length];
+                name = fn + " " + ln;
+                relVal = new BigDecimal(350000 + (id % 50) * 30000).setScale(2, java.math.RoundingMode.HALF_UP);
+                risk = "Low";
+                accountsCount = 1 + (id % 3);
+            } else if (segmentMod < 9) {
+                segment = "SME";
+                String pfx = smePrefixes[(id - 1) % smePrefixes.length];
+                String sfx = smeSuffixes[((id - 1) / smePrefixes.length) % smeSuffixes.length];
+                name = pfx + " " + sfx;
+                relVal = new BigDecimal(3500000 + (id % 40) * 225000).setScale(2, java.math.RoundingMode.HALF_UP);
+                risk = health.equals("Distressed") ? "High" : "Medium";
+                accountsCount = 2 + (id % 4);
+            } else {
+                segment = "Corporate";
+                name = corpNames[(id - 1) % corpNames.length];
+                if (id > corpNames.length * 10) {
+                    name += " Unit " + ((id % 20) + 1);
+                }
+                relVal = new BigDecimal(45000000 + (id % 25) * 1600000).setScale(2, java.math.RoundingMode.HALF_UP);
+                risk = health.equals("Distressed") ? "High" : (id % 2 == 0 ? "Low" : "Medium");
+                accountsCount = 3 + (id % 5);
+            }
+
+            boolean isDistressedKyc = health.equals("Distressed") && (id % 4 == 0);
+            String kyc = (isDistressedKyc || (id % 23 == 0)) ? "Not Verified" : "Verified";
+
+            String loc = switch (id % 4) {
                 case 0 -> "Tier 1";
                 case 1 -> "Tier 2";
                 case 2 -> "Tier 3";
                 default -> "Rural";
             };
-            list.add(new CustomerRecord(String.format("%s-CUST-%05d", bankId, id++), retailNames[i], "Retail", kyc, loc, "Low", 2, new BigDecimal("1850000.00"), "Fort Nariman Point Branch"));
+
+            String branch = branches[(id - 1) % branches.length];
+
+            list.add(new CustomerRecord(
+                    String.format("%s-CUST-%05d", bankId, id),
+                    name,
+                    segment,
+                    kyc,
+                    loc,
+                    risk,
+                    accountsCount,
+                    relVal,
+                    branch
+            ));
         }
-        for (int i = 0; i < smeNames.length; i++) {
-            String kyc = (i == 1 || (i == 2 && health.equals("Distressed"))) ? "Not Verified" : "Verified";
-            String loc = switch (i % 3) {
-                case 0 -> "Tier 2";
-                case 1 -> "Tier 3";
-                default -> "Rural";
-            };
-            list.add(new CustomerRecord(String.format("%s-CUST-%05d", bankId, id++), smeNames[i], "SME", kyc, loc, health.equals("Distressed") ? "High" : "Medium", 3, new BigDecimal("12400000.00"), "MIDC Andheri Branch"));
-        }
-        for (int i = 0; i < corpNames.length; i++) {
-            String kyc = (i == 2 && health.equals("Distressed")) ? "Not Verified" : "Verified";
-            String loc = switch (i % 3) {
-                case 0 -> "Tier 1";
-                case 1 -> "Tier 2";
-                default -> "Rural";
-            };
-            list.add(new CustomerRecord(String.format("%s-CUST-%05d", bankId, id++), corpNames[i], "Corporate", kyc, loc, health.equals("Distressed") ? "High" : "Low", 4, new BigDecimal("85000000.00"), "Corporate Finance Branch"));
-        }
+
         customerData.put(bankId, list);
     }
 
     private void seedAccounts(String bankId) {
-        List<AccountRecord> list = new ArrayList<>();
-        List<CustomerRecord> custs = customerData.get(bankId);
-        int accId = 1;
+        int targetCount = getAccountTargetCount(bankId);
+        List<AccountRecord> list = new ArrayList<>(targetCount);
+        List<CustomerRecord> custs = customerData.getOrDefault(bankId, List.of());
+        int custCount = custs.isEmpty() ? 1 : custs.size();
+
         Instant now = Instant.now();
         String[] accountTypes = {"Saving", "Salary", "Current", "Fixed Deposit", "Recurring Deposit", "NRI", "Demat"};
-        for (int i = 0; i < custs.size(); i++) {
-            CustomerRecord c = custs.get(i);
-            String primaryType = accountTypes[i % accountTypes.length];
-            BigDecimal bal = switch (primaryType) {
-                case "Current" -> new BigDecimal("3500000.00");
-                case "Fixed Deposit" -> new BigDecimal("1500000.00");
-                case "Recurring Deposit" -> new BigDecimal("250000.00");
-                case "NRI" -> new BigDecimal("5000000.00");
-                case "Salary" -> new BigDecimal("350000.00");
-                case "Demat" -> new BigDecimal("120000.00");
-                default -> new BigDecimal("450000.00");
+
+        for (int id = 1; id <= targetCount; id++) {
+            CustomerRecord c = custs.get((id - 1) % custCount);
+            String accType = accountTypes[(id - 1) % accountTypes.length];
+
+            long baseBal = switch (accType) {
+                case "Saving" -> 25000L + ((id * 31L) % 975000L);
+                case "Salary" -> 45000L + ((id * 47L) % 455000L);
+                case "Current" -> 500000L + ((id * 89L) % 7500000L);
+                case "Fixed Deposit" -> 200000L + ((id * 53L) % 4800000L);
+                case "Recurring Deposit" -> 50000L + ((id * 19L) % 950000L);
+                case "NRI" -> 1500000L + ((id * 71L) % 8500000L);
+                case "Demat" -> 10000L + ((id * 37L) % 490000L);
+                default -> 150000L;
             };
-            list.add(new AccountRecord(String.format("%s-ACC-%05d", bankId, accId++), c.customerId(), primaryType, "INR", bal, BigDecimal.ZERO, "Active", now));
-            if (!c.segment().equals("Retail")) {
-                String secondaryType = accountTypes[(i + 2) % accountTypes.length];
-                list.add(new AccountRecord(String.format("%s-ACC-%05d", bankId, accId++), c.customerId(), secondaryType, "INR", new BigDecimal("3200000.00"), new BigDecimal("100000.00"), "Active", now));
-            }
+
+            BigDecimal bal = BigDecimal.valueOf(baseBal).setScale(2, java.math.RoundingMode.HALF_UP);
+            BigDecimal hold = (id % 17 == 0) ? BigDecimal.valueOf(25000L + (id % 10) * 10000L).setScale(2, java.math.RoundingMode.HALF_UP) : BigDecimal.ZERO;
+            String status = (id % 89 == 0) ? "Dormant" : "Active";
+
+            Instant opened = now.minusSeconds((long) (id % 365) * 86400L);
+
+            list.add(new AccountRecord(
+                    String.format("%s-ACC-%05d", bankId, id),
+                    c.customerId(),
+                    accType,
+                    "INR",
+                    bal,
+                    hold,
+                    status,
+                    opened
+            ));
         }
+
         accountData.put(bankId, list);
     }
 
     private void seedDeposits(String bankId) {
-        List<DepositRecord> list = new ArrayList<>();
-        List<CustomerRecord> custs = customerData.get(bankId);
+        int targetCount = 2500;
+        List<DepositRecord> list = new ArrayList<>(targetCount);
+        List<CustomerRecord> custs = customerData.getOrDefault(bankId, List.of());
+        int custCount = custs.isEmpty() ? 1 : custs.size();
         LocalDate today = LocalDate.now();
-        int dId = 701;
-        for (int i = 0; i < Math.min(custs.size(), 6); i++) {
-            CustomerRecord c = custs.get(i);
+
+        String[] instructions = {"Auto-Renew Principal & Interest", "Auto-Renew Principal Only", "Payout to Savings CASA"};
+
+        for (int id = 1; id <= targetCount; id++) {
+            CustomerRecord c = custs.get((id - 1) % custCount);
+            long princ = 100000L + ((id * 37L) % 4900000L);
+            BigDecimal principal = BigDecimal.valueOf(princ).setScale(2, java.math.RoundingMode.HALF_UP);
+            BigDecimal rate = new BigDecimal(6.75 + (id % 12) * 0.10).setScale(2, java.math.RoundingMode.HALF_UP);
+            LocalDate start = today.minusMonths((id % 12) + 1);
+            LocalDate maturity = start.plusMonths(12 + (id % 24));
+            BigDecimal matVal = principal.multiply(BigDecimal.ONE.add(rate.divide(BigDecimal.valueOf(100), 4, java.math.RoundingMode.HALF_UP))).setScale(2, java.math.RoundingMode.HALF_UP);
+
             list.add(new DepositRecord(
-                    bankId + "-DEP-" + dId++,
+                    String.format("%s-DEP-%05d", bankId, id),
                     c.customerId(),
-                    "Fixed Deposit",
-                    new BigDecimal("1000000.00"),
-                    new BigDecimal("7.25"),
-                    today.minusMonths(6),
-                    today.plusMonths(6),
-                    new BigDecimal("1074000.00"),
-                    "Auto-Renew Principal & Interest"
+                    (id % 4 == 0) ? "Recurring Deposit" : "Fixed Deposit",
+                    principal,
+                    rate,
+                    start,
+                    maturity,
+                    matVal,
+                    instructions[id % instructions.length]
             ));
         }
+
         depositData.put(bankId, list);
     }
 
     private void seedLoans(String bankId, String health) {
-        List<LoanRecord> list = new ArrayList<>();
-        List<CustomerRecord> custs = customerData.get(bankId);
+        int targetCount = getLoanTargetCount(bankId);
+        List<LoanRecord> list = new ArrayList<>(targetCount);
+        List<CustomerRecord> custs = customerData.getOrDefault(bankId, List.of());
+        int custCount = custs.isEmpty() ? 1 : custs.size();
+
         LocalDate today = LocalDate.now();
-        int lId = 1;
         String[] loanTypes = {
             "Home Loan", "Mortgage Loan", "Gold Loan", "Vehicle Loan",
             "Loan Against Securities", "Personal Loan", "Education Loan", "Business Loan", "Credit Card"
         };
 
-        for (int i = 0; i < custs.size(); i++) {
-            CustomerRecord c = custs.get(i);
-            boolean isDistressed = health.equals("Distressed") && (i % 2 == 0);
-            int dpd = isDistressed ? (i % 4 == 0 ? 95 : 45) : (i == 1 ? 15 : 0);
+        for (int id = 1; id <= targetCount; id++) {
+            CustomerRecord c = custs.get((id - 1) % custCount);
+            String loanType = loanTypes[(id - 1) % loanTypes.length];
+
+            boolean isDistressed = health.equals("Distressed") && (id % 3 == 0);
+            int dpd = isDistressed ? (id % 6 == 0 ? 95 : (id % 4 == 0 ? 65 : 35)) : (id % 47 == 0 ? 15 : 0);
             String irac = dpd > 90 ? "Sub-Standard NPA" : (dpd > 60 ? "SMA-2" : (dpd > 30 ? "SMA-1" : (dpd > 0 ? "SMA-0" : "Standard")));
-            String loanType = loanTypes[i % loanTypes.length];
-            BigDecimal sanc = switch (loanType) {
-                case "Home Loan" -> new BigDecimal("6500000.00");
-                case "Mortgage Loan" -> new BigDecimal("8500000.00");
-                case "Gold Loan" -> new BigDecimal("450000.00");
-                case "Vehicle Loan" -> new BigDecimal("950000.00");
-                case "Loan Against Securities" -> new BigDecimal("1200000.00");
-                case "Personal Loan" -> new BigDecimal("600000.00");
-                case "Education Loan" -> new BigDecimal("1500000.00");
-                case "Business Loan" -> new BigDecimal("18500000.00");
-                default -> new BigDecimal("250000.00");
+
+            long baseSanc = switch (loanType) {
+                case "Home Loan" -> 3500000L + ((id * 31L) % 6500000L);
+                case "Mortgage Loan" -> 5000000L + ((id * 43L) % 8500000L);
+                case "Gold Loan" -> 150000L + ((id * 17L) % 850000L);
+                case "Vehicle Loan" -> 400000L + ((id * 23L) % 1100000L);
+                case "Loan Against Securities" -> 500000L + ((id * 37L) % 2500000L);
+                case "Personal Loan" -> 200000L + ((id * 19L) % 800000L);
+                case "Education Loan" -> 500000L + ((id * 29L) % 2000000L);
+                case "Business Loan" -> 2500000L + ((id * 61L) % 22500000L);
+                default -> 100000L + ((id * 13L) % 400000L); // Credit Card
             };
-            BigDecimal out = sanc.multiply(new BigDecimal("0.85")).setScale(2, java.math.RoundingMode.HALF_UP);
+
+            BigDecimal sanc = BigDecimal.valueOf(baseSanc).setScale(2, java.math.RoundingMode.HALF_UP);
+            BigDecimal out = sanc.multiply(BigDecimal.valueOf(0.65 + (id % 30) * 0.01)).setScale(2, java.math.RoundingMode.HALF_UP);
+
             BigDecimal rate = switch (loanType) {
                 case "Home Loan" -> new BigDecimal("8.65");
                 case "Mortgage Loan" -> new BigDecimal("9.50");
@@ -239,8 +367,14 @@ public class MockBankService implements BankService {
                 default -> new BigDecimal("36.00");
             };
 
+            BigDecimal collateral = loanType.equals("Personal Loan") || loanType.equals("Credit Card")
+                    ? BigDecimal.ZERO
+                    : sanc.multiply(new BigDecimal("1.25")).setScale(2, java.math.RoundingMode.HALF_UP);
+
+            BigDecimal emi = out.divide(new BigDecimal("84"), 2, java.math.RoundingMode.HALF_UP);
+
             list.add(new LoanRecord(
-                    String.format("%s-LN-%05d", bankId, lId++),
+                    String.format("%s-LN-%05d", bankId, id),
                     c.customerId(),
                     loanType,
                     sanc,
@@ -248,11 +382,12 @@ public class MockBankService implements BankService {
                     rate,
                     dpd,
                     irac,
-                    loanType.equals("Personal Loan") || loanType.equals("Credit Card") ? BigDecimal.ZERO : sanc.multiply(new BigDecimal("1.25")),
-                    today.plusDays(15),
-                    out.divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP)
+                    collateral,
+                    today.plusDays((id % 28) + 1),
+                    emi
             ));
         }
+
         loanData.put(bankId, list);
     }
 
@@ -343,22 +478,53 @@ public class MockBankService implements BankService {
 
     @Override
     public List<AccountRecord> getAccounts(String bankId, String query) {
+        return getAccounts(bankId, query, "All");
+    }
+
+    @Override
+    public List<AccountRecord> getAccounts(String bankId, String query, String accountTypeFilter) {
         List<AccountRecord> all = accountData.getOrDefault(bankId, List.of());
         return all.stream()
-                .filter(a -> query == null || query.isBlank() || a.accountId().toLowerCase().contains(query.toLowerCase()) || a.customerId().toLowerCase().contains(query.toLowerCase()))
+                .filter(a -> query == null || query.isBlank()
+                        || a.accountId().toLowerCase().contains(query.toLowerCase())
+                        || a.customerId().toLowerCase().contains(query.toLowerCase()))
+                .filter(a -> accountTypeFilter == null || accountTypeFilter.equalsIgnoreCase("All")
+                        || a.accountType().equalsIgnoreCase(accountTypeFilter))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<DepositRecord> getDeposits(String bankId) {
-        return customerData.containsKey(bankId) ? depositData.getOrDefault(bankId, List.of()) : List.of();
+        return getDeposits(bankId, "");
+    }
+
+    @Override
+    public List<DepositRecord> getDeposits(String bankId, String query) {
+        List<DepositRecord> all = depositData.getOrDefault(bankId, List.of());
+        if (query == null || query.isBlank()) {
+            return all;
+        }
+        String q = query.toLowerCase();
+        return all.stream()
+                .filter(d -> d.depositId().toLowerCase().contains(q) || d.customerId().toLowerCase().contains(q))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<LoanRecord> getLoans(String bankId, String npaFilter) {
+        return getLoans(bankId, "", npaFilter);
+    }
+
+    @Override
+    public List<LoanRecord> getLoans(String bankId, String query, String npaFilter) {
         List<LoanRecord> all = loanData.getOrDefault(bankId, List.of());
         return all.stream()
-                .filter(l -> npaFilter == null || npaFilter.equalsIgnoreCase("All") || (npaFilter.equalsIgnoreCase("NPA Only") ? l.daysPastDue() > 90 : l.iracClassification().equalsIgnoreCase(npaFilter)))
+                .filter(l -> query == null || query.isBlank()
+                        || l.loanId().toLowerCase().contains(query.toLowerCase())
+                        || l.customerId().toLowerCase().contains(query.toLowerCase())
+                        || l.loanType().toLowerCase().contains(query.toLowerCase()))
+                .filter(l -> npaFilter == null || npaFilter.equalsIgnoreCase("All")
+                        || (npaFilter.equalsIgnoreCase("NPA Only") ? l.daysPastDue() > 90 : l.iracClassification().equalsIgnoreCase(npaFilter)))
                 .collect(Collectors.toList());
     }
 

@@ -222,6 +222,7 @@ public class BankViews {
     public VBox buildCustomersView(String bankId) {
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
+        root.setFillWidth(true);
 
         HBox filterBar = new HBox(12);
         filterBar.setAlignment(Pos.CENTER_LEFT);
@@ -235,12 +236,14 @@ public class BankViews {
         segmentCombo.setValue("All");
 
         Label countLabel = new Label();
-        countLabel.setStyle("-fx-text-fill: #64748B;");
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
 
         filterBar.getChildren().addAll(new Label("Filter Segment:"), segmentCombo, searchField, countLabel);
 
         TableView<CustomerRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         TableColumn<CustomerRecord, String> colId = new TableColumn<>("Customer ID");
         colId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().customerId()));
@@ -305,18 +308,19 @@ public class BankViews {
 
         table.getColumns().addAll(colId, colName, colSegment, colKyc, colLoc, colRisk, colAccs, colRelVal, colBranch);
 
+        UIComponents.PaginationBar<CustomerRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
         Runnable refreshTable = () -> {
             List<CustomerRecord> list = bankService.getCustomers(bankId, searchField.getText(), segmentCombo.getValue());
-            table.getItems().setAll(list);
-            countLabel.setText("Showing " + list.size() + " synthetic records");
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " records");
         };
 
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         segmentCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
-        root.getChildren().addAll(filterBar, table);
-        VBox.setVgrow(table, Priority.ALWAYS);
+        root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
 
@@ -326,13 +330,28 @@ public class BankViews {
     public VBox buildAccountsView(String bankId) {
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
+        root.setFillWidth(true);
+
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
 
         TextField searchField = new TextField();
-        searchField.setPromptText("Search by account ID or customer ID...");
+        searchField.setPromptText("Search account ID or customer ID...");
         searchField.setPrefWidth(280);
+
+        ComboBox<String> typeCombo = new ComboBox<>();
+        typeCombo.getItems().addAll("All", "Saving", "Salary", "Current", "Fixed Deposit", "Recurring Deposit", "NRI", "Demat");
+        typeCombo.setValue("All");
+
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(new Label("Filter Account Type:"), typeCombo, searchField, countLabel);
 
         TableView<AccountRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         TableColumn<AccountRecord, String> colAccId = new TableColumn<>("Account ID");
         colAccId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().accountId()));
@@ -357,15 +376,19 @@ public class BankViews {
 
         table.getColumns().addAll(colAccId, colCustId, colType, colBal, colHold, colStatus, colOpened);
 
+        UIComponents.PaginationBar<AccountRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
         Runnable refreshTable = () -> {
-            List<AccountRecord> list = bankService.getAccounts(bankId, searchField.getText());
-            table.getItems().setAll(list);
+            List<AccountRecord> list = bankService.getAccounts(bankId, searchField.getText(), typeCombo.getValue());
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " accounts");
         };
+
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        typeCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
-        root.getChildren().addAll(new HBox(12, new Label("Search:"), searchField), table);
-        VBox.setVgrow(table, Priority.ALWAYS);
+        root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
 
@@ -375,9 +398,27 @@ public class BankViews {
     public VBox buildDepositsView(String bankId) {
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
+        root.setFillWidth(true);
+
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
+
+        Label sectionHeader = new Label("Active Fixed Term & Recurring Deposits Portfolio");
+        sectionHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search deposit reference or customer ID...");
+        searchField.setPrefWidth(280);
+
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(sectionHeader, searchField, countLabel);
 
         TableView<DepositRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         TableColumn<DepositRecord, String> colDepId = new TableColumn<>("Deposit Reference");
         colDepId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().depositId()));
@@ -406,11 +447,20 @@ public class BankViews {
         TableColumn<DepositRecord, String> colInstruct = new TableColumn<>("Maturity Mandate");
         colInstruct.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().renewalInstruction()));
 
-        Label sectionHeader = new Label("Active Fixed Term & Recurring Deposits Portfolio");
-        sectionHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+        table.getColumns().addAll(colDepId, colCustId, colType, colPrincipal, colRate, colStart, colMaturity, colMatAmt, colInstruct);
 
-        root.getChildren().addAll(sectionHeader, table);
-        VBox.setVgrow(table, Priority.ALWAYS);
+        UIComponents.PaginationBar<DepositRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
+        Runnable refreshTable = () -> {
+            List<DepositRecord> list = bankService.getDeposits(bankId, searchField.getText());
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " deposits");
+        };
+
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        refreshTable.run();
+
+        root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
 
@@ -420,6 +470,7 @@ public class BankViews {
     public VBox buildLoansView(String bankId) {
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
+        root.setFillWidth(true);
 
         HBox filterBar = new HBox(12);
         filterBar.setAlignment(Pos.CENTER_LEFT);
@@ -428,14 +479,23 @@ public class BankViews {
         npaCombo.getItems().addAll("All", "NPA Only", "Standard", "SMA-0", "SMA-1", "SMA-2", "Sub-Standard NPA");
         npaCombo.setValue("All");
 
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search loan account or customer ID...");
+        searchField.setPrefWidth(260);
+
         Button btnNewLoan = new Button("+ Originate Demo Loan");
         btnNewLoan.getStyleClass().add("btn-primary");
         btnNewLoan.setOnAction(e -> showOriginateLoanModal(bankId));
 
-        filterBar.getChildren().addAll(new Label("Filter Asset Classification:"), npaCombo, btnNewLoan);
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(new Label("Filter Classification:"), npaCombo, searchField, btnNewLoan, countLabel);
 
         TableView<LoanRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         TableColumn<LoanRecord, String> colLnId = new TableColumn<>("Loan Account");
         colLnId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().loanId()));
@@ -463,12 +523,19 @@ public class BankViews {
 
         table.getColumns().addAll(colLnId, colType, colPrincipal, colRate, colDpd, colIrac, colCollateral, colEmi);
 
-        Runnable refreshTable = () -> table.getItems().setAll(bankService.getLoans(bankId, npaCombo.getValue()));
+        UIComponents.PaginationBar<LoanRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
+        Runnable refreshTable = () -> {
+            List<LoanRecord> list = bankService.getLoans(bankId, searchField.getText(), npaCombo.getValue());
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " loans");
+        };
+
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         npaCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
-        root.getChildren().addAll(filterBar, table);
-        VBox.setVgrow(table, Priority.ALWAYS);
+        root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
 
@@ -478,9 +545,12 @@ public class BankViews {
     public VBox buildTreasuryView(String bankId) {
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
+        root.setFillWidth(true);
 
         TableView<TreasuryHolding> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         TableColumn<TreasuryHolding, String> colInst = new TableColumn<>("Security / Instrument");
         colInst.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().instrumentName()));
@@ -516,7 +586,6 @@ public class BankViews {
         sectionHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
 
         root.getChildren().addAll(sectionHeader, table, notice);
-        VBox.setVgrow(table, Priority.ALWAYS);
         return root;
     }
 
@@ -526,9 +595,15 @@ public class BankViews {
     public VBox buildLedgerView(String bankId) {
         VBox root = new VBox(12);
         root.setPadding(new Insets(20));
+        root.setFillWidth(true);
+
+        Label ledgerHeader = new Label("Double-Entry Authoritative Financial Ledger");
+        ledgerHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
 
         TableView<LedgerEntry> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         TableColumn<LedgerEntry, String> colTxn = new TableColumn<>("Transaction Ref");
         colTxn.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().transactionRef()));
@@ -552,13 +627,11 @@ public class BankViews {
         colStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().status()));
 
         table.getColumns().addAll(colTxn, colTime, colAcc, colDebit, colCredit, colNarration, colStatus);
-        table.getItems().setAll(bankService.getLedgerEntries(bankId));
 
-        Label ledgerHeader = new Label("Double-Entry Authoritative Financial Ledger");
-        ledgerHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+        UIComponents.PaginationBar<LedgerEntry> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+        paginationBar.setData(bankService.getLedgerEntries(bankId));
 
-        root.getChildren().addAll(ledgerHeader, table);
-        VBox.setVgrow(table, Priority.ALWAYS);
+        root.getChildren().addAll(ledgerHeader, table, paginationBar);
         return root;
     }
 

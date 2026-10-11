@@ -85,6 +85,7 @@ public class MainApp extends Application {
         // 3. Center Content Area
         contentScrollPane = new ScrollPane();
         contentScrollPane.setFitToWidth(true);
+        contentScrollPane.setFitToHeight(true);
         contentScrollPane.setStyle("-fx-background: #F8FAFC; -fx-background-color: transparent;");
         mainLayout.setCenter(contentScrollPane);
 

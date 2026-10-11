@@ -74,20 +74,36 @@ public class RenderSnapshotsTest {
 
         String cssPath = getClass().getResource("/com/lro/frontend/css/style.css").toExternalForm();
 
-        // 1. Bank Simulator Shell
-        BorderPane bankShell = buildFullShell("BANK", bankViews.buildDashboard("BANK-01-LRG", id -> {}));
+        // 1. Bank Simulator Shell - Dashboard
+        BorderPane bankShell = buildFullShell("BANK", "Institution Dashboard", bankViews.buildDashboard("BANK-01-LRG", id -> {}));
         saveSceneSnapshot(bankShell, cssPath, ARTIFACTS_DIR + "lro_bank_full_app.png");
 
+        // 1b. Bank Simulator - Customer Directory (500 items per page, full height)
+        BorderPane bankCustShell = buildFullShell("BANK", "Customer Directory", bankViews.buildCustomersView("BANK-02-MED"));
+        saveSceneSnapshot(bankCustShell, cssPath, ARTIFACTS_DIR + "lro_bank_customers.png");
+
+        // 1c. Bank Simulator - Accounts & CASA (500 items per page, full height)
+        BorderPane bankAccShell = buildFullShell("BANK", "Accounts & CASA", bankViews.buildAccountsView("BANK-02-MED"));
+        saveSceneSnapshot(bankAccShell, cssPath, ARTIFACTS_DIR + "lro_bank_accounts.png");
+
+        // 1d. Bank Simulator - Loans & NPA Management (500 items per page, full height)
+        BorderPane bankLoansShell = buildFullShell("BANK", "Loans & NPA Management", bankViews.buildLoansView("BANK-02-MED"));
+        saveSceneSnapshot(bankLoansShell, cssPath, ARTIFACTS_DIR + "lro_bank_loans.png");
+
         // 2. Exchange Simulator Shell
-        BorderPane exchShell = buildFullShell("EXCHANGE", exchangeViews.buildOverview());
+        BorderPane exchShell = buildFullShell("EXCHANGE", "Market Overview", exchangeViews.buildOverview());
         saveSceneSnapshot(exchShell, cssPath, ARTIFACTS_DIR + "lro_exchange_full_app.png");
 
         // 3. Liquidity Optimizer Shell
-        BorderPane lroShell = buildFullShell("LRO", lroViews.buildDashboard("BANK-01-LRG", id -> {}));
+        BorderPane lroShell = buildFullShell("LRO", "Liquidity Dashboard", lroViews.buildDashboard("BANK-01-LRG", id -> {}));
         saveSceneSnapshot(lroShell, cssPath, ARTIFACTS_DIR + "lro_optimizer_full_app.png");
     }
 
     private BorderPane buildFullShell(String mode, Pane viewContent) {
+        return buildFullShell(mode, null, viewContent);
+    }
+
+    private BorderPane buildFullShell(String mode, String activeNavTitle, Pane viewContent) {
         BorderPane mainLayout = new BorderPane();
         mainLayout.getStyleClass().add("main-canvas");
 
@@ -163,41 +179,44 @@ public class RenderSnapshotsTest {
         Label navHeader = new Label();
         navHeader.getStyleClass().add("nav-section-header");
 
+        String selectedTitle = activeNavTitle != null ? activeNavTitle : 
+                ("BANK".equals(mode) ? "Institution Dashboard" : "EXCHANGE".equals(mode) ? "Market Overview" : "Liquidity Dashboard");
+
         if ("BANK".equals(mode)) {
             navHeader.setText("BANK SIMULATOR NAVIGATION");
             nav.getChildren().addAll(
                     navHeader,
-                    createNavRow("🏛", "Institution Dashboard", true),
-                    createNavRow("👥", "Customer Directory", false),
-                    createNavRow("💳", "Accounts & CASA", false),
-                    createNavRow("💰", "Fixed Deposits", false),
-                    createNavRow("📊", "Loans & NPA Management", false),
-                    createNavRow("🏛", "Treasury & G-Sec Holdings", false),
-                    createNavRow("📖", "General Ledger", false),
-                    createNavRow("⌛", "Cash-Flow Maturity Ladder", false)
+                    createNavRow("🏛", "Institution Dashboard", "Institution Dashboard".equals(selectedTitle)),
+                    createNavRow("👥", "Customer Directory", "Customer Directory".equals(selectedTitle)),
+                    createNavRow("💳", "Accounts & CASA", "Accounts & CASA".equals(selectedTitle)),
+                    createNavRow("💰", "Fixed Deposits", "Fixed Deposits".equals(selectedTitle)),
+                    createNavRow("📊", "Loans & NPA Management", "Loans & NPA Management".equals(selectedTitle)),
+                    createNavRow("🏛", "Treasury & G-Sec Holdings", "Treasury & G-Sec Holdings".equals(selectedTitle)),
+                    createNavRow("📖", "General Ledger", "General Ledger".equals(selectedTitle)),
+                    createNavRow("⌛", "Cash-Flow Maturity Ladder", "Cash-Flow Maturity Ladder".equals(selectedTitle))
             );
         } else if ("EXCHANGE".equals(mode)) {
             navHeader.setText("EXCHANGE SIMULATOR NAVIGATION");
             nav.getChildren().addAll(
                     navHeader,
-                    createNavRow("🌐", "Market Overview", true),
-                    createNavRow("📋", "Instrument Catalogue", false),
-                    createNavRow("🎟", "Trading Order Ticket", false),
-                    createNavRow("📊", "Market Depth Order Book", false),
-                    createNavRow("📜", "Order & Trade Blotters", false),
-                    createNavRow("⚙", "Market Regime Controls", false)
+                    createNavRow("🌐", "Market Overview", "Market Overview".equals(selectedTitle)),
+                    createNavRow("📋", "Instrument Catalogue", "Instrument Catalogue".equals(selectedTitle)),
+                    createNavRow("🎟", "Trading Order Ticket", "Trading Order Ticket".equals(selectedTitle)),
+                    createNavRow("📊", "Market Depth Order Book", "Market Depth Order Book".equals(selectedTitle)),
+                    createNavRow("📜", "Order & Trade Blotters", "Order & Trade Blotters".equals(selectedTitle)),
+                    createNavRow("⚙", "Market Regime Controls", "Market Regime Controls".equals(selectedTitle))
             );
         } else {
             navHeader.setText("LIQUIDITY OPTIMIZER (LRO)");
             nav.getChildren().addAll(
                     navHeader,
-                    createNavRow("🎯", "Liquidity Dashboard", true),
-                    createNavRow("💼", "Portfolio & Haircuts", false),
-                    createNavRow("⏳", "Maturity Mismatch Ladder", false),
-                    createNavRow("🤖", "ML Model Transparency", false),
-                    createNavRow("📝", "Approval Review Queue", false),
-                    createNavRow("⚡", "Stress Testing Workspace", false),
-                    createNavRow("🔔", "Surveillance Alerts", false)
+                    createNavRow("🎯", "Liquidity Dashboard", "Liquidity Dashboard".equals(selectedTitle)),
+                    createNavRow("💼", "Portfolio & Haircuts", "Portfolio & Haircuts".equals(selectedTitle)),
+                    createNavRow("⏳", "Maturity Mismatch Ladder", "Maturity Mismatch Ladder".equals(selectedTitle)),
+                    createNavRow("🤖", "ML Model Transparency", "ML Model Transparency".equals(selectedTitle)),
+                    createNavRow("📝", "Approval Review Queue", "Approval Review Queue".equals(selectedTitle)),
+                    createNavRow("⚡", "Stress Testing Workspace", "Stress Testing Workspace".equals(selectedTitle)),
+                    createNavRow("🔔", "Surveillance Alerts", "Surveillance Alerts".equals(selectedTitle))
             );
         }
 
@@ -206,6 +225,7 @@ public class RenderSnapshotsTest {
         // Center View wrapped in clean scroll pane
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
+        scrollPane.setFitToHeight(true);
         scrollPane.setStyle("-fx-background: #F8FAFC; -fx-background-color: transparent;");
         scrollPane.setContent(viewContent);
         mainLayout.setCenter(scrollPane);

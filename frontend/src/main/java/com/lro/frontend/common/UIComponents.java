@@ -482,4 +482,142 @@ public final class UIComponents {
         alert.getDialogPane().setContent(content);
         alert.showAndWait();
     }
+
+    /**
+     * Reusable Full-Height Table Pagination Component.
+     * Enforces minimum 500 entries per window with intuitive navigation controls.
+     */
+    public static class PaginationBar<T> extends HBox {
+        private final TableView<T> table;
+        private List<T> allItems = new java.util.ArrayList<>();
+        private int pageSize = 500;
+        private int currentPage = 1;
+
+        private final Label infoLabel = new Label();
+        private final ComboBox<Integer> pageSizeCombo = new ComboBox<>();
+        private final Button btnFirst = new Button("⏮ First");
+        private final Button btnPrev = new Button("◀ Prev");
+        private final TextField pageInput = new TextField();
+        private final Label totalPagesLabel = new Label("/ 1");
+        private final Button btnNext = new Button("Next ▶");
+        private final Button btnLast = new Button("Last ⏭");
+
+        public PaginationBar(TableView<T> table, int defaultPageSize) {
+            this.table = table;
+            this.pageSize = Math.max(defaultPageSize, 500);
+
+            getStyleClass().add("pagination-bar");
+            setAlignment(Pos.CENTER_LEFT);
+            setSpacing(12);
+            setPadding(new Insets(10, 16, 10, 16));
+            setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 4, 0, 0, 1);");
+
+            infoLabel.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px; -fx-font-weight: 600;");
+
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            Label pageSizeLabel = new Label("Rows per page:");
+            pageSizeLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-font-weight: 500;");
+
+            pageSizeCombo.getItems().addAll(500, 1000, 2000, 5000);
+            pageSizeCombo.setValue(this.pageSize);
+            pageSizeCombo.setStyle("-fx-font-size: 12px; -fx-pref-width: 95px;");
+            pageSizeCombo.setOnAction(e -> {
+                Integer sz = pageSizeCombo.getValue();
+                if (sz != null && sz != this.pageSize) {
+                    this.pageSize = sz;
+                    this.currentPage = 1;
+                    applyPagination();
+                }
+            });
+
+            String btnStyle = "-fx-background-color: #FFFFFF; -fx-border-color: #CBD5E1; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #334155; -fx-padding: 5 12; -fx-cursor: hand;";
+            btnFirst.setStyle(btnStyle);
+            btnPrev.setStyle(btnStyle);
+            btnNext.setStyle(btnStyle);
+            btnLast.setStyle(btnStyle);
+
+            pageInput.setPrefWidth(55);
+            pageInput.setAlignment(Pos.CENTER);
+            pageInput.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 6; -fx-background-radius: 6px; -fx-border-color: #CBD5E1; -fx-border-radius: 6px; -fx-background-color: #F8FAFC;");
+            pageInput.setOnAction(e -> {
+                try {
+                    int p = Integer.parseInt(pageInput.getText().trim());
+                    goToPage(p);
+                } catch (NumberFormatException ex) {
+                    pageInput.setText(String.valueOf(currentPage));
+                }
+            });
+
+            totalPagesLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-font-weight: 600;");
+
+            btnFirst.setOnAction(e -> goToPage(1));
+            btnPrev.setOnAction(e -> goToPage(currentPage - 1));
+            btnNext.setOnAction(e -> goToPage(currentPage + 1));
+            btnLast.setOnAction(e -> goToPage(getTotalPages()));
+
+            Label pageWord = new Label("Page");
+            pageWord.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-font-weight: 500;");
+
+            HBox navControls = new HBox(6, btnFirst, btnPrev, pageWord, pageInput, totalPagesLabel, btnNext, btnLast);
+            navControls.setAlignment(Pos.CENTER_LEFT);
+
+            getChildren().addAll(infoLabel, spacer, pageSizeLabel, pageSizeCombo, new Separator(javafx.geometry.Orientation.VERTICAL), navControls);
+        }
+
+        public void setData(List<T> items) {
+            this.allItems = items != null ? items : new java.util.ArrayList<>();
+            this.currentPage = 1;
+            applyPagination();
+        }
+
+        public void goToPage(int page) {
+            int maxPages = getTotalPages();
+            if (page < 1) page = 1;
+            if (page > maxPages) page = maxPages;
+            this.currentPage = page;
+            applyPagination();
+        }
+
+        public int getCurrentPage() {
+            return currentPage;
+        }
+
+        public int getTotalPages() {
+            if (allItems == null || allItems.isEmpty()) return 1;
+            return (int) Math.ceil((double) allItems.size() / pageSize);
+        }
+
+        public int getTotalItems() {
+            return allItems != null ? allItems.size() : 0;
+        }
+
+        private void applyPagination() {
+            int total = allItems.size();
+            int maxPages = getTotalPages();
+            if (currentPage > maxPages) currentPage = maxPages;
+            if (currentPage < 1) currentPage = 1;
+
+            int start = (currentPage - 1) * pageSize;
+            int end = Math.min(start + pageSize, total);
+
+            List<T> pageSlice = (total > 0 && start < total) ? allItems.subList(start, end) : List.of();
+            table.getItems().setAll(pageSlice);
+
+            if (total == 0) {
+                infoLabel.setText("Showing 0 of 0 records");
+            } else {
+                infoLabel.setText(String.format("Showing %,d – %,d of %,d records", (start + 1), end, total));
+            }
+
+            pageInput.setText(String.valueOf(currentPage));
+            totalPagesLabel.setText(String.format("of %,d", maxPages));
+
+            btnFirst.setDisable(currentPage <= 1);
+            btnPrev.setDisable(currentPage <= 1);
+            btnNext.setDisable(currentPage >= maxPages);
+            btnLast.setDisable(currentPage >= maxPages);
+        }
+    }
 }
