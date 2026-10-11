@@ -32,12 +32,20 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 
 
 ### `accounts`
-- `account_id` (`VARCHAR(32)` PRIMARY KEY): Synthetic account number (e.g. `ACC-LRG-00001`).
-- `customer_id` (`VARCHAR(32)` REFERENCES `customers`): Parent customer reference.
-- `account_type` (`VARCHAR(32)` NOT NULL): `SAVINGS`, `CURRENT`, `SALARY`, `ESCROW`.
-- `balance_inr` (`NUMERIC(18, 2)` NOT NULL): Current available balance in Indian Rupees.
-- `interest_rate_pct` (`NUMERIC(5, 2)` NOT NULL): Annual deposit interest rate.
-- `status` (`VARCHAR(16)` NOT NULL): `ACTIVE`, `DORMANT`, `FROZEN`.
+- `account_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic account number (e.g. `ACC-LRG-5001`).
+- `customer_id` (`VARCHAR(64)` REFERENCES `customers`): Parent customer reference.
+- `account_type` (`VARCHAR(32)` NOT NULL): 7 standardized types randomly distributed:
+  `Saving`, `Salary`, `Current`, `Fixed Deposit`, `Recurring Deposit`, `NRI`, `Demat`
+- `available_balance` (`NUMERIC(18, 2)` NOT NULL): Current available balance in Indian Rupees.
+- `hold_amount` (`NUMERIC(18, 2)` NOT NULL): Lien or hold amount.
+- `currency` (`VARCHAR(8)` DEFAULT 'INR'): Account currency.
+- `status` (`VARCHAR(16)` NOT NULL): `Active`, `Dormant`, `Frozen`.
+- **Population Scale**:
+  - `bank_large`: 25,000 accounts
+  - `bank_medium`: 15,000 accounts
+  - `bank_small`: 12,000 accounts
+  - `bank_distressed`: 8,000 accounts
+
 
 ### `loans`
 - `loan_id` (`VARCHAR(32)` PRIMARY KEY): Loan contract identifier.

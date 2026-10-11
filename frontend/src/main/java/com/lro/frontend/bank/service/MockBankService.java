@@ -155,10 +155,23 @@ public class MockBankService implements BankService {
         List<CustomerRecord> custs = customerData.get(bankId);
         int accId = 5001;
         Instant now = Instant.now();
-        for (CustomerRecord c : custs) {
-            list.add(new AccountRecord(bankId + "-ACC-" + accId++, c.customerId(), "Savings CASA", "INR", new BigDecimal("450000.00"), BigDecimal.ZERO, "Active", now));
+        String[] accountTypes = {"Saving", "Salary", "Current", "Fixed Deposit", "Recurring Deposit", "NRI", "Demat"};
+        for (int i = 0; i < custs.size(); i++) {
+            CustomerRecord c = custs.get(i);
+            String primaryType = accountTypes[i % accountTypes.length];
+            BigDecimal bal = switch (primaryType) {
+                case "Current" -> new BigDecimal("3500000.00");
+                case "Fixed Deposit" -> new BigDecimal("1500000.00");
+                case "Recurring Deposit" -> new BigDecimal("250000.00");
+                case "NRI" -> new BigDecimal("5000000.00");
+                case "Salary" -> new BigDecimal("350000.00");
+                case "Demat" -> new BigDecimal("120000.00");
+                default -> new BigDecimal("450000.00");
+            };
+            list.add(new AccountRecord(bankId + "-ACC-" + accId++, c.customerId(), primaryType, "INR", bal, BigDecimal.ZERO, "Active", now));
             if (!c.segment().equals("Retail")) {
-                list.add(new AccountRecord(bankId + "-ACC-" + accId++, c.customerId(), "Current CASA", "INR", new BigDecimal("3200000.00"), new BigDecimal("100000.00"), "Active", now));
+                String secondaryType = accountTypes[(i + 2) % accountTypes.length];
+                list.add(new AccountRecord(bankId + "-ACC-" + accId++, c.customerId(), secondaryType, "INR", new BigDecimal("3200000.00"), new BigDecimal("100000.00"), "Active", now));
             }
         }
         accountData.put(bankId, list);
