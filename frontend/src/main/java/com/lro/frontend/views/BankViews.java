@@ -223,7 +223,26 @@ public class BankViews {
                 "#059669"
         );
 
-        rightCol.getChildren().addAll(regWidget, sourceWidget);
+        // Widget 3 & 4: Gross NPA Ratio and Net Interest Margin (NIM)
+        VBox npaCard = UIComponents.createKpiCard(
+                "Gross NPA Ratio",
+                Formatters.formatPercent(profile.grossNpaRatio()),
+                profile.grossNpaRatio().compareTo(new BigDecimal("2.5")) <= 0 ? "Optimal Quality" : "Monitored Quality",
+                "Ratio of non-performing assets to total gross advances indicating loan portfolio health.",
+                "#059669"
+        );
+        npaCard.setPadding(new Insets(10, 14, 10, 14));
+
+        VBox nimCard = UIComponents.createKpiCard(
+                "Net Interest Margin (NIM)",
+                Formatters.formatPercent(profile.netInterestMargin()),
+                "Annualized Yield Spread",
+                "Difference between interest earned and interest expended divided by interest-earning assets.",
+                "#E11D48"
+        );
+        nimCard.setPadding(new Insets(10, 14, 10, 14));
+
+        rightCol.getChildren().addAll(regWidget, sourceWidget, npaCard, nimCard);
 
         mainGrid.getChildren().addAll(centerCol, rightCol);
         root.getChildren().addAll(selectorBar, mainGrid);

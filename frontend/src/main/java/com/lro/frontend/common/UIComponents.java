@@ -51,7 +51,7 @@ public final class UIComponents {
         VBox card = new VBox(6);
         card.setPadding(new Insets(14, 16, 14, 16));
         card.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 6, 0, 0, 2);");
-        card.setMinWidth(180);
+        card.setMinWidth(110);
         HBox.setHgrow(card, Priority.ALWAYS);
 
         HBox header = new HBox(8);
@@ -312,7 +312,7 @@ public final class UIComponents {
         }
 
         StackPane mapArea = new StackPane();
-        mapArea.setPrefHeight(150);
+        mapArea.setPrefHeight(120);
         mapArea.setStyle("-fx-background-color: #F8FAFC; -fx-background-radius: 8px;");
 
         Pane shapesPane = new Pane();
