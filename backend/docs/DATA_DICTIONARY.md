@@ -17,7 +17,7 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 ## 2. Bank Schema Entity Specifications (`bank_*`)
 
 ### `customers`
-- `customer_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic customer identifier (e.g. `CUST-LRG-1001`).
+- `customer_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic customer identifier formatted with 5 digits starting from `00001` (e.g. `CUST-LRG-00001`).
 - `full_name` (`VARCHAR(128)` NOT NULL): Synthetic customer legal name.
 - `segment` (`VARCHAR(32)` NOT NULL): Randomly distributed across `Retail`, `SME`, `Corporate`, `Wealth`.
 - `kyc_status` (`VARCHAR(32)` NOT NULL): `Verified`, `Not Verified`.
@@ -25,15 +25,15 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 - `risk_category` (`VARCHAR(16)` NOT NULL): Internal credit score tier (`Low`, `Medium`, `High`).
 - `branch_name` (`VARCHAR(64)` NOT NULL): Originating bank branch name.
 - **Population Scale**:
-  - `bank_large`: 10,000 customers
-  - `bank_medium`: 7,500 customers
-  - `bank_small`: 5,000 customers
-  - `bank_distressed`: 4,000 customers
+  - `bank_large`: 10,000 customers (`CUST-LRG-00001` to `CUST-LRG-10000`)
+  - `bank_medium`: 7,500 customers (`CUST-MED-00001` to `CUST-MED-07500`)
+  - `bank_small`: 5,000 customers (`CUST-SML-00001` to `CUST-SML-05000`)
+  - `bank_distressed`: 4,000 customers (`CUST-DST-00001` to `CUST-DST-04000`)
 
 
 ### `accounts`
-- `account_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic account number (e.g. `ACC-LRG-5001`).
-- `customer_id` (`VARCHAR(64)` REFERENCES `customers`): Parent customer reference.
+- `account_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic account number formatted with 5 digits starting from `00001` (e.g. `ACC-LRG-00001`).
+- `customer_id` (`VARCHAR(64)` REFERENCES `customers`): Parent customer reference (`CUST-*-00001` .. `CUST-*-*`).
 - `account_type` (`VARCHAR(32)` NOT NULL): 7 standardized types randomly distributed:
   `Saving`, `Salary`, `Current`, `Fixed Deposit`, `Recurring Deposit`, `NRI`, `Demat`
 - `available_balance` (`NUMERIC(18, 2)` NOT NULL): Current available balance in Indian Rupees.
@@ -41,10 +41,10 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 - `currency` (`VARCHAR(8)` DEFAULT 'INR'): Account currency.
 - `status` (`VARCHAR(16)` NOT NULL): `Active`, `Dormant`, `Frozen`.
 - **Population Scale**:
-  - `bank_large`: 25,000 accounts
-  - `bank_medium`: 15,000 accounts
-  - `bank_small`: 12,000 accounts
-  - `bank_distressed`: 8,000 accounts
+  - `bank_large`: 25,000 accounts (`ACC-LRG-00001` to `ACC-LRG-25000`)
+  - `bank_medium`: 15,000 accounts (`ACC-MED-00001` to `ACC-MED-15000`)
+  - `bank_small`: 12,000 accounts (`ACC-SML-00001` to `ACC-SML-12000`)
+  - `bank_distressed`: 8,000 accounts (`ACC-DST-00001` to `ACC-DST-08000`)
 
 
 ### `loans`
