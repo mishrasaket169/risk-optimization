@@ -203,26 +203,54 @@ public class MockBankService implements BankService {
         List<LoanRecord> list = new ArrayList<>();
         List<CustomerRecord> custs = customerData.get(bankId);
         LocalDate today = LocalDate.now();
-        int lId = 901;
+        int lId = 1;
+        String[] loanTypes = {
+            "Home Loan", "Mortgage Loan", "Gold Loan", "Vehicle Loan",
+            "Loan Against Securities", "Personal Loan", "Education Loan", "Business Loan", "Credit Card"
+        };
 
         for (int i = 0; i < custs.size(); i++) {
             CustomerRecord c = custs.get(i);
             boolean isDistressed = health.equals("Distressed") && (i % 2 == 0);
             int dpd = isDistressed ? (i % 4 == 0 ? 95 : 45) : (i == 1 ? 15 : 0);
             String irac = dpd > 90 ? "Sub-Standard NPA" : (dpd > 60 ? "SMA-2" : (dpd > 30 ? "SMA-1" : (dpd > 0 ? "SMA-0" : "Standard")));
+            String loanType = loanTypes[i % loanTypes.length];
+            BigDecimal sanc = switch (loanType) {
+                case "Home Loan" -> new BigDecimal("6500000.00");
+                case "Mortgage Loan" -> new BigDecimal("8500000.00");
+                case "Gold Loan" -> new BigDecimal("450000.00");
+                case "Vehicle Loan" -> new BigDecimal("950000.00");
+                case "Loan Against Securities" -> new BigDecimal("1200000.00");
+                case "Personal Loan" -> new BigDecimal("600000.00");
+                case "Education Loan" -> new BigDecimal("1500000.00");
+                case "Business Loan" -> new BigDecimal("18500000.00");
+                default -> new BigDecimal("250000.00");
+            };
+            BigDecimal out = sanc.multiply(new BigDecimal("0.85")).setScale(2, java.math.RoundingMode.HALF_UP);
+            BigDecimal rate = switch (loanType) {
+                case "Home Loan" -> new BigDecimal("8.65");
+                case "Mortgage Loan" -> new BigDecimal("9.50");
+                case "Gold Loan" -> new BigDecimal("10.25");
+                case "Vehicle Loan" -> new BigDecimal("9.15");
+                case "Loan Against Securities" -> new BigDecimal("9.75");
+                case "Personal Loan" -> new BigDecimal("12.50");
+                case "Education Loan" -> new BigDecimal("9.20");
+                case "Business Loan" -> new BigDecimal("10.75");
+                default -> new BigDecimal("36.00");
+            };
 
             list.add(new LoanRecord(
-                    bankId + "-LN-" + lId++,
+                    String.format("%s-LN-%05d", bankId, lId++),
                     c.customerId(),
-                    c.segment().equals("Corporate") ? "Working Capital Loan" : (c.segment().equals("SME") ? "MSME Term Loan" : "Home Loan"),
-                    new BigDecimal("5000000.00"),
-                    new BigDecimal("4200000.00"),
-                    new BigDecimal("9.50"),
+                    loanType,
+                    sanc,
+                    out,
+                    rate,
                     dpd,
                     irac,
-                    new BigDecimal("6500000.00"),
+                    loanType.equals("Personal Loan") || loanType.equals("Credit Card") ? BigDecimal.ZERO : sanc.multiply(new BigDecimal("1.25")),
                     today.plusDays(15),
-                    new BigDecimal("55000.00")
+                    out.divide(new BigDecimal("100"), 2, java.math.RoundingMode.HALF_UP)
             ));
         }
         loanData.put(bankId, list);
@@ -381,7 +409,7 @@ public class MockBankService implements BankService {
     @Override
     public boolean originateDemoLoan(String bankId, String customerId, String loanType, BigDecimal amount, BigDecimal rate) {
         if (amount == null || rate == null || amount.compareTo(BigDecimal.ZERO) <= 0) return false;
-        String newLoanId = bankId + "-LN-" + (System.currentTimeMillis() % 100000);
+        String newLoanId = String.format("%s-LN-%05d", bankId, (loanData.getOrDefault(bankId, List.of()).size() + 1));
         LoanRecord rec = new LoanRecord(
                 newLoanId, customerId, loanType, amount, amount, rate, 0, "Standard",
                 amount.multiply(new BigDecimal("1.25")), LocalDate.now().plusMonths(1), amount.divide(new BigDecimal("120"), 2, java.math.RoundingMode.HALF_UP)

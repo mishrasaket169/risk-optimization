@@ -48,15 +48,24 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 
 
 ### `loans`
-- `loan_id` (`VARCHAR(32)` PRIMARY KEY): Loan contract identifier.
-- `customer_id` (`VARCHAR(32)` REFERENCES `customers`): Borrower customer reference.
-- `loan_type` (`VARCHAR(32)` NOT NULL): `HOME_LOAN`, `AUTO_LOAN`, `PERSONAL_LOAN`, `COMMERCIAL_WC`.
-- `principal_inr` (`NUMERIC(18, 2)` NOT NULL): Sanctioned loan principal amount.
-- `outstanding_inr` (`NUMERIC(18, 2)` NOT NULL): Current amortized balance.
-- `interest_rate_pct` (`NUMERIC(5, 2)` NOT NULL): Annual contractual lending yield.
-- `tenure_months` (`INTEGER` NOT NULL): Total repayment tenure.
-- `dpd` (`INTEGER` NOT NULL DEFAULT 0): Days Past Due tracking.
-- `irac_status` (`VARCHAR(16)` NOT NULL): RBI IRAC classification (`STANDARD`, `SMA_0`, `SMA_1`, `SMA_2`, `SUB_STANDARD`, `DOUBTFUL`, `LOSS`).
+- `loan_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic loan account number formatted with 5 digits starting from `00001` (e.g. `LN-LRG-00001`, `LN-MED-00001`, `LN-SML-00001`, `LN-DST-00001`).
+- `customer_id` (`VARCHAR(64)` REFERENCES `customers`): Borrower customer reference (`CUST-*-00001` .. `CUST-*-*`).
+- `loan_type` (`VARCHAR(64)` NOT NULL): 9 standardized types randomly distributed:
+  `Home Loan`, `Mortgage Loan`, `Gold Loan`, `Vehicle Loan`, `Loan Against Securities`, `Personal Loan`, `Education Loan`, `Business Loan`, `Credit Card`.
+- `sanctioned_amount` (`NUMERIC(18, 2)` NOT NULL): Sanctioned loan principal limit in Indian Rupees.
+- `principal_outstanding` (`NUMERIC(18, 2)` NOT NULL): Current amortized balance / outstanding principal.
+- `interest_rate_pct` (`NUMERIC(5, 2)` NOT NULL): Annual contractual lending yield (e.g. 8.25% - 42.00%).
+- `days_past_due` (`INTEGER` NOT NULL DEFAULT 0): Days Past Due (DPD) tracking delinquency.
+- `irac_classification` (`VARCHAR(32)` NOT NULL DEFAULT 'Standard'): RBI IRAC classification (`Standard`, `SMA-0`, `SMA-1`, `SMA-2`, `Sub-Standard NPA`, `Doubtful NPA`, `Loss Asset`).
+- `collateral_value` (`NUMERIC(18, 2)` NOT NULL DEFAULT 0.00): Assessed collateral valuation in INR (zero for unsecured loans).
+- `next_emi_due_date` (`DATE`): Next installment due date.
+- `monthly_emi` (`NUMERIC(18, 2)`): Monthly equated installment amount.
+- **Population Scale**:
+  - `bank_large`: 12,000 loans (`LN-LRG-00001` to `LN-LRG-12000`)
+  - `bank_medium`: 8,000 loans (`LN-MED-00001` to `LN-MED-08000`)
+  - `bank_small`: 5,000 loans (`LN-SML-00001` to `LN-SML-05000`)
+  - `bank_distressed`: 4,000 loans (`LN-DST-00001` to `LN-DST-04000`)
+  - Total: 29,000 loan contracts across all 4 bank schemas.
 
 ### `securities_holdings`
 - `lot_id` (`VARCHAR(32)` PRIMARY KEY): Unique inventory lot identifier.

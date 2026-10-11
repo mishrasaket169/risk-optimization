@@ -37,15 +37,15 @@
 
 /* App Specific Theme Accents */
 .theme-bank {
-    -fx-accent: #059669;
+    -fx-accent-color: #059669;
 }
 
 .theme-exchange {
-    -fx-accent: #4F46E5;
+    -fx-accent-color: #4F46E5;
 }
 
 .theme-lro {
-    -fx-accent: #D97706;
+    -fx-accent-color: #D97706;
 }
 
 /* Left Navigation Rail */
