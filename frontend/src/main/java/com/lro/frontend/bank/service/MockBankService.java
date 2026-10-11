@@ -118,7 +118,7 @@ public class MockBankService implements BankService {
         String[] smeNames = {"Omkar Logistics Pvt Ltd", "Ganesh Auto Spares", "Shree Textiles LLP", "Sai Electronics & Tech"};
         String[] corpNames = {"Surya Infrastructure Corp", "Titanium Solar Ventures Ltd", "Kaveri Agro Exports Ltd"};
 
-        int id = 1001;
+        int id = 1;
         for (int i = 0; i < retailNames.length; i++) {
             String kyc = (i % 3 == 0 && health.equals("Distressed")) ? "Not Verified" : "Verified";
             String loc = switch (i % 4) {
@@ -127,7 +127,7 @@ public class MockBankService implements BankService {
                 case 2 -> "Tier 3";
                 default -> "Rural";
             };
-            list.add(new CustomerRecord(bankId + "-CUST-" + id++, retailNames[i], "Retail", kyc, loc, "Low", 2, new BigDecimal("1850000.00"), "Fort Nariman Point Branch"));
+            list.add(new CustomerRecord(String.format("%s-CUST-%05d", bankId, id++), retailNames[i], "Retail", kyc, loc, "Low", 2, new BigDecimal("1850000.00"), "Fort Nariman Point Branch"));
         }
         for (int i = 0; i < smeNames.length; i++) {
             String kyc = (i == 1 || (i == 2 && health.equals("Distressed"))) ? "Not Verified" : "Verified";
@@ -136,7 +136,7 @@ public class MockBankService implements BankService {
                 case 1 -> "Tier 3";
                 default -> "Rural";
             };
-            list.add(new CustomerRecord(bankId + "-CUST-" + id++, smeNames[i], "SME", kyc, loc, health.equals("Distressed") ? "High" : "Medium", 3, new BigDecimal("12400000.00"), "MIDC Andheri Branch"));
+            list.add(new CustomerRecord(String.format("%s-CUST-%05d", bankId, id++), smeNames[i], "SME", kyc, loc, health.equals("Distressed") ? "High" : "Medium", 3, new BigDecimal("12400000.00"), "MIDC Andheri Branch"));
         }
         for (int i = 0; i < corpNames.length; i++) {
             String kyc = (i == 2 && health.equals("Distressed")) ? "Not Verified" : "Verified";
@@ -145,7 +145,7 @@ public class MockBankService implements BankService {
                 case 1 -> "Tier 2";
                 default -> "Rural";
             };
-            list.add(new CustomerRecord(bankId + "-CUST-" + id++, corpNames[i], "Corporate", kyc, loc, health.equals("Distressed") ? "High" : "Low", 4, new BigDecimal("85000000.00"), "Corporate Finance Branch"));
+            list.add(new CustomerRecord(String.format("%s-CUST-%05d", bankId, id++), corpNames[i], "Corporate", kyc, loc, health.equals("Distressed") ? "High" : "Low", 4, new BigDecimal("85000000.00"), "Corporate Finance Branch"));
         }
         customerData.put(bankId, list);
     }
@@ -153,7 +153,7 @@ public class MockBankService implements BankService {
     private void seedAccounts(String bankId) {
         List<AccountRecord> list = new ArrayList<>();
         List<CustomerRecord> custs = customerData.get(bankId);
-        int accId = 5001;
+        int accId = 1;
         Instant now = Instant.now();
         String[] accountTypes = {"Saving", "Salary", "Current", "Fixed Deposit", "Recurring Deposit", "NRI", "Demat"};
         for (int i = 0; i < custs.size(); i++) {
@@ -168,10 +168,10 @@ public class MockBankService implements BankService {
                 case "Demat" -> new BigDecimal("120000.00");
                 default -> new BigDecimal("450000.00");
             };
-            list.add(new AccountRecord(bankId + "-ACC-" + accId++, c.customerId(), primaryType, "INR", bal, BigDecimal.ZERO, "Active", now));
+            list.add(new AccountRecord(String.format("%s-ACC-%05d", bankId, accId++), c.customerId(), primaryType, "INR", bal, BigDecimal.ZERO, "Active", now));
             if (!c.segment().equals("Retail")) {
                 String secondaryType = accountTypes[(i + 2) % accountTypes.length];
-                list.add(new AccountRecord(bankId + "-ACC-" + accId++, c.customerId(), secondaryType, "INR", new BigDecimal("3200000.00"), new BigDecimal("100000.00"), "Active", now));
+                list.add(new AccountRecord(String.format("%s-ACC-%05d", bankId, accId++), c.customerId(), secondaryType, "INR", new BigDecimal("3200000.00"), new BigDecimal("100000.00"), "Active", now));
             }
         }
         accountData.put(bankId, list);
