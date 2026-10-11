@@ -1,0 +1,4 @@
+com\lro\app\EndToEndAcceptanceTest.class
+com\lro\app\RetentionAndPerformanceTest.class
+com\lro\app\ServiceContractTest.class
+com\lro\app\HistoricalIngestionTest.class

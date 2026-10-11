@@ -1,0 +1,54 @@
+{
+  "ecosystem": "Liquidity Risk Optimizer (LRO)",
+  "models": [
+    {
+      "modelId": "MODEL-01-MOMENTUM",
+      "modelName": "XGBoost Short-Horizon Equity Momentum",
+      "version": "2.1.0-prod",
+      "target": "Forward 5-session return (close[t+5] - close[t]) / close[t]",
+      "targetUnits": "decimal return",
+      "horizon": "T+5 Trading Days",
+      "inputSchema": [
+        {"name": "symbol", "type": "string", "description": "Instrument ticker (e.g. RELIANCE, HDFCBANK)"},
+        {"name": "return_1d", "type": "float", "description": "1-day historical percentage return"},
+        {"name": "return_5d", "type": "float", "description": "5-day cumulative percentage return"},
+        {"name": "return_20d", "type": "float", "description": "20-day cumulative percentage return"},
+        {"name": "volatility_20d", "type": "float", "description": "20-day annualized rolling volatility"},
+        {"name": "rsi_14", "type": "float", "description": "14-session Relative Strength Index (0 to 100)"},
+        {"name": "volume_ratio_5d", "type": "float", "description": "Ratio of 5-day average volume to 20-day average volume"}
+      ],
+      "trainingProvenance": {
+        "dataset": "Simulated Indian Market OHLCV & Technical Features",
+        "dateRange": "2023-01-01 to 2026-06-30",
+        "validationMetric": "Directional Accuracy: 64.8%, RMSE: 0.0182",
+        "syntheticFlag": true
+      },
+      "limitations": "Advisory signal only. Does not guarantee future prices. Must not be used for autonomous algorithmic trade submission."
+    },
+    {
+      "modelId": "MODEL-02-EXEC-COST",
+      "modelName": "XGBoost Liquidity & Execution Cost Estimator",
+      "version": "1.4.2-prod",
+      "target": "Realized sale slippage vs pre-trade Midpoint in basis points",
+      "targetUnits": "basis points (bps)",
+      "horizon": "Immediate order-book liquidation",
+      "inputSchema": [
+        {"name": "symbol", "type": "string", "description": "Instrument symbol"},
+        {"name": "category", "type": "string", "description": "Asset class (Equity, G-Sec, T-Bill, Corporate Bond)"},
+        {"name": "proposed_quantity", "type": "integer", "description": "Proposed liquidation tranche volume in shares/lots"},
+        {"name": "current_ltp", "type": "float", "description": "Current last traded price in INR"},
+        {"name": "bid_ask_spread_bps", "type": "float", "description": "Top of book spread in basis points"},
+        {"name": "top5_depth_quantity", "type": "integer", "description": "Aggregate quantity across top 5 bid price levels"},
+        {"name": "order_to_adv_ratio", "type": "float", "description": "Order size relative to 30-day Average Daily Volume"},
+        {"name": "market_regime", "type": "string", "description": "Active regime (Normal, Bull, Bear, Crash)"}
+      ],
+      "trainingProvenance": {
+        "dataset": "Simulated Continuous Double Auction Order Book & Fills",
+        "dateRange": "2024-01-01 to 2026-08-31",
+        "validationMetric": "R²: 0.892, MAE: 3.4 bps",
+        "syntheticFlag": true
+      },
+      "limitations": "Trained on synthetic simulator rules; does not represent live exchange execution certainty. Extreme order sizes trigger conservative rule-based fallback."
+    }
+  ]
+}

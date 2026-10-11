@@ -1,0 +1,8 @@
+com\lro\common\security\SecurityContext$UserPrincipal.class
+com\lro\common\security\SecurityContext$AuditRecord.class
+com\lro\common\exception\DomainException.class
+com\lro\common\security\SecurityContext.class
+com\lro\common\exception\ValidationException.class
+com\lro\common\event\EventEnvelope.class
+com\lro\common\model\Money.class
+com\lro\common\security\SecurityContext$Role.class

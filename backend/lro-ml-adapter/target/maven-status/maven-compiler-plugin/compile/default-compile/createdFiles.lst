@@ -1,0 +1,4 @@
+com\lro\ml\adapter\Model1MomentumAdapter.class
+com\lro\ml\adapter\Model2ExecutionCostAdapter.class
+com\lro\ml\adapter\Model2ExecutionCostAdapter$ExecutionEstimate.class
+com\lro\ml\adapter\Model1MomentumAdapter$MomentumPrediction.class
