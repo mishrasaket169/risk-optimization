@@ -247,12 +247,14 @@ class EndToEndAcceptanceTest {
         assertThrows(IllegalArgumentException.class, () -> matchingEngine.submitOrder(order1));
 
         // Model fallbacks operate deterministically if remote service is unreachable
-        var fallbackMomentum = model1Adapter.predictMomentum("NON_EXISTENT_SYMBOL", List.of(BigDecimal.valueOf(100.0)));
+        Model1MomentumAdapter unreachableModel1 = new Model1MomentumAdapter("http://127.0.0.1:9999");
+        var fallbackMomentum = unreachableModel1.predictMomentum("NON_EXISTENT_SYMBOL", List.of(BigDecimal.valueOf(100.0)));
         assertNotNull(fallbackMomentum);
         assertTrue(fallbackMomentum.confidence() > 0.0);
         assertTrue(fallbackMomentum.provenance().contains("Fallback"));
 
-        var fallbackCost = model2Adapter.estimateCost("NON_EXISTENT_SYMBOL", 50000, Money.of("100.00"));
+        Model2ExecutionCostAdapter unreachableModel2 = new Model2ExecutionCostAdapter("http://127.0.0.1:9999");
+        var fallbackCost = unreachableModel2.estimateCost("NON_EXISTENT_SYMBOL", 50000, Money.of("100.00"));
         assertNotNull(fallbackCost);
         assertTrue(fallbackCost.slippageBps() > 0.0);
         assertTrue(fallbackCost.provenance().contains("Fallback"));

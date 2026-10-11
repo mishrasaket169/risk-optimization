@@ -17,12 +17,13 @@ The persistence layer utilizes a normalized multi-schema layout managed by Flywa
 ## 2. Bank Schema Entity Specifications (`bank_*`)
 
 ### `customers`
-- `customer_id` (`VARCHAR(32)` PRIMARY KEY): Synthetic customer identifier (e.g. `CUST-LRG-00001`).
+- `customer_id` (`VARCHAR(64)` PRIMARY KEY): Synthetic customer identifier (e.g. `CUST-LRG-1001`).
 - `full_name` (`VARCHAR(128)` NOT NULL): Synthetic customer legal name.
-- `segment` (`VARCHAR(32)` NOT NULL): `RETAIL`, `SME`, `CORPORATE`, `WEALTH`.
-- `pan_masked` (`VARCHAR(16)` NOT NULL): Synthetic masked PAN (e.g. `ABCDE****F`).
-- `risk_rating` (`VARCHAR(16)` NOT NULL): Internal credit score tier (`LOW`, `MEDIUM`, `HIGH`).
-- `is_synthetic` (`BOOLEAN` NOT NULL DEFAULT TRUE): Explicit provenance label.
+- `segment` (`VARCHAR(32)` NOT NULL): `Retail`, `SME`, `Corporate`, `Wealth`.
+- `kyc_status` (`VARCHAR(32)` NOT NULL): `Verified`, `Not Verified`.
+- `location_category` (`VARCHAR(32)` NOT NULL): `Tier 1`, `Tier 2`, `Tier 3`, `Rural`.
+- `risk_category` (`VARCHAR(16)` NOT NULL): Internal credit score tier (`Low`, `Medium`, `High`).
+- `branch_name` (`VARCHAR(64)` NOT NULL): Originating bank branch name.
 
 ### `accounts`
 - `account_id` (`VARCHAR(32)` PRIMARY KEY): Synthetic account number (e.g. `ACC-LRG-00001`).

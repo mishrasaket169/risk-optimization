@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.app.EndToEndAcceptanceTest" time="1.75" tests="8" errors="0" skipped="0" failures="1">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.app.EndToEndAcceptanceTest" time="2.098" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="D:\Liquidity Optimizer\backend\lro-app\target\test-classes;D:\Liquidity Optimizer\backend\lro-app\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;D:\Liquidity Optimizer\backend\lro-bank-services\target\classes;D:\Liquidity Optimizer\backend\lro-exchange-services\target\classes;D:\Liquidity Optimizer\backend\lro-messaging\target\classes;D:\Liquidity Optimizer\backend\lro-analytics\target\classes;D:\Liquidity Optimizer\backend\lro-ml-adapter\target\classes;D:\Liquidity Optimizer\backend\lro-orchestration\target\classes;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-classic\1.5.16\logback-classic-1.5.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-core\1.5.16\logback-core-1.5.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
+    <property name="java.class.path" value="D:\Liquidity Optimizer\backend\lro-app\target\test-classes;D:\Liquidity Optimizer\backend\lro-app\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;D:\Liquidity Optimizer\backend\lro-bank-services\target\classes;D:\Liquidity Optimizer\backend\lro-exchange-services\target\classes;D:\Liquidity Optimizer\backend\lro-messaging\target\classes;D:\Liquidity Optimizer\backend\lro-analytics\target\classes;D:\Liquidity Optimizer\backend\lro-ml-adapter\target\classes;D:\Liquidity Optimizer\backend\lro-orchestration\target\classes;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-classic\1.5.16\logback-classic-1.5.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-core\1.5.16\logback-core-1.5.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
     <property name="java.vm.vendor" value="Eclipse Adoptium"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -15,9 +15,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IN"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire1912669742265260528\surefirebooter-20261011134240738_31.jar C:\Users\Saket\AppData\Local\Temp\surefire1912669742265260528 2026-10-11T13-42-28_232-jvmRun1 surefire-20261011134240738_29tmp surefire_8-20261011134240738_30tmp"/>
+    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire18145202147657020680\surefirebooter-20261011170238532_31.jar C:\Users\Saket\AppData\Local\Temp\surefire18145202147657020680 2026-10-11T17-02-20_297-jvmRun1 surefire-20261011170238532_29tmp surefire_8-20261011170238532_30tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="D:\Liquidity Optimizer\backend\lro-app\target\test-classes;D:\Liquidity Optimizer\backend\lro-app\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;D:\Liquidity Optimizer\backend\lro-bank-services\target\classes;D:\Liquidity Optimizer\backend\lro-exchange-services\target\classes;D:\Liquidity Optimizer\backend\lro-messaging\target\classes;D:\Liquidity Optimizer\backend\lro-analytics\target\classes;D:\Liquidity Optimizer\backend\lro-ml-adapter\target\classes;D:\Liquidity Optimizer\backend\lro-orchestration\target\classes;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-classic\1.5.16\logback-classic-1.5.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-core\1.5.16\logback-core-1.5.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
+    <property name="surefire.test.class.path" value="D:\Liquidity Optimizer\backend\lro-app\target\test-classes;D:\Liquidity Optimizer\backend\lro-app\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;D:\Liquidity Optimizer\backend\lro-bank-services\target\classes;D:\Liquidity Optimizer\backend\lro-exchange-services\target\classes;D:\Liquidity Optimizer\backend\lro-messaging\target\classes;D:\Liquidity Optimizer\backend\lro-analytics\target\classes;D:\Liquidity Optimizer\backend\lro-ml-adapter\target\classes;D:\Liquidity Optimizer\backend\lro-orchestration\target\classes;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-classic\1.5.16\logback-classic-1.5.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-core\1.5.16\logback-core-1.5.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Saket"/>
     <property name="user.language" value="en"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire1912669742265260528\surefirebooter-20261011134240738_31.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire18145202147657020680\surefirebooter-20261011170238532_31.jar"/>
     <property name="user.script" value=""/>
     <property name="polyglot.engine.WarnInterpreterOnly" value="false"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -52,7 +52,7 @@
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\\bin;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\18\bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Users\Saket\tools\apache-maven-3.9.9\bin;C:\Users\Saket\AppData\Local\agy\bin;C:\Users\Saket\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\Saket\AppData\Local\Programs\Python\Python314\;C:\Users\Saket\.local\bin;C:\Users\Saket\AppData\Local\Microsoft\WindowsApps;C:\Users\Saket\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Saket\AppData\Local\Python\bin;C:\msys64\ucrt64\bin;C:\Users\Saket\AppData\Roaming\npm;C:\Program Files\JetBrains\PyCharm 2026.1\bin;C:\Users\Saket\go\bin;C:\Users\Saket\AppData\Local\Programs\Antigravity IDE\bin;C:\Program Files\PostgreSQL\18\bin;C:\Users\Saket\AppData\Local\Programs\cursor\resources\app\bin;c:\Users\Saket\.antigravity-ide\extensions\ms-python.debugpy-2026.6.0-win32-x64\bundled\scripts\noConfigScripts;c:\Users\Saket\.antigravity-ide\extensions\vscjava.vscode-java-debug-0.59.0-universal\bundled\scripts\noConfigScripts;."/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Users/Saket/.gemini/antigravity-ide/bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\\bin;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\18\bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Users\Saket\tools\apache-maven-3.9.9\bin;C:\Users\Saket\AppData\Local\agy\bin;C:\Users\Saket\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\Saket\AppData\Local\Programs\Python\Python314\;C:\Users\Saket\.local\bin;C:\Users\Saket\AppData\Local\Microsoft\WindowsApps;C:\Users\Saket\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Saket\AppData\Local\Python\bin;C:\msys64\ucrt64\bin;C:\Users\Saket\AppData\Roaming\npm;C:\Program Files\JetBrains\PyCharm 2026.1\bin;C:\Users\Saket\go\bin;C:\Users\Saket\AppData\Local\Programs\Antigravity IDE\bin;C:\Program Files\PostgreSQL\18\bin;C:\Users\Saket\AppData\Local\Programs\cursor\resources\app\bin;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="stderr.encoding" value="Cp1252"/>
     <property name="java.vendor" value="Eclipse Adoptium"/>
@@ -61,569 +61,93 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testMacroCrashScenarioShock" classname="com.lro.app.EndToEndAcceptanceTest" time="0.65">
-    <system-out><![CDATA[13:42:41.823 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
-13:42:42.328 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'test-client' to /topic/risk/alerts
+  <testcase name="testMacroCrashScenarioShock" classname="com.lro.app.EndToEndAcceptanceTest" time="0.856">
+    <system-out><![CDATA[17:02:39.993 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+17:02:40.647 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'test-client' to /topic/risk/alerts
 ]]></system-out>
   </testcase>
-  <testcase name="testPortfolioValuationAndMarkToMarket" classname="com.lro.app.EndToEndAcceptanceTest" time="0.01">
-    <system-out><![CDATA[13:42:42.358 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testPortfolioValuationAndMarkToMarket" classname="com.lro.app.EndToEndAcceptanceTest" time="0.012">
+    <system-out><![CDATA[17:02:40.682 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
-  <testcase name="testIdempotencyAndFailurePaths" classname="com.lro.app.EndToEndAcceptanceTest" time="0.194">
-    <failure message="expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
-	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
-	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
-	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
-	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
-	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:183)
-	at com.lro.app.EndToEndAcceptanceTest.testIdempotencyAndFailurePaths(EndToEndAcceptanceTest.java:253)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
-]]></failure>
-    <system-out><![CDATA[13:42:42.369 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testIdempotencyAndFailurePaths" classname="com.lro.app.EndToEndAcceptanceTest" time="0.192">
+    <system-out><![CDATA[17:02:40.696 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+17:02:40.868 [main] DEBUG com.lro.ml.adapter.Model1MomentumAdapter -- ML microservice call failed (null), falling back to deterministic model
+17:02:40.884 [main] DEBUG com.lro.ml.adapter.Model2ExecutionCostAdapter -- Model 2 HTTP service call failed (null), activating deterministic fallback
 ]]></system-out>
   </testcase>
-  <testcase name="testLiquidityMetricsCalculation" classname="com.lro.app.EndToEndAcceptanceTest" time="0.01">
-    <system-out><![CDATA[13:42:42.568 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testLiquidityMetricsCalculation" classname="com.lro.app.EndToEndAcceptanceTest" time="0.014">
+    <system-out><![CDATA[17:02:40.890 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
-  <testcase name="testRecommendationRankingAndMakerCheckerWorkflow" classname="com.lro.app.EndToEndAcceptanceTest" time="0.023">
-    <system-out><![CDATA[13:42:42.579 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testRecommendationRankingAndMakerCheckerWorkflow" classname="com.lro.app.EndToEndAcceptanceTest" time="0.081">
+    <system-out><![CDATA[17:02:40.907 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
-  <testcase name="testDatabaseMigrationAndBankSeeding" classname="com.lro.app.EndToEndAcceptanceTest" time="0.785">
-    <system-out><![CDATA[13:42:42.604 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
-13:42:42.611 [main] INFO com.lro.persistence.DatabaseManager -- Running Flyway migrations on jdbc:h2:mem:lro_sim;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-13:42:42.788 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/callback' ...
-13:42:42.788 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/callback using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
-13:42:42.788 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Unable to resolve location classpath:db/callback.
-13:42:42.788 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/migration' ...
-13:42:42.789 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/migration using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
-13:42:42.790 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning URL: file:/D:/Liquidity%20Optimizer/backend/lro-persistence/target/classes/db/migration
-13:42:42.791 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning starting at classpath root in filesystem: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\
-13:42:42.792 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning for resources in path: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\db\migration (db/migration)
-13:42:42.794 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V1__init_banking_schemas.sql
-13:42:42.794 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V2__init_exchange_schemas.sql
-13:42:42.794 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V3__init_lro_schemas.sql
-13:42:42.795 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classes at classpath:db/migration
-13:42:43.069 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V2__init_exchange_schemas.sql
-13:42:43.071 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V3__init_lro_schemas.sql
-13:42:43.071 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V1__init_banking_schemas.sql
-13:42:43.118 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:h2:mem:lro_sim (H2 2.3)
-13:42:43.118 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Database Type: H2
-13:42:43.118 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Driver: H2 JDBC Driver 2.3.232 (2024-08-11)
-13:42:43.118 [main] DEBUG org.flywaydb.core.FlywayExecutor -- DDL Transactions Supported: false
-13:42:43.120 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Schemas: 
-13:42:43.120 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Default schema: null
-13:42:43.128 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Scanning for script callbacks ...
-13:42:43.131 [main] DEBUG org.flywaydb.core.internal.callback.SqlScriptCallbackFactory -- Scanning for SQL callbacks ...
-13:42:43.145 [main] DEBUG org.flywaydb.core.internal.command.DbValidate -- Validating migrations ...
-13:42:43.148 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-13:42:43.161 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-13:42:43.162 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-13:42:43.162 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-13:42:43.163 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-13:42:43.163 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-13:42:43.163 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-13:42:43.164 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-13:42:43.164 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-13:42:43.164 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-13:42:43.164 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-13:42:43.165 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-13:42:43.165 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-13:42:43.169 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
-13:42:43.172 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 3 migrations (execution time 00:00.026s)
-13:42:43.177 [main] DEBUG org.flywaydb.core.internal.command.DbSchemas -- Skipping creation of existing schema: "PUBLIC"
-13:42:43.187 [main] INFO org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Creating Schema History table "PUBLIC"."flyway_schema_history" ...
-13:42:43.193 [main] DEBUG org.flywaydb.core.internal.parser.Parser -- Parsing  ...
-13:42:43.206 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 1: CREATE TABLE IF NOT EXISTS "PUBLIC"."flyway_schema_history" (
-    "installed_rank" INT NOT NULL,
-    "version" VARCHAR(50),
-    "description" VARCHAR(200) NOT NULL,
-    "type" VARCHAR(20) NOT NULL,
-    "script" VARCHAR(1000) NOT NULL,
-    "checksum" INT,
-    "installed_by" VARCHAR(100) NOT NULL,
-    "installed_on" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "execution_time" INT NOT NULL,
-    "success" BOOLEAN NOT NULL,
-    CONSTRAINT "flyway_schema_history_pk" PRIMARY KEY ("installed_rank")
-) AS SELECT -1, NULL, '<< Flyway Schema History table created >>', 'TABLE', '', NULL, 'SA', CURRENT_TIMESTAMP, 0, TRUE
-13:42:43.207 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 14: CREATE INDEX "PUBLIC"."flyway_schema_history_s_idx" ON "PUBLIC"."flyway_schema_history" ("success")
-13:42:43.207 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS "PUBLIC"."flyway_schema_history" (
-    "installed_rank" INT NOT NULL,
-    "version" VARCHAR(50),
-    "description" VARCHAR(200) NOT NULL,
-    "type" VARCHAR(20) NOT NULL,
-    "script" VARCHAR(1000) NOT NULL,
-    "checksum" INT,
-    "installed_by" VARCHAR(100) NOT NULL,
-    "installed_on" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "execution_time" INT NOT NULL,
-    "success" BOOLEAN NOT NULL,
-    CONSTRAINT "flyway_schema_history_pk" PRIMARY KEY ("installed_rank")
-) AS SELECT -1, NULL, '<< Flyway Schema History table created >>', 'TABLE', '', NULL, 'SA', CURRENT_TIMESTAMP, 0, TRUE
-13:42:43.219 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.219 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE INDEX "PUBLIC"."flyway_schema_history_s_idx" ON "PUBLIC"."flyway_schema_history" ("success")
-13:42:43.222 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.222 [main] DEBUG org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Created Schema History table "PUBLIC"."flyway_schema_history"
-13:42:43.229 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-13:42:43.235 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "PUBLIC": << Empty Schema >>
-13:42:43.237 [main] DEBUG org.flywaydb.core.internal.parser.Parser -- Parsing V1__init_banking_schemas.sql ...
-13:42:43.240 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 4: -- V1: Normalized Banking Schemas for the 4 fictional institutions
--- (bank_large, bank_medium, bank_small, bank_distressed)
-
-CREATE SCHEMA IF NOT EXISTS bank_large
-13:42:43.240 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 5: CREATE SCHEMA IF NOT EXISTS bank_medium
-13:42:43.240 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 6: CREATE SCHEMA IF NOT EXISTS bank_small
-13:42:43.241 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 7: CREATE SCHEMA IF NOT EXISTS bank_distressed
-13:42:43.243 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 10: -- Macro function to create standard tables in any bank schema
-CREATE TABLE IF NOT EXISTS bank_large.customers (
-    customer_id VARCHAR(64) PRIMARY KEY,
-    full_name VARCHAR(128) NOT NULL,
-    segment VARCHAR(32) NOT NULL,
-    kyc_status VARCHAR(32) NOT NULL,
-    risk_category VARCHAR(16) NOT NULL,
-    branch_name VARCHAR(64) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.244 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 20: CREATE TABLE IF NOT EXISTS bank_large.accounts (
-    account_id VARCHAR(64) PRIMARY KEY,
-    customer_id VARCHAR(64) REFERENCES bank_large.customers(customer_id),
-    account_type VARCHAR(32) NOT NULL,
-    currency VARCHAR(8) DEFAULT 'INR',
-    available_balance NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    hold_amount NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    status VARCHAR(16) NOT NULL DEFAULT 'Active',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.246 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 31: CREATE TABLE IF NOT EXISTS bank_large.deposits (
-    deposit_id VARCHAR(64) PRIMARY KEY,
-    customer_id VARCHAR(64) REFERENCES bank_large.customers(customer_id),
-    product_type VARCHAR(32) NOT NULL,
-    principal_amount NUMERIC(18, 2) NOT NULL,
-    interest_rate_pct NUMERIC(6, 2) NOT NULL,
-    start_date DATE NOT NULL,
-    maturity_date DATE NOT NULL,
-    maturity_amount NUMERIC(18, 2) NOT NULL,
-    renewal_instruction VARCHAR(64) NOT NULL
-)
-13:42:43.248 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 43: CREATE TABLE IF NOT EXISTS bank_large.loans (
-    loan_id VARCHAR(64) PRIMARY KEY,
-    customer_id VARCHAR(64) REFERENCES bank_large.customers(customer_id),
-    loan_type VARCHAR(32) NOT NULL,
-    sanctioned_amount NUMERIC(18, 2) NOT NULL,
-    principal_outstanding NUMERIC(18, 2) NOT NULL,
-    interest_rate_pct NUMERIC(6, 2) NOT NULL,
-    days_past_due INT NOT NULL DEFAULT 0,
-    irac_classification VARCHAR(32) NOT NULL DEFAULT 'Standard',
-    collateral_value NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    next_emi_due_date DATE NOT NULL,
-    monthly_emi NUMERIC(18, 2) NOT NULL
-)
-13:42:43.251 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 57: CREATE TABLE IF NOT EXISTS bank_large.treasury_holdings (
-    holding_id VARCHAR(64) PRIMARY KEY,
-    isin VARCHAR(32) NOT NULL,
-    instrument_name VARCHAR(128) NOT NULL,
-    category VARCHAR(32) NOT NULL,
-    quantity BIGINT NOT NULL,
-    face_value_unit NUMERIC(18, 2) NOT NULL,
-    book_value NUMERIC(18, 2) NOT NULL,
-    market_value NUMERIC(18, 2) NOT NULL,
-    encumbrance_status VARCHAR(32) NOT NULL DEFAULT 'Unencumbered',
-    maturity_date DATE,
-    coupon_or_yield_pct NUMERIC(6, 2) NOT NULL DEFAULT 0.00,
-    last_valuation_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.253 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 72: CREATE TABLE IF NOT EXISTS bank_large.ledger_entries (
-    entry_id VARCHAR(64) PRIMARY KEY,
-    transaction_ref VARCHAR(64) NOT NULL,
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    account_reference VARCHAR(64) NOT NULL,
-    counterparty_ref VARCHAR(64),
-    debit_inr NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    credit_inr NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    narration VARCHAR(255) NOT NULL,
-    status VARCHAR(16) NOT NULL DEFAULT 'Posted'
-)
-13:42:43.253 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 85: -- Replicate normalized tables for medium, small, distressed banks
-CREATE TABLE IF NOT EXISTS bank_medium.customers AS SELECT * FROM bank_large.customers WITH NO DATA
-13:42:43.253 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 86: CREATE TABLE IF NOT EXISTS bank_medium.accounts AS SELECT * FROM bank_large.accounts WITH NO DATA
-13:42:43.254 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 87: CREATE TABLE IF NOT EXISTS bank_medium.deposits AS SELECT * FROM bank_large.deposits WITH NO DATA
-13:42:43.254 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 88: CREATE TABLE IF NOT EXISTS bank_medium.loans AS SELECT * FROM bank_large.loans WITH NO DATA
-13:42:43.254 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 89: CREATE TABLE IF NOT EXISTS bank_medium.treasury_holdings AS SELECT * FROM bank_large.treasury_holdings WITH NO DATA
-13:42:43.255 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 90: CREATE TABLE IF NOT EXISTS bank_medium.ledger_entries AS SELECT * FROM bank_large.ledger_entries WITH NO DATA
-13:42:43.255 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 92: CREATE TABLE IF NOT EXISTS bank_small.customers AS SELECT * FROM bank_large.customers WITH NO DATA
-13:42:43.256 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 93: CREATE TABLE IF NOT EXISTS bank_small.accounts AS SELECT * FROM bank_large.accounts WITH NO DATA
-13:42:43.256 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 94: CREATE TABLE IF NOT EXISTS bank_small.deposits AS SELECT * FROM bank_large.deposits WITH NO DATA
-13:42:43.256 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 95: CREATE TABLE IF NOT EXISTS bank_small.loans AS SELECT * FROM bank_large.loans WITH NO DATA
-13:42:43.256 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 96: CREATE TABLE IF NOT EXISTS bank_small.treasury_holdings AS SELECT * FROM bank_large.treasury_holdings WITH NO DATA
-13:42:43.257 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 97: CREATE TABLE IF NOT EXISTS bank_small.ledger_entries AS SELECT * FROM bank_large.ledger_entries WITH NO DATA
-13:42:43.257 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 99: CREATE TABLE IF NOT EXISTS bank_distressed.customers AS SELECT * FROM bank_large.customers WITH NO DATA
-13:42:43.257 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 100: CREATE TABLE IF NOT EXISTS bank_distressed.accounts AS SELECT * FROM bank_large.accounts WITH NO DATA
-13:42:43.258 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 101: CREATE TABLE IF NOT EXISTS bank_distressed.deposits AS SELECT * FROM bank_large.deposits WITH NO DATA
-13:42:43.258 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 102: CREATE TABLE IF NOT EXISTS bank_distressed.loans AS SELECT * FROM bank_large.loans WITH NO DATA
-13:42:43.260 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 103: CREATE TABLE IF NOT EXISTS bank_distressed.treasury_holdings AS SELECT * FROM bank_large.treasury_holdings WITH NO DATA
-13:42:43.261 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 104: CREATE TABLE IF NOT EXISTS bank_distressed.ledger_entries AS SELECT * FROM bank_large.ledger_entries WITH NO DATA
-13:42:43.266 [main] DEBUG org.flywaydb.core.internal.command.DbMigrate -- Starting migration of schema "PUBLIC" to version "1 - init banking schemas" ...
-13:42:43.268 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "PUBLIC" to version "1 - init banking schemas"
-13:42:43.270 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: -- V1: Normalized Banking Schemas for the 4 fictional institutions
--- (bank_large, bank_medium, bank_small, bank_distressed)
-
-CREATE SCHEMA IF NOT EXISTS bank_large
-13:42:43.273 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.273 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE SCHEMA IF NOT EXISTS bank_medium
-13:42:43.273 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.273 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE SCHEMA IF NOT EXISTS bank_small
-13:42:43.274 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.274 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE SCHEMA IF NOT EXISTS bank_distressed
-13:42:43.274 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.274 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: -- Macro function to create standard tables in any bank schema
-CREATE TABLE IF NOT EXISTS bank_large.customers (
-    customer_id VARCHAR(64) PRIMARY KEY,
-    full_name VARCHAR(128) NOT NULL,
-    segment VARCHAR(32) NOT NULL,
-    kyc_status VARCHAR(32) NOT NULL,
-    risk_category VARCHAR(16) NOT NULL,
-    branch_name VARCHAR(64) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.277 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.277 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_large.accounts (
-    account_id VARCHAR(64) PRIMARY KEY,
-    customer_id VARCHAR(64) REFERENCES bank_large.customers(customer_id),
-    account_type VARCHAR(32) NOT NULL,
-    currency VARCHAR(8) DEFAULT 'INR',
-    available_balance NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    hold_amount NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    status VARCHAR(16) NOT NULL DEFAULT 'Active',
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.282 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.282 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_large.deposits (
-    deposit_id VARCHAR(64) PRIMARY KEY,
-    customer_id VARCHAR(64) REFERENCES bank_large.customers(customer_id),
-    product_type VARCHAR(32) NOT NULL,
-    principal_amount NUMERIC(18, 2) NOT NULL,
-    interest_rate_pct NUMERIC(6, 2) NOT NULL,
-    start_date DATE NOT NULL,
-    maturity_date DATE NOT NULL,
-    maturity_amount NUMERIC(18, 2) NOT NULL,
-    renewal_instruction VARCHAR(64) NOT NULL
-)
-13:42:43.285 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.285 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_large.loans (
-    loan_id VARCHAR(64) PRIMARY KEY,
-    customer_id VARCHAR(64) REFERENCES bank_large.customers(customer_id),
-    loan_type VARCHAR(32) NOT NULL,
-    sanctioned_amount NUMERIC(18, 2) NOT NULL,
-    principal_outstanding NUMERIC(18, 2) NOT NULL,
-    interest_rate_pct NUMERIC(6, 2) NOT NULL,
-    days_past_due INT NOT NULL DEFAULT 0,
-    irac_classification VARCHAR(32) NOT NULL DEFAULT 'Standard',
-    collateral_value NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    next_emi_due_date DATE NOT NULL,
-    monthly_emi NUMERIC(18, 2) NOT NULL
-)
-13:42:43.288 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.289 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_large.treasury_holdings (
-    holding_id VARCHAR(64) PRIMARY KEY,
-    isin VARCHAR(32) NOT NULL,
-    instrument_name VARCHAR(128) NOT NULL,
-    category VARCHAR(32) NOT NULL,
-    quantity BIGINT NOT NULL,
-    face_value_unit NUMERIC(18, 2) NOT NULL,
-    book_value NUMERIC(18, 2) NOT NULL,
-    market_value NUMERIC(18, 2) NOT NULL,
-    encumbrance_status VARCHAR(32) NOT NULL DEFAULT 'Unencumbered',
-    maturity_date DATE,
-    coupon_or_yield_pct NUMERIC(6, 2) NOT NULL DEFAULT 0.00,
-    last_valuation_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.292 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.293 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_large.ledger_entries (
-    entry_id VARCHAR(64) PRIMARY KEY,
-    transaction_ref VARCHAR(64) NOT NULL,
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    account_reference VARCHAR(64) NOT NULL,
-    counterparty_ref VARCHAR(64),
-    debit_inr NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    credit_inr NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    narration VARCHAR(255) NOT NULL,
-    status VARCHAR(16) NOT NULL DEFAULT 'Posted'
-)
-13:42:43.295 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.295 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: -- Replicate normalized tables for medium, small, distressed banks
-CREATE TABLE IF NOT EXISTS bank_medium.customers AS SELECT * FROM bank_large.customers WITH NO DATA
-13:42:43.296 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.297 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_medium.accounts AS SELECT * FROM bank_large.accounts WITH NO DATA
-13:42:43.298 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.298 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_medium.deposits AS SELECT * FROM bank_large.deposits WITH NO DATA
-13:42:43.299 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.299 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_medium.loans AS SELECT * FROM bank_large.loans WITH NO DATA
-13:42:43.300 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.300 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_medium.treasury_holdings AS SELECT * FROM bank_large.treasury_holdings WITH NO DATA
-13:42:43.301 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.301 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_medium.ledger_entries AS SELECT * FROM bank_large.ledger_entries WITH NO DATA
-13:42:43.302 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.302 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_small.customers AS SELECT * FROM bank_large.customers WITH NO DATA
-13:42:43.303 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.304 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_small.accounts AS SELECT * FROM bank_large.accounts WITH NO DATA
-13:42:43.305 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.305 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_small.deposits AS SELECT * FROM bank_large.deposits WITH NO DATA
-13:42:43.306 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.306 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_small.loans AS SELECT * FROM bank_large.loans WITH NO DATA
-13:42:43.307 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.307 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_small.treasury_holdings AS SELECT * FROM bank_large.treasury_holdings WITH NO DATA
-13:42:43.308 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.308 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_small.ledger_entries AS SELECT * FROM bank_large.ledger_entries WITH NO DATA
-13:42:43.309 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.309 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_distressed.customers AS SELECT * FROM bank_large.customers WITH NO DATA
-13:42:43.311 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.311 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_distressed.accounts AS SELECT * FROM bank_large.accounts WITH NO DATA
-13:42:43.312 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.312 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_distressed.deposits AS SELECT * FROM bank_large.deposits WITH NO DATA
-13:42:43.313 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.313 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_distressed.loans AS SELECT * FROM bank_large.loans WITH NO DATA
-13:42:43.314 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.314 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_distressed.treasury_holdings AS SELECT * FROM bank_large.treasury_holdings WITH NO DATA
-13:42:43.315 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.315 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS bank_distressed.ledger_entries AS SELECT * FROM bank_large.ledger_entries WITH NO DATA
-13:42:43.316 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.317 [main] DEBUG org.flywaydb.core.internal.command.DbMigrate -- Successfully completed migration of schema "PUBLIC" to version "1 - init banking schemas"
-13:42:43.323 [main] DEBUG org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema History table "PUBLIC"."flyway_schema_history" successfully updated to reflect changes
-13:42:43.324 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-13:42:43.331 [main] DEBUG org.flywaydb.core.internal.parser.Parser -- Parsing V2__init_exchange_schemas.sql ...
-13:42:43.332 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 3: -- V2: Normalized Exchange Simulator Schema
-
-CREATE SCHEMA IF NOT EXISTS exchange
-13:42:43.334 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 5: CREATE TABLE IF NOT EXISTS exchange.instruments (
-    symbol VARCHAR(32) PRIMARY KEY,
-    isin VARCHAR(32) NOT NULL,
-    name VARCHAR(128) NOT NULL,
-    category VARCHAR(32) NOT NULL,
-    sector VARCHAR(64),
-    tick_size NUMERIC(10, 4) NOT NULL DEFAULT 0.05,
-    lot_size INT NOT NULL DEFAULT 1,
-    last_traded_price NUMERIC(18, 4) NOT NULL,
-    day_change_pct NUMERIC(8, 4) NOT NULL DEFAULT 0.00,
-    bid_price NUMERIC(18, 4) NOT NULL,
-    ask_price NUMERIC(18, 4) NOT NULL,
-    day_volume BIGINT NOT NULL DEFAULT 0,
-    day_turnover_inr NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    coupon_or_yield_pct NUMERIC(6, 2),
-    maturity_or_expiry DATE,
-    strike_price NUMERIC(18, 2),
-    option_type VARCHAR(4),
-    last_quote_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.335 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 26: CREATE TABLE IF NOT EXISTS exchange.orders (
-    order_id VARCHAR(64) PRIMARY KEY,
-    client_ref_id VARCHAR(64) NOT NULL,
-    placed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    symbol VARCHAR(32) REFERENCES exchange.instruments(symbol),
-    side VARCHAR(8) NOT NULL,
-    order_type VARCHAR(16) NOT NULL,
-    quantity BIGINT NOT NULL,
-    filled_quantity BIGINT NOT NULL DEFAULT 0,
-    limit_price NUMERIC(18, 4),
-    average_fill_price NUMERIC(18, 4) DEFAULT 0.00,
-    status VARCHAR(24) NOT NULL DEFAULT 'Accepted',
-    time_in_force VARCHAR(8) NOT NULL DEFAULT 'DAY',
-    estimated_notional_inr NUMERIC(18, 2) NOT NULL
-)
-13:42:43.337 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 42: CREATE TABLE IF NOT EXISTS exchange.trades (
-    trade_id VARCHAR(64) PRIMARY KEY,
-    order_id VARCHAR(64) REFERENCES exchange.orders(order_id),
-    executed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    symbol VARCHAR(32) NOT NULL,
-    side VARCHAR(8) NOT NULL,
-    quantity BIGINT NOT NULL,
-    price NUMERIC(18, 4) NOT NULL,
-    gross_value_inr NUMERIC(18, 2) NOT NULL
-)
-13:42:43.337 [main] DEBUG org.flywaydb.core.internal.command.DbMigrate -- Starting migration of schema "PUBLIC" to version "2 - init exchange schemas" ...
-13:42:43.338 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "PUBLIC" to version "2 - init exchange schemas"
-13:42:43.339 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: -- V2: Normalized Exchange Simulator Schema
-
-CREATE SCHEMA IF NOT EXISTS exchange
-13:42:43.339 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.339 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS exchange.instruments (
-    symbol VARCHAR(32) PRIMARY KEY,
-    isin VARCHAR(32) NOT NULL,
-    name VARCHAR(128) NOT NULL,
-    category VARCHAR(32) NOT NULL,
-    sector VARCHAR(64),
-    tick_size NUMERIC(10, 4) NOT NULL DEFAULT 0.05,
-    lot_size INT NOT NULL DEFAULT 1,
-    last_traded_price NUMERIC(18, 4) NOT NULL,
-    day_change_pct NUMERIC(8, 4) NOT NULL DEFAULT 0.00,
-    bid_price NUMERIC(18, 4) NOT NULL,
-    ask_price NUMERIC(18, 4) NOT NULL,
-    day_volume BIGINT NOT NULL DEFAULT 0,
-    day_turnover_inr NUMERIC(18, 2) NOT NULL DEFAULT 0.00,
-    coupon_or_yield_pct NUMERIC(6, 2),
-    maturity_or_expiry DATE,
-    strike_price NUMERIC(18, 2),
-    option_type VARCHAR(4),
-    last_quote_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.341 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.342 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS exchange.orders (
-    order_id VARCHAR(64) PRIMARY KEY,
-    client_ref_id VARCHAR(64) NOT NULL,
-    placed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    symbol VARCHAR(32) REFERENCES exchange.instruments(symbol),
-    side VARCHAR(8) NOT NULL,
-    order_type VARCHAR(16) NOT NULL,
-    quantity BIGINT NOT NULL,
-    filled_quantity BIGINT NOT NULL DEFAULT 0,
-    limit_price NUMERIC(18, 4),
-    average_fill_price NUMERIC(18, 4) DEFAULT 0.00,
-    status VARCHAR(24) NOT NULL DEFAULT 'Accepted',
-    time_in_force VARCHAR(8) NOT NULL DEFAULT 'DAY',
-    estimated_notional_inr NUMERIC(18, 2) NOT NULL
-)
-13:42:43.344 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.344 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS exchange.trades (
-    trade_id VARCHAR(64) PRIMARY KEY,
-    order_id VARCHAR(64) REFERENCES exchange.orders(order_id),
-    executed_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    symbol VARCHAR(32) NOT NULL,
-    side VARCHAR(8) NOT NULL,
-    quantity BIGINT NOT NULL,
-    price NUMERIC(18, 4) NOT NULL,
-    gross_value_inr NUMERIC(18, 2) NOT NULL
-)
-13:42:43.346 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.346 [main] DEBUG org.flywaydb.core.internal.command.DbMigrate -- Successfully completed migration of schema "PUBLIC" to version "2 - init exchange schemas"
-13:42:43.349 [main] DEBUG org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema History table "PUBLIC"."flyway_schema_history" successfully updated to reflect changes
-13:42:43.351 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-13:42:43.352 [main] DEBUG org.flywaydb.core.internal.parser.Parser -- Parsing V3__init_lro_schemas.sql ...
-13:42:43.354 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 3: -- V3: Normalized LRO Decision Support & Audit Schema
-
-CREATE SCHEMA IF NOT EXISTS lro
-13:42:43.355 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 5: CREATE TABLE IF NOT EXISTS lro.liquidity_snapshots (
-    snapshot_id VARCHAR(64) PRIMARY KEY,
-    bank_id VARCHAR(32) NOT NULL,
-    as_of_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    cash_available_inr NUMERIC(18, 2) NOT NULL,
-    liquid_assets_hqla_inr NUMERIC(18, 2) NOT NULL,
-    funding_gap_1d_inr NUMERIC(18, 2) NOT NULL,
-    funding_gap_30d_inr NUMERIC(18, 2) NOT NULL,
-    educational_lcr_pct NUMERIC(8, 2) NOT NULL,
-    educational_nsfr_pct NUMERIC(8, 2) NOT NULL,
-    market_data_freshness VARCHAR(64) NOT NULL
-)
-13:42:43.356 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 18: CREATE TABLE IF NOT EXISTS lro.recommendations (
-    recommendation_id VARCHAR(64) PRIMARY KEY,
-    bank_id VARCHAR(32) NOT NULL,
-    asset_name VARCHAR(128) NOT NULL,
-    proposed_action VARCHAR(64) NOT NULL,
-    suggested_quantity BIGINT NOT NULL,
-    expected_gross_proceeds_inr NUMERIC(18, 2) NOT NULL,
-    estimated_cost_inr NUMERIC(18, 2) NOT NULL,
-    net_proceeds_inr NUMERIC(18, 2) NOT NULL,
-    lcr_benefit_pct NUMERIC(6, 2) NOT NULL,
-    model_confidence_pct NUMERIC(6, 2) NOT NULL,
-    rationale_text TEXT NOT NULL,
-    status VARCHAR(32) NOT NULL DEFAULT 'Pending Review',
-    generated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.356 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 34: CREATE TABLE IF NOT EXISTS lro.risk_alerts (
-    alert_id VARCHAR(64) PRIMARY KEY,
-    bank_id VARCHAR(32) NOT NULL,
-    severity VARCHAR(16) NOT NULL,
-    title VARCHAR(128) NOT NULL,
-    description TEXT NOT NULL,
-    triggered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    acknowledged BOOLEAN NOT NULL DEFAULT FALSE
-)
-13:42:43.359 [main] DEBUG org.flywaydb.core.internal.sqlscript.ParserSqlScript -- Found statement at line 44: CREATE TABLE IF NOT EXISTS lro.audit_log (
-    audit_id VARCHAR(64) PRIMARY KEY,
-    actor_user_id VARCHAR(64) NOT NULL,
-    role_at_execution VARCHAR(64) NOT NULL,
-    action_name VARCHAR(64) NOT NULL,
-    target_entity_type VARCHAR(64) NOT NULL,
-    target_entity_id VARCHAR(64) NOT NULL,
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    details_json TEXT NOT NULL,
-    signature_hash VARCHAR(64) NOT NULL
-)
-13:42:43.359 [main] DEBUG org.flywaydb.core.internal.command.DbMigrate -- Starting migration of schema "PUBLIC" to version "3 - init lro schemas" ...
-13:42:43.360 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Migrating schema "PUBLIC" to version "3 - init lro schemas"
-13:42:43.360 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: -- V3: Normalized LRO Decision Support & Audit Schema
-
-CREATE SCHEMA IF NOT EXISTS lro
-13:42:43.361 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.361 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS lro.liquidity_snapshots (
-    snapshot_id VARCHAR(64) PRIMARY KEY,
-    bank_id VARCHAR(32) NOT NULL,
-    as_of_time TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    cash_available_inr NUMERIC(18, 2) NOT NULL,
-    liquid_assets_hqla_inr NUMERIC(18, 2) NOT NULL,
-    funding_gap_1d_inr NUMERIC(18, 2) NOT NULL,
-    funding_gap_30d_inr NUMERIC(18, 2) NOT NULL,
-    educational_lcr_pct NUMERIC(8, 2) NOT NULL,
-    educational_nsfr_pct NUMERIC(8, 2) NOT NULL,
-    market_data_freshness VARCHAR(64) NOT NULL
-)
-13:42:43.363 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.363 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS lro.recommendations (
-    recommendation_id VARCHAR(64) PRIMARY KEY,
-    bank_id VARCHAR(32) NOT NULL,
-    asset_name VARCHAR(128) NOT NULL,
-    proposed_action VARCHAR(64) NOT NULL,
-    suggested_quantity BIGINT NOT NULL,
-    expected_gross_proceeds_inr NUMERIC(18, 2) NOT NULL,
-    estimated_cost_inr NUMERIC(18, 2) NOT NULL,
-    net_proceeds_inr NUMERIC(18, 2) NOT NULL,
-    lcr_benefit_pct NUMERIC(6, 2) NOT NULL,
-    model_confidence_pct NUMERIC(6, 2) NOT NULL,
-    rationale_text TEXT NOT NULL,
-    status VARCHAR(32) NOT NULL DEFAULT 'Pending Review',
-    generated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-)
-13:42:43.365 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.366 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS lro.risk_alerts (
-    alert_id VARCHAR(64) PRIMARY KEY,
-    bank_id VARCHAR(32) NOT NULL,
-    severity VARCHAR(16) NOT NULL,
-    title VARCHAR(128) NOT NULL,
-    description TEXT NOT NULL,
-    triggered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    acknowledged BOOLEAN NOT NULL DEFAULT FALSE
-)
-13:42:43.367 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.367 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- Executing SQL: CREATE TABLE IF NOT EXISTS lro.audit_log (
-    audit_id VARCHAR(64) PRIMARY KEY,
-    actor_user_id VARCHAR(64) NOT NULL,
-    role_at_execution VARCHAR(64) NOT NULL,
-    action_name VARCHAR(64) NOT NULL,
-    target_entity_type VARCHAR(64) NOT NULL,
-    target_entity_id VARCHAR(64) NOT NULL,
-    timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    details_json TEXT NOT NULL,
-    signature_hash VARCHAR(64) NOT NULL
-)
-13:42:43.369 [main] DEBUG org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor -- 0 rows affected
-13:42:43.369 [main] DEBUG org.flywaydb.core.internal.command.DbMigrate -- Successfully completed migration of schema "PUBLIC" to version "3 - init lro schemas"
-13:42:43.372 [main] DEBUG org.flywaydb.core.internal.schemahistory.JdbcTableSchemaHistory -- Schema History table "PUBLIC"."flyway_schema_history" successfully updated to reflect changes
-13:42:43.374 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-13:42:43.381 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Successfully applied 3 migrations to schema "PUBLIC", now at version v3 (execution time 00:00.070s)
-13:42:43.384 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Memory usage: 37 of 40M
-13:42:43.384 [main] INFO com.lro.persistence.DatabaseManager -- Successfully executed 3 database migrations.
+  <testcase name="testDatabaseMigrationAndBankSeeding" classname="com.lro.app.EndToEndAcceptanceTest" time="0.859">
+    <system-out><![CDATA[17:02:40.988 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+17:02:40.995 [main] INFO com.lro.persistence.DatabaseManager -- Running Flyway migrations on jdbc:postgresql://localhost:5432/lro_db
+17:02:41.216 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Multiple databases found that handle url 'jdbc:postgresql://localhost:5432/lro_db': CockroachDB,PostgreSQL
+17:02:41.216 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/callback' ...
+17:02:41.216 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/callback using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
+17:02:41.217 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Unable to resolve location classpath:db/callback.
+17:02:41.217 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/migration' ...
+17:02:41.217 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/migration using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
+17:02:41.218 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning URL: file:/D:/Liquidity%20Optimizer/backend/lro-persistence/target/classes/db/migration
+17:02:41.221 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning starting at classpath root in filesystem: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\
+17:02:41.221 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning for resources in path: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\db\migration (db/migration)
+17:02:41.224 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V1__init_banking_schemas.sql
+17:02:41.225 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V2__init_exchange_schemas.sql
+17:02:41.225 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V3__init_lro_schemas.sql
+17:02:41.225 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V4__add_constraints_and_seed.sql
+17:02:41.225 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classes at classpath:db/migration
+17:02:41.583 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V2__init_exchange_schemas.sql
+17:02:41.585 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V3__init_lro_schemas.sql
+17:02:41.586 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V1__init_banking_schemas.sql
+17:02:41.586 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V4__add_constraints_and_seed.sql
+17:02:41.597 [main] DEBUG org.flywaydb.core.internal.database.DatabaseTypeRegister -- Multiple databases found that handle url 'jdbc:postgresql://localhost:5432/lro_db': CockroachDB,PostgreSQL
+17:02:41.598 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:5432/lro_db (PostgreSQL 18.6)
+17:02:41.598 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Database Type: PostgreSQL
+17:02:41.598 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Driver: PostgreSQL JDBC Driver 42.7.4
+17:02:41.599 [main] DEBUG org.flywaydb.core.FlywayExecutor -- DDL Transactions Supported: true
+17:02:41.601 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Schemas: 
+17:02:41.602 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Default schema: null
+17:02:41.622 [main] WARN org.flywaydb.core.internal.database.base.Database -- Flyway upgrade recommended: PostgreSQL 18.6 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 17.
+17:02:41.624 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Scanning for script callbacks ...
+17:02:41.627 [main] DEBUG org.flywaydb.core.internal.callback.SqlScriptCallbackFactory -- Scanning for SQL callbacks ...
+17:02:41.645 [main] DEBUG org.flywaydb.core.internal.command.DbValidate -- Validating migrations ...
+17:02:41.650 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
+17:02:41.675 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+17:02:41.675 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+17:02:41.675 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+17:02:41.675 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+17:02:41.677 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+17:02:41.677 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+17:02:41.677 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+17:02:41.677 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+17:02:41.679 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+17:02:41.681 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+17:02:41.721 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 4 migrations (execution time 00:00.075s)
+17:02:41.728 [main] DEBUG org.flywaydb.core.internal.command.DbSchemas -- Skipping creation of existing schema: "public"
+17:02:41.822 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
+17:02:41.826 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": 4
+17:02:41.826 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "public" is up to date. No migration necessary.
+17:02:41.839 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Memory usage: 24 of 40M
+17:02:41.841 [main] INFO com.lro.persistence.DatabaseManager -- Successfully executed 0 database migrations.
 ]]></system-out>
   </testcase>
-  <testcase name="testOrderMatchingAndTradeGeneration" classname="com.lro.app.EndToEndAcceptanceTest" time="0.019">
-    <system-out><![CDATA[13:42:43.390 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testOrderMatchingAndTradeGeneration" classname="com.lro.app.EndToEndAcceptanceTest" time="0.013">
+    <system-out><![CDATA[17:02:41.848 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
-  <testcase name="testDoubleEntryLedgerBalancing" classname="com.lro.app.EndToEndAcceptanceTest" time="0.012">
-    <system-out><![CDATA[13:42:43.410 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testDoubleEntryLedgerBalancing" classname="com.lro.app.EndToEndAcceptanceTest" time="0.014">
+    <system-out><![CDATA[17:02:41.864 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
 </testsuite>

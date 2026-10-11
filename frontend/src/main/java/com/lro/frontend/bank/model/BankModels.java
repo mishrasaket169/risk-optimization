@@ -28,7 +28,8 @@ public class BankModels {
             String customerId,
             String fullName,
             String segment, // "Retail", "SME", "Corporate"
-            String kycStatus, // "Verified (Demo)", "Pending Review"
+            String kycStatus, // "Verified", "Not Verified"
+            String locationCategory, // "Tier 1", "Tier 2", "Tier 3", "Rural"
             String riskCategory, // "Low", "Medium", "High"
             int activeAccountsCount,
             BigDecimal totalRelationshipValue,

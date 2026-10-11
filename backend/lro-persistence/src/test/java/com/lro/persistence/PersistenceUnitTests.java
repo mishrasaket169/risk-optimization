@@ -13,7 +13,7 @@ public class PersistenceUnitTests {
     @Test
     @DisplayName("Verify Prompt 12: Flyway migrations initialize all 4 bank schemas, exchange, and lro")
     void testFlywayMigrationsAndTopology() throws Exception {
-        DatabaseManager db = new DatabaseManager("jdbc:h2:mem:test_topo;DB_CLOSE_DELAY=-1;MODE=PostgreSQL", "sa", "");
+        DatabaseManager db = new DatabaseManager();
         assertTrue(db.isHealthy(), "Database must be healthy");
 
         boolean migrated = db.runMigrations();

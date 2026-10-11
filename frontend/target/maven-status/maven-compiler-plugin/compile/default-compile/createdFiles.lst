@@ -1,3 +1,4 @@
+com\lro\frontend\views\BankViews$2.class
 com\lro\frontend\views\ExchangeViews.class
 com\lro\frontend\MainApp.class
 com\lro\frontend\bank\model\BankModels$CashFlowBucket.class
@@ -16,6 +17,7 @@ com\lro\frontend\exchange\model\ExchangeModels.class
 com\lro\frontend\views\LroViews.class
 com\lro\frontend\bank\model\BankModels$AccountRecord.class
 com\lro\frontend\lro\service\LroService.class
+com\lro\frontend\views\BankViews$1.class
 com\lro\frontend\bank\model\BankModels$TreasuryHolding.class
 com\lro\frontend\bank\model\BankModels$DepositRecord.class
 com\lro\frontend\MainApp$AppMode.class

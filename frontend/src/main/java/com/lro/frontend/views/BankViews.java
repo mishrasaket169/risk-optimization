@@ -155,8 +155,45 @@ public class BankViews {
         TableColumn<CustomerRecord, String> colSegment = new TableColumn<>("Segment");
         colSegment.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().segment()));
 
-        TableColumn<CustomerRecord, String> colKyc = new TableColumn<>("KYC Tier");
+        TableColumn<CustomerRecord, String> colKyc = new TableColumn<>("KYC Status");
         colKyc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().kycStatus()));
+        colKyc.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    Label chip = UIComponents.createStatusChip(item, item.equalsIgnoreCase("Verified") ? "success" : "danger");
+                    setGraphic(chip);
+                    setText(null);
+                }
+            }
+        });
+
+        TableColumn<CustomerRecord, String> colLoc = new TableColumn<>("Location Category");
+        colLoc.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().locationCategory()));
+        colLoc.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    String type = switch (item) {
+                        case "Tier 1" -> "info";
+                        case "Tier 2" -> "default";
+                        case "Tier 3" -> "warning";
+                        default -> "normal";
+                    };
+                    Label chip = UIComponents.createStatusChip(item, type);
+                    setGraphic(chip);
+                    setText(null);
+                }
+            }
+        });
 
         TableColumn<CustomerRecord, String> colRisk = new TableColumn<>("Risk Rating");
         colRisk.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().riskCategory()));
@@ -170,7 +207,7 @@ public class BankViews {
         TableColumn<CustomerRecord, String> colBranch = new TableColumn<>("Assigned Branch");
         colBranch.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().branchName()));
 
-        table.getColumns().addAll(colId, colName, colSegment, colKyc, colRisk, colAccs, colRelVal, colBranch);
+        table.getColumns().addAll(colId, colName, colSegment, colKyc, colLoc, colRisk, colAccs, colRelVal, colBranch);
 
         Runnable refreshTable = () -> {
             List<CustomerRecord> list = bankService.getCustomers(bankId, searchField.getText(), segmentCombo.getValue());

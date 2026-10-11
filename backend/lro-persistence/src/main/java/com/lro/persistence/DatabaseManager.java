@@ -16,15 +16,24 @@ public class DatabaseManager {
 
     private static final Logger log = LoggerFactory.getLogger(DatabaseManager.class);
 
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException ignored) {}
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException ignored) {}
+    }
+
     private final String jdbcUrl;
     private final String username;
     private final String password;
 
     public DatabaseManager() {
         this(
-                System.getenv().getOrDefault("LRO_DB_URL", "jdbc:h2:mem:lro_sim;DB_CLOSE_DELAY=-1;MODE=PostgreSQL"),
-                System.getenv().getOrDefault("LRO_DB_USER", "sa"),
-                System.getenv().getOrDefault("LRO_DB_PASSWORD", "")
+                System.getenv().getOrDefault("LRO_DB_URL", "jdbc:postgresql://localhost:5432/lro_db"),
+                System.getenv().getOrDefault("LRO_DB_USER", "postgres"),
+                System.getenv().getOrDefault("LRO_DB_PASSWORD", "Saket@169")
         );
     }
 

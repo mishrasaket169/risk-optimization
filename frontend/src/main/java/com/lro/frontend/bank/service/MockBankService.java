@@ -119,14 +119,33 @@ public class MockBankService implements BankService {
         String[] corpNames = {"Surya Infrastructure Corp", "Titanium Solar Ventures Ltd", "Kaveri Agro Exports Ltd"};
 
         int id = 1001;
-        for (String name : retailNames) {
-            list.add(new CustomerRecord(bankId + "-CUST-" + id++, name, "Retail", "Verified (Demo)", "Low", 2, new BigDecimal("1850000.00"), "Fort Nariman Point Branch"));
+        for (int i = 0; i < retailNames.length; i++) {
+            String kyc = (i % 3 == 0 && health.equals("Distressed")) ? "Not Verified" : "Verified";
+            String loc = switch (i % 4) {
+                case 0 -> "Tier 1";
+                case 1 -> "Tier 2";
+                case 2 -> "Tier 3";
+                default -> "Rural";
+            };
+            list.add(new CustomerRecord(bankId + "-CUST-" + id++, retailNames[i], "Retail", kyc, loc, "Low", 2, new BigDecimal("1850000.00"), "Fort Nariman Point Branch"));
         }
-        for (String name : smeNames) {
-            list.add(new CustomerRecord(bankId + "-CUST-" + id++, name, "SME", "Verified (Demo)", health.equals("Distressed") ? "High" : "Medium", 3, new BigDecimal("12400000.00"), "MIDC Andheri Branch"));
+        for (int i = 0; i < smeNames.length; i++) {
+            String kyc = (i == 1 || (i == 2 && health.equals("Distressed"))) ? "Not Verified" : "Verified";
+            String loc = switch (i % 3) {
+                case 0 -> "Tier 2";
+                case 1 -> "Tier 3";
+                default -> "Rural";
+            };
+            list.add(new CustomerRecord(bankId + "-CUST-" + id++, smeNames[i], "SME", kyc, loc, health.equals("Distressed") ? "High" : "Medium", 3, new BigDecimal("12400000.00"), "MIDC Andheri Branch"));
         }
-        for (String name : corpNames) {
-            list.add(new CustomerRecord(bankId + "-CUST-" + id++, name, "Corporate", "Verified (Demo)", health.equals("Distressed") ? "High" : "Low", 4, new BigDecimal("85000000.00"), "Corporate Finance Branch"));
+        for (int i = 0; i < corpNames.length; i++) {
+            String kyc = (i == 2 && health.equals("Distressed")) ? "Not Verified" : "Verified";
+            String loc = switch (i % 3) {
+                case 0 -> "Tier 1";
+                case 1 -> "Tier 2";
+                default -> "Rural";
+            };
+            list.add(new CustomerRecord(bankId + "-CUST-" + id++, corpNames[i], "Corporate", kyc, loc, health.equals("Distressed") ? "High" : "Low", 4, new BigDecimal("85000000.00"), "Corporate Finance Branch"));
         }
         customerData.put(bankId, list);
     }

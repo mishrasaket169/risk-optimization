@@ -25,7 +25,10 @@ try {
 }
 
 # 2. Run Backend Initialization & Schema Migrations
-Write-Host "[2/3] Initializing backend engines, Flyway migrations, and synthetic populations..." -ForegroundColor Yellow
+Write-Host "[2/3] Initializing backend engines, Flyway migrations, and synthetic populations on PostgreSQL 18..." -ForegroundColor Yellow
+$env:LRO_DB_URL = "jdbc:postgresql://localhost:5432/lro_db"
+$env:LRO_DB_USER = "postgres"
+$env:LRO_DB_PASSWORD = "Saket@169"
 Start-Process -FilePath "mvn" -ArgumentList "-f `"$BackendDir\lro-app\pom.xml`" exec:java -Dexec.mainClass=`"com.lro.app.BackendLauncher`"" -Wait -NoNewWindow
 Write-Host "      Backend engines initialized successfully." -ForegroundColor Green
 
