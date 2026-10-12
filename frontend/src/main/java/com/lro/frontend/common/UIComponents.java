@@ -13,17 +13,21 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 
 /**
- * Reusable UI component factory enforcing the authentic LRO Ecosystem Design System:
+ * Reusable UI component factory enforcing the authentic LRO Ecosystem Design
+ * System:
  * - High-contrast clean foundation (#F8FAFC, #FFFFFF)
- * - Financial metric color coding (Cyan #0284C7, Emerald #059669, Indigo #4F46E5, Amber #D97706, Red #DC2626)
+ * - Financial metric color coding (Cyan #0284C7, Emerald #059669, Indigo
+ * #4F46E5, Amber #D97706, Red #DC2626)
  * - Soft Blue selection states (#EFF6FF, border #BFDBFE, text #2563EB)
  * - Basel/RBI compliant notices, tooltips, and glossary dialogs.
  */
 public final class UIComponents {
 
-    private UIComponents() {}
+    private UIComponents() {
+    }
 
-    public record SourceItem(String label, String value, String colorHex) {}
+    public record SourceItem(String label, String value, String colorHex) {
+    }
 
     /**
      * Prominent Synthetic Data Disclaimer banner.
@@ -35,9 +39,11 @@ public final class UIComponents {
         banner.setStyle("-fx-background-color: #FEF3C7; -fx-border-color: #F59E0B; -fx-border-width: 0 0 1 0;");
 
         Label badge = new Label("SIMULATION ONLY");
-        badge.setStyle("-fx-background-color: #D97706; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-padding: 3 8; -fx-background-radius: 4px; -fx-font-size: 10px;");
+        badge.setStyle(
+                "-fx-background-color: #D97706; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-padding: 3 8; -fx-background-radius: 4px; -fx-font-size: 10px;");
 
-        Label text = new Label("All institutions, quotes, metrics and recommendations are synthetic for research/education. No real monetary trading or affiliation.");
+        Label text = new Label(
+                "All institutions, quotes, metrics and recommendations are synthetic for research/education. No real monetary trading or affiliation.");
         text.setStyle("-fx-text-fill: #92400E; -fx-font-size: 11px; -fx-font-weight: 600;");
 
         banner.getChildren().addAll(badge, text);
@@ -45,12 +51,15 @@ public final class UIComponents {
     }
 
     /**
-     * Official LRO KPI Card with metric-specific accent color, title, subtitle, and explanation tooltip.
+     * Official LRO KPI Card with metric-specific accent color, title, subtitle, and
+     * explanation tooltip.
      */
-    public static VBox createKpiCard(String title, String value, String subtitle, String glossaryHelp, String accentColor) {
+    public static VBox createKpiCard(String title, String value, String subtitle, String glossaryHelp,
+            String accentColor) {
         VBox card = new VBox(6);
         card.setPadding(new Insets(14, 16, 14, 16));
-        card.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 6, 0, 0, 2);");
+        card.setStyle(
+                "-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 6, 0, 0, 2);");
         card.setMinWidth(110);
         HBox.setHgrow(card, Priority.ALWAYS);
 
@@ -73,7 +82,8 @@ public final class UIComponents {
         }
 
         Label lblValue = new Label(value);
-        lblValue.setStyle("-fx-text-fill: " + (accentColor != null ? accentColor : "#0F172A") + "; -fx-font-size: 21px; -fx-font-weight: 800;");
+        lblValue.setStyle("-fx-text-fill: " + (accentColor != null ? accentColor : "#0F172A")
+                + "; -fx-font-size: 21px; -fx-font-weight: 800;");
 
         Label lblSubtitle = new Label(subtitle);
         lblSubtitle.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
@@ -85,11 +95,13 @@ public final class UIComponents {
     /**
      * KPI card with delta percentage badge aligned with LRO color palette.
      */
-    public static VBox createLroKpiCard(String title, String value, String deltaText, boolean isPositive, String subtitle, String glossaryHelp) {
+    public static VBox createLroKpiCard(String title, String value, String deltaText, boolean isPositive,
+            String subtitle, String glossaryHelp) {
         String accentColor = isPositive ? "#059669" : "#DC2626";
         if (title.contains("Cash") || title.contains("Assets") || title.contains("Turnover")) {
             accentColor = "#0284C7";
-        } else if (title.contains("Deposits") || title.contains("HQLA") || title.contains("LCR") || title.contains("Index")) {
+        } else if (title.contains("Deposits") || title.contains("HQLA") || title.contains("LCR")
+                || title.contains("Index")) {
             accentColor = "#059669";
         } else if (title.contains("Loan") || title.contains("Movement")) {
             accentColor = "#4F46E5";
@@ -97,7 +109,8 @@ public final class UIComponents {
 
         VBox card = new VBox(6);
         card.setPadding(new Insets(14, 16, 14, 16));
-        card.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 6, 0, 0, 2);");
+        card.setStyle(
+                "-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-effect: dropshadow(three-pass-box, rgba(15,23,42,0.03), 6, 0, 0, 2);");
         card.setMinWidth(200);
         HBox.setHgrow(card, Priority.ALWAYS);
 
@@ -137,8 +150,6 @@ public final class UIComponents {
         return card;
     }
 
-
-
     /**
      * Status Chip / Pill badge matching the authentic LRO style.
      */
@@ -146,15 +157,15 @@ public final class UIComponents {
         Label chip = new Label(status);
         String base = "-fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 3 8; -fx-background-radius: 12px; ";
         String style = switch (type.toLowerCase()) {
-            case "success", "healthy", "filled", "active", "standard", "normal" -> 
+            case "success", "healthy", "filled", "active", "standard", "normal" ->
                 base + "-fx-background-color: #DCFCE7; -fx-text-fill: #15803D; -fx-border-color: #86EFAC; -fx-border-radius: 12px;";
-            case "warning", "sma", "partial", "watchlist", "regimes" -> 
+            case "warning", "sma", "partial", "watchlist", "regimes" ->
                 base + "-fx-background-color: #FEF9C3; -fx-text-fill: #A16207; -fx-border-color: #FDE047; -fx-border-radius: 12px;";
-            case "danger", "distressed", "npa", "crash", "rejected", "canceled" -> 
+            case "danger", "distressed", "npa", "crash", "rejected", "canceled" ->
                 base + "-fx-background-color: #FEE2E2; -fx-text-fill: #B91C1C; -fx-border-color: #FCA5A5; -fx-border-radius: 12px;";
-            case "info", "tier 1", "accepted" -> 
+            case "info", "tier 1", "accepted" ->
                 base + "-fx-background-color: #DBEAFE; -fx-text-fill: #1D4ED8; -fx-border-color: #93C5FD; -fx-border-radius: 12px;";
-            default -> 
+            default ->
                 base + "-fx-background-color: #F1F5F9; -fx-text-fill: #475569; -fx-border-color: #CBD5E1; -fx-border-radius: 12px;";
         };
         chip.setStyle(style);
@@ -168,7 +179,8 @@ public final class UIComponents {
     /**
      * Flow Dynamics / Trend Chart Card.
      */
-    public static VBox createChartCard(String title, String metricValue, String metricDelta, String metricSub, String activeFilter, Node chartNode) {
+    public static VBox createChartCard(String title, String metricValue, String metricDelta, String metricSub,
+            String activeFilter, Node chartNode) {
         VBox card = new VBox(12);
         card.getStyleClass().add("lro-card");
 
@@ -183,7 +195,7 @@ public final class UIComponents {
         filterBox.getStyleClass().add("filter-pill-container");
         filterBox.setAlignment(Pos.CENTER);
 
-        String[] filters = {"Day", "Week", "Year"};
+        String[] filters = { "Day", "Week", "Year" };
         for (String f : filters) {
             Button btn = new Button(f);
             btn.getStyleClass().add(f.equalsIgnoreCase(activeFilter) ? "filter-pill-btn-active" : "filter-pill-btn");
@@ -213,9 +225,11 @@ public final class UIComponents {
     }
 
     /**
-     * Dual-Bar Flow Chart with LRO color scheme (Slate/Navy #0F172A & Sand #E2E8F0).
+     * Dual-Bar Flow Chart with LRO color scheme (Slate/Navy #0F172A & Sand
+     * #E2E8F0).
      */
-    public static VBox createDualBarChart(String[] days, double[] navyValues, double[] beigeValues, String tooltipDay, String tooltipVal, String primaryColorHex) {
+    public static VBox createDualBarChart(String[] days, double[] navyValues, double[] beigeValues, String tooltipDay,
+            String tooltipVal, String primaryColorHex) {
         VBox container = new VBox(8);
         container.setPadding(new Insets(8, 0, 8, 0));
 
@@ -224,8 +238,10 @@ public final class UIComponents {
         chartRow.setPrefHeight(140);
 
         double maxVal = 1.0;
-        for (double v : navyValues) maxVal = Math.max(maxVal, v);
-        for (double v : beigeValues) maxVal = Math.max(maxVal, v);
+        for (double v : navyValues)
+            maxVal = Math.max(maxVal, v);
+        for (double v : beigeValues)
+            maxVal = Math.max(maxVal, v);
 
         for (int i = 0; i < days.length; i++) {
             String day = days[i];
@@ -274,14 +290,16 @@ public final class UIComponents {
         return container;
     }
 
-    public static VBox createDualBarChart(String[] days, double[] navyValues, double[] beigeValues, String tooltipDay, String tooltipVal) {
+    public static VBox createDualBarChart(String[] days, double[] navyValues, double[] beigeValues, String tooltipDay,
+            String tooltipVal) {
         return createDualBarChart(days, navyValues, beigeValues, tooltipDay, tooltipVal, "#0F172A");
     }
 
     /**
      * Regional / Geographic Exposure Widget.
      */
-    public static VBox createRegionalExposureWidget(String title, String period, String highlightCountry, String highlightLoyalty, String highlightCount, String highlightColor) {
+    public static VBox createRegionalExposureWidget(String title, String period, String highlightCountry,
+            String highlightLoyalty, String highlightCount, String highlightColor) {
         VBox card = new VBox(10);
         card.getStyleClass().add("lro-card");
         card.setMinWidth(280);
@@ -304,10 +322,11 @@ public final class UIComponents {
 
         HBox tools = new HBox(6);
         tools.setAlignment(Pos.CENTER_LEFT);
-        String[] toolLabels = {"🔍", "➕", "➖"};
+        String[] toolLabels = { "🔍", "➕", "➖" };
         for (String tl : toolLabels) {
             Button b = new Button(tl);
-            b.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 4px; -fx-font-size: 10px; -fx-padding: 3 6; -fx-cursor: hand;");
+            b.setStyle(
+                    "-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 4px; -fx-font-size: 10px; -fx-padding: 3 6; -fx-cursor: hand;");
             tools.getChildren().add(b);
         }
 
@@ -317,19 +336,23 @@ public final class UIComponents {
 
         Pane shapesPane = new Pane();
         Rectangle land1 = new Rectangle(18, 18, 95, 45);
-        land1.setArcWidth(12); land1.setArcHeight(12);
+        land1.setArcWidth(12);
+        land1.setArcHeight(12);
         land1.setFill(Color.web("#E2E8F0"));
 
         Rectangle land2 = new Rectangle(125, 14, 135, 55);
-        land2.setArcWidth(12); land2.setArcHeight(12);
+        land2.setArcWidth(12);
+        land2.setArcHeight(12);
         land2.setFill(Color.web(highlightColor != null ? highlightColor : "#2563EB"));
 
         Rectangle land3 = new Rectangle(45, 75, 75, 50);
-        land3.setArcWidth(12); land3.setArcHeight(12);
+        land3.setArcWidth(12);
+        land3.setArcHeight(12);
         land3.setFill(Color.web("#E2E8F0"));
 
         Rectangle land4 = new Rectangle(150, 80, 85, 40);
-        land4.setArcWidth(12); land4.setArcHeight(12);
+        land4.setArcWidth(12);
+        land4.setArcHeight(12);
         land4.setFill(Color.web("#E2E8F0"));
 
         shapesPane.getChildren().addAll(land1, land2, land3, land4);
@@ -365,7 +388,8 @@ public final class UIComponents {
     /**
      * Composition & Distribution Donut Widget.
      */
-    public static VBox createDonutSourceWidget(String title, String subtitle, String centerValueLabel, String centerValue, List<SourceItem> sources, String buttonText, Runnable onAction, String accentColor) {
+    public static VBox createDonutSourceWidget(String title, String subtitle, String centerValueLabel,
+            String centerValue, List<SourceItem> sources, String buttonText, Runnable onAction, String accentColor) {
         VBox card = new VBox(10);
         card.getStyleClass().add("lro-card-soft");
         card.setMinWidth(280);
@@ -438,7 +462,8 @@ public final class UIComponents {
         Button btnDetails = new Button(buttonText != null ? buttonText : "See Details ↗");
         btnDetails.getStyleClass().add("btn-primary");
         if (accentColor != null) {
-            btnDetails.setStyle("-fx-background-color: " + accentColor + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-padding: 7 14; -fx-cursor: hand;");
+            btnDetails.setStyle("-fx-background-color: " + accentColor
+                    + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6px; -fx-padding: 7 14; -fx-cursor: hand;");
         }
         if (onAction != null) {
             btnDetails.setOnAction(e -> onAction.run());
@@ -468,7 +493,8 @@ public final class UIComponents {
 
         if (formula != null && !formula.isEmpty()) {
             Label formulaLabel = new Label("Calculation / Logic:\n" + formula);
-            formulaLabel.setStyle("-fx-font-family: monospace; -fx-background-color: #F1F5F9; -fx-padding: 8; -fx-background-radius: 4;");
+            formulaLabel.setStyle(
+                    "-fx-font-family: monospace; -fx-background-color: #F1F5F9; -fx-padding: 8; -fx-background-radius: 4;");
             content.getChildren().add(formulaLabel);
         }
 
@@ -510,7 +536,8 @@ public final class UIComponents {
             setAlignment(Pos.CENTER_LEFT);
             setSpacing(12);
             setPadding(new Insets(10, 16, 10, 16));
-            setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 4, 0, 0, 1);");
+            setStyle(
+                    "-fx-background-color: #FFFFFF; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.03), 4, 0, 0, 1);");
 
             infoLabel.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px; -fx-font-weight: 600;");
 
@@ -540,7 +567,8 @@ public final class UIComponents {
 
             pageInput.setPrefWidth(55);
             pageInput.setAlignment(Pos.CENTER);
-            pageInput.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 6; -fx-background-radius: 6px; -fx-border-color: #CBD5E1; -fx-border-radius: 6px; -fx-background-color: #F8FAFC;");
+            pageInput.setStyle(
+                    "-fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 6; -fx-background-radius: 6px; -fx-border-color: #CBD5E1; -fx-border-radius: 6px; -fx-background-color: #F8FAFC;");
             pageInput.setOnAction(e -> {
                 try {
                     int p = Integer.parseInt(pageInput.getText().trim());
@@ -563,7 +591,8 @@ public final class UIComponents {
             HBox navControls = new HBox(6, btnFirst, btnPrev, pageWord, pageInput, totalPagesLabel, btnNext, btnLast);
             navControls.setAlignment(Pos.CENTER_LEFT);
 
-            getChildren().addAll(infoLabel, spacer, pageSizeLabel, pageSizeCombo, new Separator(javafx.geometry.Orientation.VERTICAL), navControls);
+            getChildren().addAll(infoLabel, spacer, pageSizeLabel, pageSizeCombo,
+                    new Separator(javafx.geometry.Orientation.VERTICAL), navControls);
         }
 
         public void setData(List<T> items) {
@@ -574,8 +603,10 @@ public final class UIComponents {
 
         public void goToPage(int page) {
             int maxPages = getTotalPages();
-            if (page < 1) page = 1;
-            if (page > maxPages) page = maxPages;
+            if (page < 1)
+                page = 1;
+            if (page > maxPages)
+                page = maxPages;
             this.currentPage = page;
             applyPagination();
         }
@@ -585,7 +616,8 @@ public final class UIComponents {
         }
 
         public int getTotalPages() {
-            if (allItems == null || allItems.isEmpty()) return 1;
+            if (allItems == null || allItems.isEmpty())
+                return 1;
             return (int) Math.ceil((double) allItems.size() / pageSize);
         }
 
@@ -596,8 +628,10 @@ public final class UIComponents {
         private void applyPagination() {
             int total = allItems.size();
             int maxPages = getTotalPages();
-            if (currentPage > maxPages) currentPage = maxPages;
-            if (currentPage < 1) currentPage = 1;
+            if (currentPage > maxPages)
+                currentPage = maxPages;
+            if (currentPage < 1)
+                currentPage = 1;
 
             int start = (currentPage - 1) * pageSize;
             int end = Math.min(start + pageSize, total);

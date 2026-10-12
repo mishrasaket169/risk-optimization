@@ -3,6 +3,7 @@ package com.lro.frontend.bank.service;
 import com.lro.frontend.bank.model.BankModels.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
@@ -139,6 +140,16 @@ public class MockBankService implements BankService {
             case "BANK-03-SML" -> 5000;
             case "BANK-04-DST" -> 4000;
             default -> 5000;
+        };
+    }
+
+    private int getTreasuryTargetCount(String bankId) {
+        return switch (bankId) {
+            case "BANK-01-LRG" -> 5000;
+            case "BANK-02-MED" -> 3000;
+            case "BANK-03-SML" -> 2500;
+            case "BANK-04-DST" -> 1500;
+            default -> 2500;
         };
     }
 
@@ -391,17 +402,148 @@ public class MockBankService implements BankService {
         loanData.put(bankId, list);
     }
 
+    private static final String[] TREASURY_CATEGORIES = {
+        "Government Bond",
+        "Treasury Bill",
+        "Corporate Bond",
+        "Commercial Paper",
+        "Government Securities",
+        "Municipal Bond",
+        "Mortgage-backed Securities",
+        "ETF",
+        "Gold commodities"
+    };
+
     private void seedTreasury(String bankId) {
-        List<TreasuryHolding> list = new ArrayList<>();
+        int targetCount = getTreasuryTargetCount(bankId);
+        List<TreasuryHolding> list = new ArrayList<>(targetCount);
         LocalDate today = LocalDate.now();
         Instant now = Instant.now();
+        boolean isDistressed = "BANK-04-DST".equals(bankId);
 
-        list.add(new TreasuryHolding(bankId + "-TRS-01", "7.18% GS 2033 (Govt of India)", "G-Sec", 500000L, new BigDecimal("100.00"), new BigDecimal("50000000.00"), new BigDecimal("50420000.00"), new BigDecimal("49800000.00"), "Unencumbered (Free)", today.plusYears(9), new BigDecimal("7.18"), now));
-        list.add(new TreasuryHolding(bankId + "-TRS-02", "7.06% GS 2028 (Govt of India)", "G-Sec", 300000L, new BigDecimal("100.00"), new BigDecimal("30000000.00"), new BigDecimal("30150000.00"), new BigDecimal("29850000.00"), "Unencumbered (Free)", today.plusYears(4), new BigDecimal("7.06"), now));
-        list.add(new TreasuryHolding(bankId + "-TRS-03", "91-Day Treasury Bill", "T-Bill", 400000L, new BigDecimal("100.00"), new BigDecimal("39300000.00"), new BigDecimal("39580000.00"), new BigDecimal("39450000.00"), "Unencumbered (Free)", today.plusDays(45), new BigDecimal("6.85"), now));
-        list.add(new TreasuryHolding(bankId + "-TRS-04", "182-Day Treasury Bill", "T-Bill", 250000L, new BigDecimal("100.00"), new BigDecimal("24100000.00"), new BigDecimal("24350000.00"), new BigDecimal("24200000.00"), "Encumbered (Repo / Collateral)", today.plusDays(110), new BigDecimal("6.92"), now));
-        list.add(new TreasuryHolding(bankId + "-TRS-05", "8.15% HDFC Bank AAA Bond 2029", "Corporate Bond", 100000L, new BigDecimal("1000.00"), new BigDecimal("100000000.00"), new BigDecimal("99800000.00"), new BigDecimal("96500000.00"), "Unencumbered (Free)", today.plusYears(5), new BigDecimal("8.15"), now));
-        list.add(new TreasuryHolding(bankId + "-TRS-06", "Reliance Industries Eq (Simulated)", "Equity", 50000L, new BigDecimal("1250.00"), new BigDecimal("62500000.00"), new BigDecimal("68200000.00"), new BigDecimal("63500000.00"), "Unencumbered (Free)", null, new BigDecimal("0.00"), now));
+        String[] gBonds = {"7.18% GS 2033 Benchmark", "7.26% GS 2032", "7.06% GS 2028", "7.38% GS 2027", "6.54% GS 2032", "7.10% GS 2034", "7.40% GS 2035", "6.99% GS 2051", "7.54% GS 2036", "7.17% GS 2028"};
+        String[] corpBonds = {"8.15% HDFC Bank AAA Bond 2029", "7.95% ICICI Bank Tier-2 2031", "8.40% REC Limited Bond 2028", "8.20% PFC Infrastructure Bond 2030", "7.85% Bajaj Finance Senior NCD 2027", "8.50% L&T Finance Debenture 2029", "8.65% Tata Capital Bond 2028", "8.10% NTPC PSU Bond 2032"};
+        String[] cps = {"Reliance Retail CP 90D", "Tata Motors Finance CP 180D", "Adani Ports CP 90D", "UltraTech Cement CP 60D", "Mahindra & Mahindra Fin CP 120D", "L&T Finance Holdings CP 90D"};
+        String[] gSecs = {"7.25% Sovereign Green Bond 2028", "7.30% SDL (Maharashtra) 2033", "7.42% SDL (Gujarat) 2031", "7.35% SDL (Tamil Nadu) 2032", "7.39% SDL (Karnataka) 2034", "7.45% SDL (Uttar Pradesh) 2033"};
+        String[] muniBonds = {"8.50% Ahmedabad Municipal Green Bond 2029", "8.40% Pune Municipal Corp Bond 2028", "8.25% Vadodara Municipal Corp 2027", "8.60% Indore Municipal Green Bond 2030", "8.30% Surat Municipal Bond 2029"};
+        String[] mbs = {"HDFC Capital RMBS Tranche-A1", "LIC Housing RMBS Trust Series-1", "PNB Housing Prime MBS Class-A", "Can Fin Homes Securitized Note 2028", "Bajaj Housing Finance RMBS 2029"};
+        String[] bondEtfs = {"Bharat Bond ETF - April 2030", "Bharat Bond ETF - April 2032", "Nippon India ETF Nifty CPSE Bond", "Edelweiss Nifty PSU Bond Plus SDL ETF", "Mirae Asset Nifty SDL June 2027 ETF"};
+        String[] goldCommodities = {"Sovereign Gold Bond 2028 Series-VI", "Sovereign Gold Bond 2029 Series-II", "Nippon India Gold ETF Units", "HDFC Gold ETF Holding", "SBI Gold Sovereign Lot"};
+
+        for (int i = 1; i <= targetCount; i++) {
+            String holdingId = bankId + "-TRS-" + String.format("%05d", i);
+            String cat = TREASURY_CATEGORIES[(i - 1 + (int)((i * 31L) % 9)) % 9];
+
+            String instName;
+            BigDecimal faceValue;
+            long qty;
+            BigDecimal coupon;
+            LocalDate maturity;
+            double hairCut;
+
+            switch (cat) {
+                case "Government Bond" -> {
+                    instName = gBonds[i % gBonds.length];
+                    faceValue = new BigDecimal("100.00");
+                    qty = 10000L + (long)(Math.abs((i * 1013L) % 4990000));
+                    coupon = BigDecimal.valueOf(6.75 + ((i % 125) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(730 + (i % 6000));
+                    hairCut = 0.98;
+                }
+                case "Treasury Bill" -> {
+                    int sub = i % 3;
+                    instName = (sub == 0 ? "91-Day" : sub == 1 ? "182-Day" : "364-Day") + " T-Bill Series-" + ((i % 40) + 1);
+                    faceValue = new BigDecimal("100.00");
+                    qty = 50000L + (long)(Math.abs((i * 2017L) % 9950000));
+                    coupon = BigDecimal.valueOf(6.40 + ((i % 70) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(sub == 0 ? 15 + (i % 75) : sub == 1 ? 90 + (i % 90) : 180 + (i % 180));
+                    hairCut = 0.99;
+                }
+                case "Corporate Bond" -> {
+                    instName = corpBonds[i % corpBonds.length];
+                    faceValue = new BigDecimal("1000.00");
+                    qty = 5000L + (long)(Math.abs((i * 733L) % 495000));
+                    coupon = BigDecimal.valueOf(7.75 + ((i % 150) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(365 + (i % 3650));
+                    hairCut = 0.92;
+                }
+                case "Commercial Paper" -> {
+                    instName = cps[i % cps.length];
+                    faceValue = new BigDecimal("500000.00");
+                    qty = 10L + (long)(Math.abs((i * 97L) % 1990));
+                    coupon = BigDecimal.valueOf(7.10 + ((i % 110) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(15 + (i % 250));
+                    hairCut = 0.94;
+                }
+                case "Government Securities" -> {
+                    instName = gSecs[i % gSecs.length];
+                    faceValue = new BigDecimal("100.00");
+                    qty = 10000L + (long)(Math.abs((i * 1237L) % 4990000));
+                    coupon = BigDecimal.valueOf(7.20 + ((i % 60) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(730 + (i % 4000));
+                    hairCut = 0.97;
+                }
+                case "Municipal Bond" -> {
+                    instName = muniBonds[i % muniBonds.length];
+                    faceValue = new BigDecimal("1000.00");
+                    qty = 2000L + (long)(Math.abs((i * 449L) % 298000));
+                    coupon = BigDecimal.valueOf(8.15 + ((i % 85) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(730 + (i % 2500));
+                    hairCut = 0.91;
+                }
+                case "Mortgage-backed Securities" -> {
+                    instName = mbs[i % mbs.length];
+                    faceValue = new BigDecimal("10000.00");
+                    qty = 500L + (long)(Math.abs((i * 223L) % 49500));
+                    coupon = BigDecimal.valueOf(8.40 + ((i % 120) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(1095 + (i % 3000));
+                    hairCut = 0.88;
+                }
+                case "ETF" -> {
+                    instName = bondEtfs[i % bondEtfs.length];
+                    faceValue = new BigDecimal("1000.00");
+                    qty = 10000L + (long)(Math.abs((i * 881L) % 990000));
+                    coupon = BigDecimal.valueOf(6.90 + ((i % 90) / 100.0)).setScale(2, RoundingMode.HALF_UP);
+                    maturity = today.plusDays(730 + (i % 3000));
+                    hairCut = 0.95;
+                }
+                default -> { // Gold commodities
+                    instName = goldCommodities[i % goldCommodities.length];
+                    faceValue = new BigDecimal("5000.00");
+                    qty = 1000L + (long)(Math.abs((i * 359L) % 199000));
+                    coupon = (i % 5 <= 1) ? new BigDecimal("2.50") : BigDecimal.ZERO;
+                    maturity = (i % 5 <= 1) ? today.plusDays(1460 + (i % 1500)) : null;
+                    hairCut = 0.90;
+                }
+            }
+
+            BigDecimal bookVal = faceValue.multiply(BigDecimal.valueOf(qty))
+                    .multiply(BigDecimal.valueOf("Treasury Bill".equals(cat) || "Commercial Paper".equals(cat) ? 0.95 : 1.00))
+                    .setScale(2, RoundingMode.HALF_UP);
+            double mtmFactor = 0.95 + ((i % 100) / 1000.0);
+            BigDecimal marketVal = bookVal.multiply(BigDecimal.valueOf(mtmFactor)).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal proceeds = marketVal.multiply(BigDecimal.valueOf(hairCut)).setScale(2, RoundingMode.HALF_UP);
+
+            boolean isEncumbered = isDistressed ? (i % 10 < 5) : (i % 10 < 2);
+            String encumbrance = isEncumbered ? "Encumbered (Repo / Collateral)" : "Unencumbered";
+
+            Instant valTime = now.minusSeconds((i % 86400));
+
+            list.add(new TreasuryHolding(
+                    holdingId,
+                    instName,
+                    cat,
+                    qty,
+                    faceValue,
+                    bookVal,
+                    marketVal,
+                    proceeds,
+                    encumbrance,
+                    maturity,
+                    coupon,
+                    valTime
+            ));
+        }
 
         treasuryData.put(bankId, list);
     }
@@ -530,7 +672,20 @@ public class MockBankService implements BankService {
 
     @Override
     public List<TreasuryHolding> getTreasuryHoldings(String bankId) {
-        return treasuryData.getOrDefault(bankId, List.of());
+        return getTreasuryHoldings(bankId, "", "All");
+    }
+
+    @Override
+    public List<TreasuryHolding> getTreasuryHoldings(String bankId, String query, String categoryFilter) {
+        List<TreasuryHolding> all = treasuryData.getOrDefault(bankId, List.of());
+        return all.stream()
+                .filter(t -> query == null || query.isBlank()
+                        || t.holdingId().toLowerCase().contains(query.toLowerCase())
+                        || t.instrumentName().toLowerCase().contains(query.toLowerCase())
+                        || t.category().toLowerCase().contains(query.toLowerCase()))
+                .filter(t -> categoryFilter == null || categoryFilter.equalsIgnoreCase("All")
+                        || t.category().equalsIgnoreCase(categoryFilter))
+                .collect(Collectors.toList());
     }
 
     @Override

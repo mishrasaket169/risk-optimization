@@ -547,10 +547,40 @@ public class BankViews {
         root.setPadding(new Insets(20));
         root.setFillWidth(true);
 
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search instrument name or holding ID...");
+        searchField.setPrefWidth(280);
+
+        ComboBox<String> categoryCombo = new ComboBox<>();
+        categoryCombo.getItems().addAll(
+                "All",
+                "Government Bond",
+                "Treasury Bill",
+                "Corporate Bond",
+                "Commercial Paper",
+                "Government Securities",
+                "Municipal Bond",
+                "Mortgage-backed Securities",
+                "ETF",
+                "Gold commodities"
+        );
+        categoryCombo.setValue("All");
+
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(new Label("Filter Category:"), categoryCombo, searchField, countLabel);
+
         TableView<TreasuryHolding> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         table.setMaxHeight(Double.MAX_VALUE);
         VBox.setVgrow(table, Priority.ALWAYS);
+
+        TableColumn<TreasuryHolding, String> colId = new TableColumn<>("Holding ID");
+        colId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().holdingId()));
 
         TableColumn<TreasuryHolding, String> colInst = new TableColumn<>("Security / Instrument");
         colInst.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().instrumentName()));
@@ -572,20 +602,40 @@ public class BankViews {
 
         TableColumn<TreasuryHolding, String> colEncumbrance = new TableColumn<>("Encumbrance");
         colEncumbrance.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().encumbranceStatus()));
+        colEncumbrance.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    String chipType = item.toLowerCase().contains("unencumbered") ? "verified" : "tier2";
+                    Label chip = UIComponents.createStatusChip(item.contains("(") ? item.substring(0, item.indexOf('(')).trim() : item, chipType);
+                    setGraphic(chip);
+                    setText(null);
+                }
+            }
+        });
 
         TableColumn<TreasuryHolding, String> colYield = new TableColumn<>("Yield / Coupon");
         colYield.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatPercent(d.getValue().couponOrYieldPercent())));
 
-        table.getColumns().addAll(colInst, colCat, colQty, colBook, colMtm, colProceeds, colEncumbrance, colYield);
-        table.getItems().setAll(bankService.getTreasuryHoldings(bankId));
+        table.getColumns().addAll(colId, colInst, colCat, colQty, colBook, colMtm, colProceeds, colEncumbrance, colYield);
 
-        Label notice = new Label("Notice: Realizable proceeds incorporate estimated haircuts and order-book liquidation slippage.");
-        notice.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
+        UIComponents.PaginationBar<TreasuryHolding> paginationBar = new UIComponents.PaginationBar<>(table, 500);
 
-        Label sectionHeader = new Label("Bank Treasury Investment Portfolio & Encumbrance Ledger");
-        sectionHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+        Runnable refreshTable = () -> {
+            List<TreasuryHolding> list = bankService.getTreasuryHoldings(bankId, searchField.getText(), categoryCombo.getValue());
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " holdings");
+        };
 
-        root.getChildren().addAll(sectionHeader, table, notice);
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        categoryCombo.setOnAction(e -> refreshTable.run());
+        refreshTable.run();
+
+        root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
 

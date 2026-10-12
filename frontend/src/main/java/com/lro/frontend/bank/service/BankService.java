@@ -23,6 +23,9 @@ public interface BankService {
         return getLoans(bankId, npaFilter);
     }
     List<TreasuryHolding> getTreasuryHoldings(String bankId);
+    default List<TreasuryHolding> getTreasuryHoldings(String bankId, String query, String categoryFilter) {
+        return getTreasuryHoldings(bankId);
+    }
     List<LedgerEntry> getLedgerEntries(String bankId);
     List<CashFlowBucket> getCashFlowLadder(String bankId);
 

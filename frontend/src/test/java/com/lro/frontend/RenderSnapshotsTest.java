@@ -90,6 +90,10 @@ public class RenderSnapshotsTest {
         BorderPane bankLoansShell = buildFullShell("BANK", "Loans & NPA Management", bankViews.buildLoansView("BANK-02-MED"));
         saveSceneSnapshot(bankLoansShell, cssPath, ARTIFACTS_DIR + "lro_bank_loans.png");
 
+        // 1e. Bank Simulator - Treasury & G-Sec Holdings (500 items per page, full height)
+        BorderPane bankTreasuryShell = buildFullShell("BANK", "Treasury & G-Sec Holdings", bankViews.buildTreasuryView("BANK-01-LRG"));
+        saveSceneSnapshot(bankTreasuryShell, cssPath, ARTIFACTS_DIR + "lro_bank_treasury.png");
+
         // 2. Exchange Simulator Shell
         BorderPane exchShell = buildFullShell("EXCHANGE", "Market Overview", exchangeViews.buildOverview());
         saveSceneSnapshot(exchShell, cssPath, ARTIFACTS_DIR + "lro_exchange_full_app.png");
