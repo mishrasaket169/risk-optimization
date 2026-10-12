@@ -1,6 +1,8 @@
 package com.lro.frontend;
 
+import com.lro.frontend.bank.service.BankService;
 import com.lro.frontend.bank.service.MockBankService;
+import com.lro.frontend.bank.service.PostgresBankService;
 import com.lro.frontend.common.Formatters;
 import com.lro.frontend.common.UIComponents;
 import com.lro.frontend.exchange.service.MockExchangeService;
@@ -64,7 +66,20 @@ public class RenderSnapshotsTest {
     }
 
     private void renderFullAppScreenshots() throws Exception {
-        MockBankService bankService = new MockBankService();
+        BankService bankService;
+        boolean isPg = false;
+        try {
+            PostgresBankService pg = new PostgresBankService();
+            if (pg.isConnected()) {
+                bankService = pg;
+                isPg = true;
+            } else {
+                bankService = new MockBankService();
+            }
+        } catch (Exception ex) {
+            bankService = new MockBankService();
+        }
+
         MockExchangeService exchangeService = new MockExchangeService();
         MockLroService lroService = new MockLroService();
 
@@ -75,39 +90,47 @@ public class RenderSnapshotsTest {
         String cssPath = getClass().getResource("/com/lro/frontend/css/style.css").toExternalForm();
 
         // 1. Bank Simulator Shell - Dashboard
-        BorderPane bankShell = buildFullShell("BANK", "Institution Dashboard", bankViews.buildDashboard("BANK-01-LRG", id -> {}));
+        BorderPane bankShell = buildFullShell("BANK", "Institution Dashboard", bankViews.buildDashboard("BANK-01-LRG", id -> {}), isPg);
         saveSceneSnapshot(bankShell, cssPath, ARTIFACTS_DIR + "lro_bank_full_app.png");
 
         // 1b. Bank Simulator - Customer Directory (500 items per page, full height)
-        BorderPane bankCustShell = buildFullShell("BANK", "Customer Directory", bankViews.buildCustomersView("BANK-02-MED"));
+        BorderPane bankCustShell = buildFullShell("BANK", "Customer Directory", bankViews.buildCustomersView("BANK-02-MED"), isPg);
         saveSceneSnapshot(bankCustShell, cssPath, ARTIFACTS_DIR + "lro_bank_customers.png");
 
         // 1c. Bank Simulator - Accounts & CASA (500 items per page, full height)
-        BorderPane bankAccShell = buildFullShell("BANK", "Accounts & CASA", bankViews.buildAccountsView("BANK-02-MED"));
+        BorderPane bankAccShell = buildFullShell("BANK", "Accounts & CASA", bankViews.buildAccountsView("BANK-02-MED"), isPg);
         saveSceneSnapshot(bankAccShell, cssPath, ARTIFACTS_DIR + "lro_bank_accounts.png");
 
         // 1d. Bank Simulator - Loans & NPA Management (500 items per page, full height)
-        BorderPane bankLoansShell = buildFullShell("BANK", "Loans & NPA Management", bankViews.buildLoansView("BANK-02-MED"));
+        BorderPane bankLoansShell = buildFullShell("BANK", "Loans & NPA Management", bankViews.buildLoansView("BANK-02-MED"), isPg);
         saveSceneSnapshot(bankLoansShell, cssPath, ARTIFACTS_DIR + "lro_bank_loans.png");
 
         // 1e. Bank Simulator - Treasury & G-Sec Holdings (500 items per page, full height)
-        BorderPane bankTreasuryShell = buildFullShell("BANK", "Treasury & G-Sec Holdings", bankViews.buildTreasuryView("BANK-01-LRG"));
+        BorderPane bankTreasuryShell = buildFullShell("BANK", "Treasury & G-Sec Holdings", bankViews.buildTreasuryView("BANK-01-LRG"), isPg);
         saveSceneSnapshot(bankTreasuryShell, cssPath, ARTIFACTS_DIR + "lro_bank_treasury.png");
 
+        // 1f. Bank Simulator - Authoritative Double-Entry Ledger (500 items per page, full height)
+        BorderPane bankLedgerShell = buildFullShell("BANK", "General Ledger", bankViews.buildLedgerView("BANK-01-LRG"), isPg);
+        saveSceneSnapshot(bankLedgerShell, cssPath, ARTIFACTS_DIR + "lro_bank_ledger.png");
+
         // 2. Exchange Simulator Shell
-        BorderPane exchShell = buildFullShell("EXCHANGE", "Market Overview", exchangeViews.buildOverview());
+        BorderPane exchShell = buildFullShell("EXCHANGE", "Market Overview", exchangeViews.buildOverview(), isPg);
         saveSceneSnapshot(exchShell, cssPath, ARTIFACTS_DIR + "lro_exchange_full_app.png");
 
         // 3. Liquidity Optimizer Shell
-        BorderPane lroShell = buildFullShell("LRO", "Liquidity Dashboard", lroViews.buildDashboard("BANK-01-LRG", id -> {}));
+        BorderPane lroShell = buildFullShell("LRO", "Liquidity Dashboard", lroViews.buildDashboard("BANK-01-LRG", id -> {}), isPg);
         saveSceneSnapshot(lroShell, cssPath, ARTIFACTS_DIR + "lro_optimizer_full_app.png");
     }
 
     private BorderPane buildFullShell(String mode, Pane viewContent) {
-        return buildFullShell(mode, null, viewContent);
+        return buildFullShell(mode, null, viewContent, false);
     }
 
     private BorderPane buildFullShell(String mode, String activeNavTitle, Pane viewContent) {
+        return buildFullShell(mode, activeNavTitle, viewContent, false);
+    }
+
+    private BorderPane buildFullShell(String mode, String activeNavTitle, Pane viewContent, boolean isPg) {
         BorderPane mainLayout = new BorderPane();
         mainLayout.getStyleClass().add("main-canvas");
 
@@ -165,13 +188,30 @@ public class RenderSnapshotsTest {
         Region spacerTop = new Region();
         HBox.setHgrow(spacerTop, Priority.ALWAYS);
 
+        // Status & Simulator Controls
+        HBox statusBox = new HBox(8);
+        statusBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label dbBadge = new Label(isPg ? "🟢 PostgreSQL Live" : "🟡 In-Memory Mock");
+        dbBadge.setStyle(isPg
+                ? "-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;"
+                : "-fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
+
+        Label simBadge = new Label("⚡ Sim: 8 TPS");
+        simBadge.setStyle("-fx-background-color: #EFF6FF; -fx-text-fill: #1D4ED8; -fx-padding: 4 8 4 8; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;" );
+
+        Label txnCountLabel = new Label("(Active)");
+        txnCountLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-family: monospace; -fx-font-weight: 600;");
+
+        statusBox.getChildren().addAll(dbBadge, simBadge, txnCountLabel);
+
         Label clock = new Label("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
         clock.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
 
         Button btnHelp = new Button("📖 Glossary");
         btnHelp.getStyleClass().add("btn-secondary");
 
-        header.getChildren().addAll(brandBox, switcher, spacerTop, clock, btnHelp);
+        header.getChildren().addAll(brandBox, switcher, spacerTop, statusBox, clock, btnHelp);
         mainLayout.setTop(header);
 
         // Left Navigation Rail

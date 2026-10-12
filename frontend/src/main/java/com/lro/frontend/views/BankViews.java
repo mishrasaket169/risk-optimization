@@ -22,10 +22,19 @@ public class BankViews {
 
     private final BankService bankService;
     private final Runnable onDataChanged;
+    private Runnable activeViewRefresher;
 
     public BankViews(BankService bankService, Runnable onDataChanged) {
         this.bankService = bankService;
         this.onDataChanged = onDataChanged;
+    }
+
+    public void refreshActiveView() {
+        if (activeViewRefresher != null) {
+            activeViewRefresher.run();
+        } else if (onDataChanged != null) {
+            onDataChanged.run();
+        }
     }
 
     /**
@@ -33,6 +42,7 @@ public class BankViews {
      * NPA ratios, maturity summaries, and simulation disclaimers.
      */
     public VBox buildDashboard(String selectedBankId, java.util.function.Consumer<String> onSelectBank) {
+        this.activeViewRefresher = null;
         VBox root = new VBox(16);
         root.setPadding(new Insets(20));
 
@@ -320,6 +330,7 @@ public class BankViews {
         segmentCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
         root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
@@ -388,6 +399,7 @@ public class BankViews {
         typeCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
         root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
@@ -460,6 +472,7 @@ public class BankViews {
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
         root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
@@ -535,6 +548,7 @@ public class BankViews {
         npaCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
         root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
@@ -635,6 +649,7 @@ public class BankViews {
         categoryCombo.setOnAction(e -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
         root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
@@ -647,8 +662,20 @@ public class BankViews {
         root.setPadding(new Insets(20));
         root.setFillWidth(true);
 
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
+
         Label ledgerHeader = new Label("Double-Entry Authoritative Financial Ledger");
         ledgerHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search reference, account, or narration...");
+        searchField.setPrefWidth(280);
+
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(ledgerHeader, searchField, countLabel);
 
         TableView<LedgerEntry> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
@@ -679,9 +706,25 @@ public class BankViews {
         table.getColumns().addAll(colTxn, colTime, colAcc, colDebit, colCredit, colNarration, colStatus);
 
         UIComponents.PaginationBar<LedgerEntry> paginationBar = new UIComponents.PaginationBar<>(table, 500);
-        paginationBar.setData(bankService.getLedgerEntries(bankId));
 
-        root.getChildren().addAll(ledgerHeader, table, paginationBar);
+        Runnable refreshTable = () -> {
+            List<LedgerEntry> all = bankService.getLedgerEntries(bankId);
+            String q = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
+            List<LedgerEntry> filtered = all.stream().filter(e -> {
+                if (q.isEmpty()) return true;
+                return (e.transactionRef() != null && e.transactionRef().toLowerCase().contains(q))
+                        || (e.accountReference() != null && e.accountReference().toLowerCase().contains(q))
+                        || (e.narration() != null && e.narration().toLowerCase().contains(q));
+            }).toList();
+            paginationBar.setData(filtered);
+            countLabel.setText("Total: " + String.format("%,d", filtered.size()) + " entries");
+        };
+
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        refreshTable.run();
+
+        this.activeViewRefresher = refreshTable;
+        root.getChildren().addAll(filterBar, table, paginationBar);
         return root;
     }
 

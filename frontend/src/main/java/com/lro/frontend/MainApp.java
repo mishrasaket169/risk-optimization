@@ -1,6 +1,9 @@
 package com.lro.frontend;
 
+import com.lro.frontend.bank.service.BankService;
+import com.lro.frontend.bank.service.BankTransactionSimulator;
 import com.lro.frontend.bank.service.MockBankService;
+import com.lro.frontend.bank.service.PostgresBankService;
 import com.lro.frontend.common.Formatters;
 import com.lro.frontend.common.UIComponents;
 import com.lro.frontend.exchange.service.MockExchangeService;
@@ -12,6 +15,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Main JavaFX Desktop Application Shell implementing the LRO Financial
@@ -32,7 +37,8 @@ import java.time.Instant;
  * (A) Bank Simulator (Green Theme)
  * (B) Exchange Simulator (Royal Blue Theme)
  * (C) Liquidity Risk Optimizer (Amber Theme)
- * Fully aligned with official LRO branding, selection states, and color scheme.
+ * Fully connected to authoritative PostgreSQL database with live CDC LISTEN/NOTIFY
+ * and real-time high-throughput transaction simulator.
  */
 public class MainApp extends Application {
 
@@ -48,9 +54,14 @@ public class MainApp extends Application {
     private String currentNavTag = "DASHBOARD";
 
     // Services
-    private MockBankService bankService;
+    private BankService bankService;
+    private PostgresBankService pgBankService;
     private MockExchangeService exchangeService;
     private MockLroService lroService;
+    private BankTransactionSimulator simulator;
+
+    private boolean isPostgresConnected = false;
+    private final AtomicBoolean needsLiveRefresh = new AtomicBoolean(false);
 
     // View Factories
     private BankViews bankViews;
@@ -62,6 +73,8 @@ public class MainApp extends Application {
     private VBox navRail;
     private ScrollPane contentScrollPane;
     private Label clockLabel;
+    private Label txnCountLabel;
+    private Button btnToggleSim;
 
     @Override
     public void start(Stage primaryStage) {
@@ -89,14 +102,30 @@ public class MainApp extends Application {
         contentScrollPane.setStyle("-fx-background: #F8FAFC; -fx-background-color: transparent;");
         mainLayout.setCenter(contentScrollPane);
 
-        // Start clock timer
+        // Start clock timer and transaction counter
         Timeline clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             if (clockLabel != null) {
                 clockLabel.setText("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
             }
+            if (simulator != null && txnCountLabel != null) {
+                txnCountLabel.setText("(" + String.format("%,d", simulator.getTransactionCount()) + " txns)");
+            }
         }));
         clockTimeline.setCycleCount(Animation.INDEFINITE);
         clockTimeline.play();
+
+        // Live data refresh timeline (debounced to 750ms to prevent UI flicker under 8 TPS)
+        Timeline liveRefreshTimeline = new Timeline(new KeyFrame(Duration.millis(750), e -> {
+            if (needsLiveRefresh.compareAndSet(true, false)) {
+                if (currentApp == AppMode.BANK_SIMULATOR) {
+                    bankViews.refreshActiveView();
+                } else {
+                    refreshCurrentView();
+                }
+            }
+        }));
+        liveRefreshTimeline.setCycleCount(Animation.INDEFINITE);
+        liveRefreshTimeline.play();
 
         // Initial View Render
         refreshNavigationRail();
@@ -109,6 +138,15 @@ public class MainApp extends Application {
             System.err.println("Warning: style.css not found on classpath: " + ex.getMessage());
         }
 
+        primaryStage.setOnCloseRequest(e -> {
+            if (simulator != null) {
+                simulator.stop();
+            }
+            if (pgBankService != null) {
+                pgBankService.close();
+            }
+        });
+
         primaryStage.setScene(scene);
         primaryStage.setMinWidth(1150);
         primaryStage.setMinHeight(720);
@@ -116,7 +154,31 @@ public class MainApp extends Application {
     }
 
     private void initServices() {
-        this.bankService = new MockBankService();
+        try {
+            System.out.println("Connecting to authoritative PostgreSQL database (lro_db)...");
+            PostgresBankService pg = new PostgresBankService();
+            if (pg.isConnected()) {
+                this.pgBankService = pg;
+                this.bankService = pg;
+                this.isPostgresConnected = true;
+                System.out.println("Successfully connected to live PostgreSQL database (lro_db)!");
+            } else {
+                System.out.println("PostgreSQL connection check failed, falling back to MockBankService.");
+                this.bankService = new MockBankService();
+                this.isPostgresConnected = false;
+            }
+        } catch (Exception ex) {
+            System.err.println("Error connecting to PostgreSQL: " + ex.getMessage() + ", falling back to MockBankService.");
+            this.bankService = new MockBankService();
+            this.isPostgresConnected = false;
+        }
+
+        if (isPostgresConnected && pgBankService != null) {
+            this.simulator = new BankTransactionSimulator(pgBankService.getDataSource());
+            this.simulator.start();
+            pgBankService.addDataChangeListener(() -> needsLiveRefresh.set(true));
+        }
+
         this.exchangeService = new MockExchangeService();
         this.lroService = new MockLroService();
 
@@ -176,7 +238,39 @@ public class MainApp extends Application {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Status & Clock
+        // Status & Simulator Controls
+        HBox statusBox = new HBox(8);
+        statusBox.setAlignment(Pos.CENTER_LEFT);
+
+        Label dbBadge = new Label(isPostgresConnected ? "🟢 PostgreSQL Live" : "🟡 In-Memory Mock");
+        dbBadge.setStyle(isPostgresConnected
+                ? "-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;"
+                : "-fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
+
+        if (simulator != null) {
+            Label simBadge = new Label("⚡ Sim: 8 TPS");
+            simBadge.setStyle("-fx-background-color: #EFF6FF; -fx-text-fill: #1D4ED8; -fx-padding: 4 8 4 8; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
+
+            txnCountLabel = new Label("(" + String.format("%,d", simulator.getTransactionCount()) + " txns)");
+            txnCountLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-family: monospace; -fx-font-weight: 600;");
+
+            btnToggleSim = new Button(simulator.isRunning() ? "⏸ Pause" : "▶ Resume");
+            btnToggleSim.setStyle("-fx-font-size: 11px; -fx-padding: 3 8 3 8; -fx-background-radius: 6; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;");
+            btnToggleSim.setOnAction(e -> {
+                if (simulator.isRunning()) {
+                    simulator.pause();
+                    btnToggleSim.setText("▶ Resume");
+                } else {
+                    simulator.resume();
+                    btnToggleSim.setText("⏸ Pause");
+                }
+            });
+
+            statusBox.getChildren().addAll(dbBadge, simBadge, txnCountLabel, btnToggleSim);
+        } else {
+            statusBox.getChildren().add(dbBadge);
+        }
+
         clockLabel = new Label("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
         clockLabel.setStyle(
                 "-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
@@ -189,7 +283,7 @@ public class MainApp extends Application {
                 "Three integrated modules: Bank Simulator, Exchange Simulator, and LRO Decision Support Engine.",
                 "Simulated environment complying with RBI/Basel III framework principles."));
 
-        header.getChildren().addAll(brandBox, switcher, spacer, clockLabel, btnHelp);
+        header.getChildren().addAll(brandBox, switcher, spacer, statusBox, clockLabel, btnHelp);
         return header;
     }
 
