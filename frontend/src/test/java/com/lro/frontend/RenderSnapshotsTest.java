@@ -3,7 +3,7 @@ package com.lro.frontend;
 import com.lro.frontend.bank.service.BankService;
 import com.lro.frontend.bank.service.MockBankService;
 import com.lro.frontend.bank.service.PostgresBankService;
-import com.lro.frontend.common.Formatters;
+import com.lro.frontend.common.UIComponents;
 import com.lro.frontend.exchange.service.MockExchangeService;
 import com.lro.frontend.lro.service.MockLroService;
 import com.lro.frontend.views.BankViews;
@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.time.Instant;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -111,9 +110,44 @@ public class RenderSnapshotsTest {
         BorderPane bankLedgerShell = buildFullShell("BANK", "General Ledger", bankViews.buildLedgerView("BANK-01-LRG"), isPg);
         saveSceneSnapshot(bankLedgerShell, cssPath, ARTIFACTS_DIR + "lro_bank_ledger.png");
 
-        // 2. Exchange Simulator Shell
+        // 2. Exchange Simulator Shell - Market Overview
         BorderPane exchShell = buildFullShell("EXCHANGE", "Market Overview", exchangeViews.buildOverview(), isPg);
         saveSceneSnapshot(exchShell, cssPath, ARTIFACTS_DIR + "lro_exchange_full_app.png");
+
+        // 2b. Exchange Simulator Shell - Stock Directory
+        BorderPane exchStockShell = buildFullShell("EXCHANGE", "Stock", exchangeViews.buildStocksView(sym -> {}), isPg);
+        saveSceneSnapshot(exchStockShell, cssPath, ARTIFACTS_DIR + "lro_exchange_stocks.png");
+
+        // 2c. Exchange Simulator Shell - Bond Directory
+        BorderPane exchBondShell = buildFullShell("EXCHANGE", "Bond", exchangeViews.buildBondsView(sym -> {}), isPg);
+        saveSceneSnapshot(exchBondShell, cssPath, ARTIFACTS_DIR + "lro_exchange_bonds.png");
+
+        // 2d. Exchange Simulator Shell - Securities Directory
+        BorderPane exchSecShell = buildFullShell("EXCHANGE", "Securities", exchangeViews.buildSecuritiesView(sym -> {}), isPg);
+        saveSceneSnapshot(exchSecShell, cssPath, ARTIFACTS_DIR + "lro_exchange_securities.png");
+
+        // 2e. Exchange Simulator - Focused Market Movement Card
+        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        double[] movementPoints = {24150.0, 24380.0, 24520.0, 24850.5, 24690.0, 24960.0, 25120.0};
+        VBox lineChartNode = UIComponents.createLineMovementChart(
+                days,
+                movementPoints,
+                3,
+                "Today :",
+                "24,850.50 (₹4,505 Cr)",
+                "#4F46E5"
+        );
+        VBox movementCard = UIComponents.createChartCard(
+                "Market Movement",
+                "₹ 685.00 Cr",
+                "+2.32%",
+                "Total traded value & index movement in week",
+                "Week",
+                lineChartNode
+        );
+        movementCard.setPrefWidth(850);
+        movementCard.setStyle("-fx-background-color: #F8FAFC; -fx-padding: 20px;");
+        saveSceneSnapshot(movementCard, cssPath, ARTIFACTS_DIR + "lro_exchange_market_movement.png");
 
         // 3. Liquidity Optimizer Shell
         BorderPane lroShell = buildFullShell("LRO", "Liquidity Dashboard", lroViews.buildDashboard("BANK-01-LRG", id -> {}), isPg);
@@ -182,30 +216,11 @@ public class RenderSnapshotsTest {
         Region spacerTop = new Region();
         HBox.setHgrow(spacerTop, Priority.ALWAYS);
 
-        // Status & Simulator Controls
-        HBox statusBox = new HBox(8);
-        statusBox.setAlignment(Pos.CENTER_LEFT);
+        Button btnToggleSim = new Button("⏸ Pause");
+        btnToggleSim.getStyleClass().add("btn-secondary");
+        btnToggleSim.setStyle("-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;");
 
-        Label dbBadge = new Label(isPg ? "🟢 PostgreSQL Live" : "🟡 In-Memory Mock");
-        dbBadge.setStyle(isPg
-                ? "-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;"
-                : "-fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
-
-        Label simBadge = new Label("⚡ Sim: 8 TPS");
-        simBadge.setStyle("-fx-background-color: #EFF6FF; -fx-text-fill: #1D4ED8; -fx-padding: 4 8 4 8; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;" );
-
-        Label txnCountLabel = new Label("(Active)");
-        txnCountLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-family: monospace; -fx-font-weight: 600;");
-
-        statusBox.getChildren().addAll(dbBadge, simBadge, txnCountLabel);
-
-        Label clock = new Label("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
-        clock.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
-
-        Button btnHelp = new Button("📖 Glossary");
-        btnHelp.getStyleClass().add("btn-secondary");
-
-        header.getChildren().addAll(brandBox, switcher, spacerTop, statusBox, clock, btnHelp);
+        header.getChildren().addAll(brandBox, switcher, spacerTop, btnToggleSim);
         mainLayout.setTop(header);
 
         // Left Navigation Rail
@@ -237,10 +252,11 @@ public class RenderSnapshotsTest {
             nav.getChildren().addAll(
                     navHeader,
                     createNavRow("🌐", "Market Overview", "Market Overview".equals(selectedTitle)),
-                    createNavRow("📋", "Instrument Catalogue", "Instrument Catalogue".equals(selectedTitle)),
+                    createNavRow("📈", "Stock", "Stock".equals(selectedTitle)),
+                    createNavRow("🏛", "Bond", "Bond".equals(selectedTitle)),
+                    createNavRow("🛡", "Securities", "Securities".equals(selectedTitle)),
                     createNavRow("🎟", "Trading Order Ticket", "Trading Order Ticket".equals(selectedTitle)),
                     createNavRow("📊", "Market Depth Order Book", "Market Depth Order Book".equals(selectedTitle)),
-                    createNavRow("📜", "Order & Trade Blotters", "Order & Trade Blotters".equals(selectedTitle)),
                     createNavRow("⚙", "Market Regime Controls", "Market Regime Controls".equals(selectedTitle))
             );
         } else {

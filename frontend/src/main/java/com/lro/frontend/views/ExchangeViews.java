@@ -87,17 +87,23 @@ public class ExchangeViews {
                 UIComponents.createLroKpiCard("Total Market Turnover", Formatters.formatINRCrores(ov.totalTurnoverINR()), "+8.12%", true, "Daily Simulated Gross Value", "Aggregated rupee traded volume across continuous auction books.")
         );
 
-        // Row 2: "Spending Statistic" Chart Card matching LRO
+        // Row 2: "Market Movement" Line Graph Card
         String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-        double[] buys = {3100, 5200, 6100, 7200, 8400, 6500, 7900};
-        double[] sells = {2900, 4700, 5600, 4505, 7800, 5900, 7100};
-        VBox chartNode = UIComponents.createDualBarChart(days, sells, buys, "Wed", "₹4,505 Cr", "#4F46E5");
+        double[] movementPoints = {24150.0, 24380.0, 24520.0, 24850.5, 24690.0, 24960.0, 25120.0};
+        VBox chartNode = UIComponents.createLineMovementChart(
+                days,
+                movementPoints,
+                3,
+                "Today :",
+                "24,850.50 (₹4,505 Cr)",
+                "#4F46E5"
+        );
 
         VBox chartCard = UIComponents.createChartCard(
-                "Spending Statistic (Trading Volume & Turnover)",
+                "Market Movement",
                 Formatters.formatINRCrores(ov.totalTurnoverINR().divide(BigDecimal.valueOf(10), RoundingMode.HALF_UP)),
                 "+2.32%",
-                "Total traded value in week",
+                "Total traded value & index movement in week",
                 "Week",
                 chartNode
         );
@@ -152,22 +158,7 @@ public class ExchangeViews {
 
         tableCard.getChildren().addAll(tableHeader, table);
 
-        // Row 4: Live Events Feed
-        VBox eventsBox = new VBox(8);
-        eventsBox.setPadding(new Insets(16, 20, 16, 20));
-        eventsBox.getStyleClass().add("lro-card-soft");
-
-        Label evtTitle = new Label("Simulated Exchange Events Stream");
-        evtTitle.setStyle("-fx-font-weight: 800; -fx-text-fill: #4F46E5; -fx-font-size: 13px;");
-        eventsBox.getChildren().add(evtTitle);
-
-        for (String ev : ov.recentMarketEvents()) {
-            Label evLbl = new Label("• " + ev);
-            evLbl.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px;");
-            eventsBox.getChildren().add(evLbl);
-        }
-
-        centerCol.getChildren().addAll(kpiRow, chartCard, tableCard, eventsBox);
+        centerCol.getChildren().addAll(kpiRow, chartCard, tableCard);
 
         // =========================================================================
         // RIGHT COLUMN (LRO Widgets: Regional Map & Social Source)
@@ -176,14 +167,14 @@ public class ExchangeViews {
         rightCol.setPrefWidth(320);
         rightCol.setMinWidth(300);
 
-        // Widget 1: Sector Breadth (Matches "Costumer by Country" card)
-        VBox regWidget = UIComponents.createRegionalExposureWidget(
-                "Costumer by Country (Sectors)",
-                "Periode August 2026",
-                "Banking & Sovereign Debt",
-                "68%",
-                "345,000 Lots",
-                "#4F46E5"
+        // Widget 1: 10-Yr Benchmark Bond Yield KPI Tile (Matches LRO KPI card styling, replacing Costumer by Country)
+        VBox bondYieldTile = UIComponents.createLroKpiCard(
+                "10-Yr Benchmark Bond Yield",
+                "7.18%",
+                "-0.04%",
+                false,
+                "Sovereign 10-Yr G-Sec Benchmark",
+                "Aggregated benchmark sovereign yield curve anchor for Indian debt markets."
         );
 
         // Widget 2: Volume Source Distribution (Matches "Social Source" card)
@@ -208,7 +199,7 @@ public class ExchangeViews {
                 "#4F46E5"
         );
 
-        rightCol.getChildren().addAll(regWidget, sourceWidget);
+        rightCol.getChildren().addAll(bondYieldTile, sourceWidget);
 
         mainGrid.getChildren().addAll(centerCol, rightCol);
         root.getChildren().addAll(statusBar, mainGrid);
@@ -216,24 +207,38 @@ public class ExchangeViews {
     }
 
     /**
-     * PROMPT 05: Multi-Asset Instrument Catalogue with category filters and search.
+     * Stock Directory View: Equities & listed company shares.
      */
-    public VBox buildInstrumentCatalogue(java.util.function.Consumer<String> onSelectInstrument) {
-        VBox root = new VBox(12);
+    public VBox buildStocksView(java.util.function.Consumer<String> onSelectInstrument) {
+        VBox root = new VBox(14);
         root.setPadding(new Insets(20));
+
+        // Header Title Banner
+        HBox titleBox = new HBox(12);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+        Label title = new Label("Stock Directory");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0F172A;");
+        Label subtitle = new Label("Cash Equity Shares & Listed Blue-Chip Stocks");
+        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;");
+        Label chip = UIComponents.createStatusChip("Equities / Listed Shares", "info");
+        titleBox.getChildren().addAll(title, subtitle, chip);
 
         HBox filterBar = new HBox(12);
         filterBar.setAlignment(Pos.CENTER_LEFT);
 
-        ComboBox<String> catCombo = new ComboBox<>();
-        catCombo.getItems().addAll("All", "Equity", "G-Sec", "T-Bill", "Corporate Bond", "Futures", "Options", "FX", "Commodity");
-        catCombo.setValue("All");
+        ComboBox<String> sectorCombo = new ComboBox<>();
+        sectorCombo.getItems().addAll("All", "Energy / Conglomerate", "Banking & Financials", "Information Technology",
+                "Public Sector Banking", "Telecommunications", "Infrastructure & Capital Goods", "Automotive", "FMCG / Diversified");
+        sectorCombo.setValue("All");
 
         TextField searchField = new TextField();
-        searchField.setPromptText("Search symbol, name, or ISIN...");
+        searchField.setPromptText("Search symbol or company name...");
         searchField.setPrefWidth(260);
 
-        filterBar.getChildren().addAll(new Label("Asset Class:"), catCombo, searchField);
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(new Label("Sector:"), sectorCombo, searchField, countLabel);
 
         TableView<InstrumentRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
@@ -241,13 +246,10 @@ public class ExchangeViews {
         TableColumn<InstrumentRecord, String> colSym = new TableColumn<>("Symbol");
         colSym.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
 
-        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Instrument Name");
+        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Company Name");
         colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
 
-        TableColumn<InstrumentRecord, String> colCat = new TableColumn<>("Category");
-        colCat.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().category()));
-
-        TableColumn<InstrumentRecord, String> colSector = new TableColumn<>("Sector / Issuer");
+        TableColumn<InstrumentRecord, String> colSector = new TableColumn<>("Sector / Industry");
         colSector.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().sector()));
 
         TableColumn<InstrumentRecord, String> colLtp = new TableColumn<>("LTP (₹)");
@@ -256,24 +258,19 @@ public class ExchangeViews {
         TableColumn<InstrumentRecord, String> colChg = new TableColumn<>("Change %");
         colChg.setCellValueFactory(d -> new SimpleStringProperty((d.getValue().changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(d.getValue().changePercent())));
 
-        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid Price");
+        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid Price (₹)");
         colBid.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().bidPrice())));
 
-        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask Price");
+        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask Price (₹)");
         colAsk.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().askPrice())));
 
         TableColumn<InstrumentRecord, String> colVol = new TableColumn<>("Volume");
         colVol.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().dayVolume())));
 
-        TableColumn<InstrumentRecord, String> colSpecific = new TableColumn<>("Terms / Yield / Strike");
-        colSpecific.setCellValueFactory(d -> {
-            InstrumentRecord r = d.getValue();
-            if (r.couponOrYieldPercent() != null) return new SimpleStringProperty("Yield: " + Formatters.formatPercent(r.couponOrYieldPercent()));
-            if (r.strikePrice() != null) return new SimpleStringProperty("Strike: " + r.strikePrice() + " (" + r.optionType() + ")");
-            return new SimpleStringProperty("Lot: " + r.lotSize());
-        });
+        TableColumn<InstrumentRecord, String> colTurnover = new TableColumn<>("Turnover (₹)");
+        colTurnover.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINRCrores(d.getValue().dayTurnoverINR())));
 
-        table.getColumns().addAll(colSym, colName, colCat, colSector, colLtp, colChg, colBid, colAsk, colVol, colSpecific);
+        table.getColumns().addAll(colSym, colName, colSector, colLtp, colChg, colBid, colAsk, colVol, colTurnover);
 
         table.setOnMouseClicked(e -> {
             InstrumentRecord sel = table.getSelectionModel().getSelectedItem();
@@ -283,19 +280,224 @@ public class ExchangeViews {
         });
 
         Runnable refreshTable = () -> {
-            List<InstrumentRecord> list = exchangeService.getInstruments(catCombo.getValue(), searchField.getText());
+            String selectedSec = sectorCombo.getValue();
+            String q = searchField.getText();
+            List<InstrumentRecord> list = exchangeService.getInstruments("Stock", q).stream()
+                    .filter(i -> selectedSec == null || selectedSec.equalsIgnoreCase("All") || i.sector().equalsIgnoreCase(selectedSec))
+                    .collect(java.util.stream.Collectors.toList());
             table.getItems().setAll(list);
+            countLabel.setText("Total: " + list.size() + " stocks");
         };
-        catCombo.setOnAction(e -> refreshTable.run());
+        sectorCombo.setOnAction(e -> refreshTable.run());
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         refreshTable.run();
 
-        Label tip = new Label("Tip: Click any instrument row to open its order ticket or market depth view.");
+        Label tip = new Label("Tip: Click any stock to view its order book depth or launch an order ticket.");
         tip.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
 
-        root.getChildren().addAll(filterBar, table, tip);
+        root.getChildren().addAll(titleBox, filterBar, table, tip);
         VBox.setVgrow(table, Priority.ALWAYS);
         return root;
+    }
+
+    /**
+     * Bond Directory View: Corporate debentures & institutional fixed income.
+     */
+    public VBox buildBondsView(java.util.function.Consumer<String> onSelectInstrument) {
+        VBox root = new VBox(14);
+        root.setPadding(new Insets(20));
+
+        // Header Title Banner
+        HBox titleBox = new HBox(12);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+        Label title = new Label("Bond Directory");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0F172A;");
+        Label subtitle = new Label("Corporate Debentures & Institutional Fixed-Income Bonds");
+        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;");
+        Label chip = UIComponents.createStatusChip("Rated Fixed Income", "info");
+        titleBox.getChildren().addAll(title, subtitle, chip);
+
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
+
+        ComboBox<String> sectorCombo = new ComboBox<>();
+        sectorCombo.getItems().addAll("All", "Financial Services", "PSU / Infrastructure", "Power & Utilities",
+                "Energy & Petrochem", "Metals & Mining", "National Highways");
+        sectorCombo.setValue("All");
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search bond symbol, issuer...");
+        searchField.setPrefWidth(260);
+
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(new Label("Issuer Sector:"), sectorCombo, searchField, countLabel);
+
+        TableView<InstrumentRecord> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        TableColumn<InstrumentRecord, String> colSym = new TableColumn<>("Bond Symbol");
+        colSym.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
+
+        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Issuer / Bond Series");
+        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
+
+        TableColumn<InstrumentRecord, String> colSector = new TableColumn<>("Sector / Type");
+        colSector.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().sector()));
+
+        TableColumn<InstrumentRecord, String> colCoupon = new TableColumn<>("Coupon Rate %");
+        colCoupon.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().couponOrYieldPercent() != null ? Formatters.formatPercent(d.getValue().couponOrYieldPercent()) : "N/A"));
+
+        TableColumn<InstrumentRecord, String> colLtp = new TableColumn<>("Clean Price (₹)");
+        colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().lastTradedPrice())));
+
+        TableColumn<InstrumentRecord, String> colChg = new TableColumn<>("Change %");
+        colChg.setCellValueFactory(d -> new SimpleStringProperty((d.getValue().changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(d.getValue().changePercent())));
+
+        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid (₹)");
+        colBid.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().bidPrice())));
+
+        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask (₹)");
+        colAsk.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().askPrice())));
+
+        TableColumn<InstrumentRecord, String> colVol = new TableColumn<>("Volume");
+        colVol.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().dayVolume())));
+
+        TableColumn<InstrumentRecord, String> colMaturity = new TableColumn<>("Maturity Date");
+        colMaturity.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().maturityOrExpiryDate() != null ? d.getValue().maturityOrExpiryDate().toString() : "Perpetual"));
+
+        table.getColumns().addAll(colSym, colName, colSector, colCoupon, colLtp, colChg, colBid, colAsk, colVol, colMaturity);
+
+        table.setOnMouseClicked(e -> {
+            InstrumentRecord sel = table.getSelectionModel().getSelectedItem();
+            if (sel != null && onSelectInstrument != null) {
+                onSelectInstrument.accept(sel.symbol());
+            }
+        });
+
+        Runnable refreshTable = () -> {
+            String selectedSec = sectorCombo.getValue();
+            String q = searchField.getText();
+            List<InstrumentRecord> list = exchangeService.getInstruments("Bond", q).stream()
+                    .filter(i -> selectedSec == null || selectedSec.equalsIgnoreCase("All") || i.sector().equalsIgnoreCase(selectedSec))
+                    .collect(java.util.stream.Collectors.toList());
+            table.getItems().setAll(list);
+            countLabel.setText("Total: " + list.size() + " bonds");
+        };
+        sectorCombo.setOnAction(e -> refreshTable.run());
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        refreshTable.run();
+
+        Label tip = new Label("Tip: Click any bond to view its order book depth or launch an order ticket.");
+        tip.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
+
+        root.getChildren().addAll(titleBox, filterBar, table, tip);
+        VBox.setVgrow(table, Priority.ALWAYS);
+        return root;
+    }
+
+    /**
+     * Securities Directory View: Government Securities (G-Secs) & Sovereign Treasury Bills (T-Bills).
+     */
+    public VBox buildSecuritiesView(java.util.function.Consumer<String> onSelectInstrument) {
+        VBox root = new VBox(14);
+        root.setPadding(new Insets(20));
+
+        // Header Title Banner
+        HBox titleBox = new HBox(12);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
+        Label title = new Label("Securities Directory");
+        title.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0F172A;");
+        Label subtitle = new Label("Government Securities (G-Secs) & Sovereign Treasury Bills");
+        subtitle.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748B; -fx-font-weight: 500;");
+        Label chip = UIComponents.createStatusChip("Sovereign G-Secs", "normal");
+        titleBox.getChildren().addAll(title, subtitle, chip);
+
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
+
+        ComboBox<String> typeCombo = new ComboBox<>();
+        typeCombo.getItems().addAll("All", "G-Sec", "T-Bill");
+        typeCombo.setValue("All");
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search security symbol, tenor...");
+        searchField.setPrefWidth(260);
+
+        Label countLabel = new Label();
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-weight: bold; -fx-font-size: 12px;");
+
+        filterBar.getChildren().addAll(new Label("Security Type:"), typeCombo, searchField, countLabel);
+
+        TableView<InstrumentRecord> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+
+        TableColumn<InstrumentRecord, String> colSym = new TableColumn<>("Security Symbol");
+        colSym.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
+
+        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Security Description");
+        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
+
+        TableColumn<InstrumentRecord, String> colType = new TableColumn<>("Category");
+        colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().category()));
+
+        TableColumn<InstrumentRecord, String> colYield = new TableColumn<>("Benchmark Yield %");
+        colYield.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().couponOrYieldPercent() != null ? Formatters.formatPercent(d.getValue().couponOrYieldPercent()) : "N/A"));
+
+        TableColumn<InstrumentRecord, String> colLtp = new TableColumn<>("Clean Price (₹)");
+        colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().lastTradedPrice())));
+
+        TableColumn<InstrumentRecord, String> colChg = new TableColumn<>("Change %");
+        colChg.setCellValueFactory(d -> new SimpleStringProperty((d.getValue().changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(d.getValue().changePercent())));
+
+        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid (₹)");
+        colBid.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().bidPrice())));
+
+        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask (₹)");
+        colAsk.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().askPrice())));
+
+        TableColumn<InstrumentRecord, String> colVol = new TableColumn<>("Volume");
+        colVol.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().dayVolume())));
+
+        TableColumn<InstrumentRecord, String> colMaturity = new TableColumn<>("Maturity Date");
+        colMaturity.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().maturityOrExpiryDate() != null ? d.getValue().maturityOrExpiryDate().toString() : "N/A"));
+
+        table.getColumns().addAll(colSym, colName, colType, colYield, colLtp, colChg, colBid, colAsk, colVol, colMaturity);
+
+        table.setOnMouseClicked(e -> {
+            InstrumentRecord sel = table.getSelectionModel().getSelectedItem();
+            if (sel != null && onSelectInstrument != null) {
+                onSelectInstrument.accept(sel.symbol());
+            }
+        });
+
+        Runnable refreshTable = () -> {
+            String selectedType = typeCombo.getValue();
+            String q = searchField.getText();
+            List<InstrumentRecord> list = exchangeService.getInstruments("Securities", q).stream()
+                    .filter(i -> selectedType == null || selectedType.equalsIgnoreCase("All") || i.category().equalsIgnoreCase(selectedType))
+                    .collect(java.util.stream.Collectors.toList());
+            table.getItems().setAll(list);
+            countLabel.setText("Total: " + list.size() + " securities");
+        };
+        typeCombo.setOnAction(e -> refreshTable.run());
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        refreshTable.run();
+
+        Label tip = new Label("Tip: Click any security to view its order book depth or launch an order ticket.");
+        tip.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
+
+        root.getChildren().addAll(titleBox, filterBar, table, tip);
+        VBox.setVgrow(table, Priority.ALWAYS);
+        return root;
+    }
+
+    /**
+     * Backward-compatible instrument catalogue forwarding to Stocks view.
+     */
+    public VBox buildInstrumentCatalogue(java.util.function.Consumer<String> onSelectInstrument) {
+        return buildStocksView(onSelectInstrument);
     }
 
     /**

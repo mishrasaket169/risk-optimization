@@ -203,20 +203,42 @@ public class PostgresBankService implements BankService, AutoCloseable {
     @Override
     public List<CustomerRecord> getCustomers(String bankId, String query, String segmentFilter) {
         String schema = mapBankToSchema(bankId);
-        StringBuilder sql = new StringBuilder("SELECT customer_id, full_name, segment, kyc_status, location_category, risk_category, branch_name FROM " + schema + ".customers WHERE 1=1 ");
+        StringBuilder sql = new StringBuilder("""
+            SELECT 
+                c.customer_id,
+                c.full_name,
+                c.segment,
+                c.kyc_status,
+                c.location_category,
+                c.risk_category,
+                c.branch_name,
+                (COALESCE(a.acc_count, 0) + COALESCE(l.loan_count, 0)) AS linked_accounts,
+                (COALESCE(a.acc_balance, 0) + COALESCE(l.loan_balance, 0)) AS relationship_value
+            FROM %s.customers c
+            LEFT JOIN (
+                SELECT customer_id, COUNT(*) AS acc_count, SUM(available_balance) AS acc_balance
+                FROM %s.accounts
+                GROUP BY customer_id
+            ) a ON a.customer_id = c.customer_id
+            LEFT JOIN (
+                SELECT customer_id, COUNT(*) AS loan_count, SUM(principal_outstanding) AS loan_balance
+                FROM %s.loans
+                GROUP BY customer_id
+            ) l ON l.customer_id = c.customer_id
+            WHERE 1=1\s""".formatted(schema, schema, schema));
 
         List<Object> params = new ArrayList<>();
         if (query != null && !query.isBlank()) {
-            sql.append(" AND (lower(full_name) LIKE ? OR lower(customer_id) LIKE ?) ");
+            sql.append(" AND (lower(c.full_name) LIKE ? OR lower(c.customer_id) LIKE ?) ");
             String q = "%" + query.trim().toLowerCase() + "%";
             params.add(q);
             params.add(q);
         }
         if (segmentFilter != null && !segmentFilter.equalsIgnoreCase("All")) {
-            sql.append(" AND lower(segment) = lower(?) ");
+            sql.append(" AND lower(c.segment) = lower(?) ");
             params.add(segmentFilter.trim());
         }
-        sql.append(" ORDER BY customer_id ASC LIMIT 5000;");
+        sql.append(" ORDER BY c.customer_id ASC LIMIT 5000;");
 
         List<CustomerRecord> list = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
@@ -226,6 +248,8 @@ public class PostgresBankService implements BankService, AutoCloseable {
             }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    int linkedAccounts = rs.getInt("linked_accounts");
+                    BigDecimal relVal = rs.getBigDecimal("relationship_value");
                     list.add(new CustomerRecord(
                             rs.getString("customer_id"),
                             rs.getString("full_name"),
@@ -233,8 +257,8 @@ public class PostgresBankService implements BankService, AutoCloseable {
                             rs.getString("kyc_status"),
                             rs.getString("location_category"),
                             rs.getString("risk_category"),
-                            2, // activeAccountsCount
-                            new BigDecimal("1850000.00"), // totalRelationshipValue
+                            linkedAccounts,
+                            relVal != null ? relVal : BigDecimal.ZERO,
                             rs.getString("branch_name")
                     ));
                 }
@@ -425,7 +449,7 @@ public class PostgresBankService implements BankService, AutoCloseable {
     @Override
     public List<LedgerEntry> getLedgerEntries(String bankId) {
         String schema = mapBankToSchema(bankId);
-        String sql = "SELECT entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status FROM " + schema + ".ledger_entries ORDER BY timestamp DESC LIMIT 2000;";
+        String sql = "SELECT entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status FROM " + schema + ".ledger_entries ORDER BY timestamp DESC LIMIT 2000;";
 
         List<LedgerEntry> list = new ArrayList<>();
         try (Connection conn = dataSource.getConnection();
@@ -442,7 +466,8 @@ public class PostgresBankService implements BankService, AutoCloseable {
                         rs.getString("counterparty_ref"),
                         rs.getBigDecimal("debit_inr"),
                         rs.getBigDecimal("credit_inr"),
-                        rs.getString("narration"),
+                        rs.getString("type"),
+                        rs.getString("method"),
                         rs.getString("status")
                 ));
             }
@@ -519,8 +544,8 @@ public class PostgresBankService implements BankService, AutoCloseable {
     public boolean recordDepositTransaction(String bankId, String accountId, BigDecimal amount, String type) {
         String schema = mapBankToSchema(bankId);
         String updateSql = "UPDATE " + schema + ".accounts SET available_balance = available_balance + ? WHERE account_id = ?;";
-        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status) " +
-                "VALUES ('LED-' || to_char(random() * 1000000, 'FM000000'), 'TXN-' || to_char(random() * 1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'CASH_CLEARING', ?, 0.00, ?, 'Posted');";
+        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status) " +
+                "VALUES ('LED-' || to_char(random() * 1000000, 'FM000000'), 'TXN-' || to_char(random() * 1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'CASH_CLEARING', ?, 0.00, ?, ?, 'Posted');";
 
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
@@ -533,7 +558,8 @@ public class PostgresBankService implements BankService, AutoCloseable {
 
                 psLedger.setString(1, accountId);
                 psLedger.setBigDecimal(2, amount);
-                psLedger.setString(3, "Direct Deposit - " + type);
+                psLedger.setString(3, "Deposits");
+                psLedger.setString(4, "Cash");
                 psLedger.executeUpdate();
 
                 conn.commit();

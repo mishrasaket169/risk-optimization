@@ -31,7 +31,7 @@ public class BankTransactionSimulator {
     private final AtomicLong transactionCount = new AtomicLong(0);
 
     private ScheduledExecutorService executorService;
-    private volatile int transactionsPerSecond = 8; // Default: 8 txns/sec (in 5-10 range)
+    private volatile int transactionsPerSecond = 35; // Increased speed (35 txns/sec)
 
     private static final String[] SCHEMAS = {
             "bank_large", "bank_large", "bank_large", // weighted towards large
@@ -46,6 +46,25 @@ public class BankTransactionSimulator {
             "Business Loan", "Credit Card"
     };
 
+    private static final String[] TYPES = {
+            "Deposits", "Withdrawal", "Transfers", "Payments", "Investment"
+    };
+
+    private static final java.util.Map<String, String[]> TYPE_TO_METHODS = java.util.Map.of(
+            "Deposits", new String[]{"Cash", "Cheque", "NEFT", "RTGS", "IMPS", "UPI"},
+            "Withdrawal", new String[]{"Cash", "UPI", "Cheque", "IMPS"},
+            "Transfers", new String[]{"UPI", "IMPS", "NEFT", "RTGS"},
+            "Payments", new String[]{"UPI", "IMPS", "NEFT", "Cheque", "Cash"},
+            "Investment", new String[]{"RTGS", "NEFT", "Cheque", "IMPS"}
+    );
+
+    private String[] getRandomTypeAndMethod() {
+        String type = TYPES[random.nextInt(TYPES.length)];
+        String[] methods = TYPE_TO_METHODS.get(type);
+        String method = methods[random.nextInt(methods.length)];
+        return new String[]{type, method};
+    }
+
     public BankTransactionSimulator(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -59,9 +78,9 @@ public class BankTransactionSimulator {
                 return t;
             });
 
-            // Schedule recurring ticks based on target frequency (e.g. every 125ms for 8 txns/sec)
-            long intervalMillis = Math.max(50, 1000 / transactionsPerSecond);
-            executorService.scheduleAtFixedRate(this::executeRandomTransaction, 200, intervalMillis, TimeUnit.MILLISECONDS);
+            // Schedule recurring ticks based on target frequency (e.g. ~28ms for 35 txns/sec)
+            long intervalMillis = Math.max(20, 1000 / transactionsPerSecond);
+            executorService.scheduleAtFixedRate(this::executeRandomTransaction, 0, intervalMillis, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -169,12 +188,15 @@ public class BankTransactionSimulator {
             ps.executeUpdate();
         }
 
+        String[] tm = getRandomTypeAndMethod();
         // Insert double-entry ledger record
-        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status) " +
-                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-CR-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'CLEARING_SETTLEMENT', ?, 0.00, 'Live Electronic Inward Credit / Salary', 'Posted');";
+        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status) " +
+                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-CR-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'CLEARING_SETTLEMENT', ?, 0.00, ?, ?, 'Posted');";
         try (PreparedStatement ps = conn.prepareStatement(ledgerSql)) {
             ps.setString(1, accId);
             ps.setBigDecimal(2, amount);
+            ps.setString(3, tm[0]);
+            ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
     }
@@ -205,12 +227,15 @@ public class BankTransactionSimulator {
             ps.executeUpdate();
         }
 
+        String[] tm = getRandomTypeAndMethod();
         // Insert double-entry ledger entry
-        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status) " +
-                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-DR-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'MERCHANT_OUTFLOW', 0.00, ?, 'Live UPI / POS Debit Withdrawal', 'Posted');";
+        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status) " +
+                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-DR-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'MERCHANT_OUTFLOW', 0.00, ?, ?, ?, 'Posted');";
         try (PreparedStatement ps = conn.prepareStatement(ledgerSql)) {
             ps.setString(1, accId);
             ps.setBigDecimal(2, amount);
+            ps.setString(3, tm[0]);
+            ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
     }
@@ -263,12 +288,15 @@ public class BankTransactionSimulator {
             ps.executeUpdate();
         }
 
+        String[] tm = getRandomTypeAndMethod();
         // Record in General Ledger
-        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status) " +
-                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-EMI-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'LOAN_PORTFOLIO_ASSET', 0.00, ?, 'Live Loan EMI Recovery Deduction', 'Posted');";
+        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status) " +
+                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-EMI-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'LOAN_PORTFOLIO_ASSET', 0.00, ?, ?, ?, 'Posted');";
         try (PreparedStatement ps = conn.prepareStatement(ledgerSql)) {
             ps.setString(1, custId);
             ps.setBigDecimal(2, emi);
+            ps.setString(3, tm[0]);
+            ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
     }
@@ -316,12 +344,15 @@ public class BankTransactionSimulator {
             ps.executeUpdate();
         }
 
+        String[] tm = getRandomTypeAndMethod();
         // Insert double-entry ledger
-        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status) " +
-                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-LN-DISB-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'LOAN_DISBURSEMENT_PAYABLE', ?, 0.00, 'New Loan Origination Proceeds Credited', 'Posted');";
+        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status) " +
+                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-LN-DISB-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'LOAN_DISBURSEMENT_PAYABLE', ?, 0.00, ?, ?, 'Posted');";
         try (PreparedStatement ps = conn.prepareStatement(ledgerSql)) {
             ps.setString(1, custId);
             ps.setBigDecimal(2, sanctionedAmount);
+            ps.setString(3, tm[0]);
+            ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
     }
@@ -358,12 +389,15 @@ public class BankTransactionSimulator {
             ps.executeUpdate();
         }
 
+        String[] tm = getRandomTypeAndMethod();
         // Ledger settlement entry
-        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, narration, status) " +
-                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-LN-CLOSE-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'LOAN_CLOSURE_SETTLEMENT', 0.00, ?, 'Customer Full Loan Payoff & Closure', 'Posted');";
+        String ledgerSql = "INSERT INTO " + schema + ".ledger_entries (entry_id, transaction_ref, timestamp, account_reference, counterparty_ref, debit_inr, credit_inr, type, method, status) " +
+                "VALUES ('LED-' || to_char(random()*10000000, 'FM0000000'), 'TXN-LN-CLOSE-' || to_char(random()*1000000, 'FM000000'), CURRENT_TIMESTAMP, ?, 'LOAN_CLOSURE_SETTLEMENT', 0.00, ?, ?, ?, 'Posted');";
         try (PreparedStatement ps = conn.prepareStatement(ledgerSql)) {
             ps.setString(1, custId);
             ps.setBigDecimal(2, outstanding);
+            ps.setString(3, tm[0]);
+            ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
     }

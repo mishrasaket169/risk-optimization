@@ -98,6 +98,9 @@ public class PostgresBankServiceIntegrationTest {
 
         // Wait up to 5 seconds for simulator to fire and CDC notification to be received
         boolean fired = latch.await(5, TimeUnit.SECONDS);
+        for (int i = 0; i < 50 && simulator.getTransactionCount() == 0; i++) {
+            Thread.sleep(50);
+        }
         simulator.stop();
 
         assertTrue(simulator.getTransactionCount() > 0, "Simulator should have executed transactions");

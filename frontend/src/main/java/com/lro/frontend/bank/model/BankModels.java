@@ -95,7 +95,8 @@ public class BankModels {
             String counterpartyRef,
             BigDecimal debitINR,
             BigDecimal creditINR,
-            String narration,
+            String type,
+            String method,
             String status // "Posted", "Pending", "Reversed"
     ) {}
 

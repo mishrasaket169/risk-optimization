@@ -90,11 +90,10 @@ public class BankViews {
 
         // Row 1: 3 LRO KPI Cards matching Bank Simulator metrics
         HBox kpiRow = new HBox(12);
-        kpiRow.getChildren().addAll(
-                UIComponents.createKpiCard("Total Assets", Formatters.formatINRCrores(profile.totalAssets()), "Verified Book Size", "Total resources owned by the bank including loans and investments.", "#0284C7"),
-                UIComponents.createKpiCard("Total Deposits", Formatters.formatINRCrores(profile.totalDeposits()), "Customer CASA & FDs", "Core funding source from retail and corporate depositors.", "#059669"),
-                UIComponents.createKpiCard("Gross Loan Portfolio", Formatters.formatINRCrores(profile.totalLoans()), "Sanctioned Credit Assets", "Total outstanding advances to retail, SME and corporate borrowers.", "#4F46E5")
-        );
+        VBox cardAssets = UIComponents.createKpiCard("Total Assets", Formatters.formatINRCrores(profile.totalAssets()), "Verified Book Size", "Total resources owned by the bank including loans and investments.", "#0284C7");
+        VBox cardDeposits = UIComponents.createKpiCard("Total Deposits", Formatters.formatINRCrores(profile.totalDeposits()), "Customer CASA & FDs", "Core funding source from retail and corporate depositors.", "#059669");
+        VBox cardLoans = UIComponents.createKpiCard("Gross Loan Portfolio", Formatters.formatINRCrores(profile.totalLoans()), "Sanctioned Credit Assets", "Total outstanding advances to retail, SME and corporate borrowers.", "#4F46E5");
+        kpiRow.getChildren().addAll(cardAssets, cardDeposits, cardLoans);
 
         // Row 2: Asset & Liability Flow Dynamic Chart Card
         String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -225,6 +224,19 @@ public class BankViews {
 
         mainGrid.getChildren().addAll(centerCol, rightCol);
         root.getChildren().addAll(selectorBar, mainGrid);
+
+        this.activeViewRefresher = () -> {
+            BankProfile p = bankService.getBankProfile(selectedBankId).orElse(profile);
+            UIComponents.updateKpiCardValue(cardAssets, Formatters.formatINRCrores(p.totalAssets()));
+            UIComponents.updateKpiCardValue(cardDeposits, Formatters.formatINRCrores(p.totalDeposits()));
+            UIComponents.updateKpiCardValue(cardLoans, Formatters.formatINRCrores(p.totalLoans()));
+            UIComponents.updateKpiCardValue(npaCard, Formatters.formatPercent(p.grossNpaRatio()));
+            UIComponents.updateKpiCardValue(nimCard, Formatters.formatPercent(p.netInterestMargin()));
+
+            List<AccountRecord> currentAccs = bankService.getAccounts(selectedBankId, "");
+            table.getItems().setAll(currentAccs.size() > 5 ? currentAccs.subList(0, 5) : currentAccs);
+        };
+
         return root;
     }
 
@@ -671,7 +683,7 @@ public class BankViews {
         ledgerHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
 
         TextField searchField = new TextField();
-        searchField.setPromptText("Search reference, account, or narration...");
+        searchField.setPromptText("Search reference, account, type, or method...");
         searchField.setPrefWidth(280);
 
         Label countLabel = new Label();
@@ -699,13 +711,16 @@ public class BankViews {
         TableColumn<LedgerEntry, String> colCredit = new TableColumn<>("Credit (INR)");
         colCredit.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().creditINR().compareTo(BigDecimal.ZERO) > 0 ? Formatters.formatINR(d.getValue().creditINR()) : "—"));
 
-        TableColumn<LedgerEntry, String> colNarration = new TableColumn<>("Transaction Narration");
-        colNarration.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().narration()));
+        TableColumn<LedgerEntry, String> colType = new TableColumn<>("Type");
+        colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().type()));
+
+        TableColumn<LedgerEntry, String> colMethod = new TableColumn<>("Method");
+        colMethod.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().method()));
 
         TableColumn<LedgerEntry, String> colStatus = new TableColumn<>("Posting Status");
         colStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().status()));
 
-        table.getColumns().addAll(colTxn, colTime, colAcc, colDebit, colCredit, colNarration, colStatus);
+        table.getColumns().addAll(colTxn, colTime, colAcc, colDebit, colCredit, colType, colMethod, colStatus);
 
         UIComponents.PaginationBar<LedgerEntry> paginationBar = new UIComponents.PaginationBar<>(table, 500);
 
@@ -716,7 +731,8 @@ public class BankViews {
                 if (q.isEmpty()) return true;
                 return (e.transactionRef() != null && e.transactionRef().toLowerCase().contains(q))
                         || (e.accountReference() != null && e.accountReference().toLowerCase().contains(q))
-                        || (e.narration() != null && e.narration().toLowerCase().contains(q));
+                        || (e.type() != null && e.type().toLowerCase().contains(q))
+                        || (e.method() != null && e.method().toLowerCase().contains(q));
             }).toList();
             paginationBar.setData(filtered);
             countLabel.setText("Total: " + String.format("%,d", filtered.size()) + " entries");
@@ -766,6 +782,7 @@ public class BankViews {
 
         root.getChildren().addAll(ladderHeader, table, explanation);
         VBox.setVgrow(table, Priority.ALWAYS);
+        this.activeViewRefresher = () -> table.getItems().setAll(bankService.getCashFlowLadder(bankId));
         return root;
     }
 

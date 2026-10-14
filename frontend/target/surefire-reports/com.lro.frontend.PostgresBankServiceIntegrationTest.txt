@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.lro.frontend.PostgresBankServiceIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.436 s -- in com.lro.frontend.PostgresBankServiceIntegrationTest

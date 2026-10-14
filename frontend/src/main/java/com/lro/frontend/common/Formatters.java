@@ -120,6 +120,11 @@ public final class Formatters {
         return DATE_FORMATTER.format(instant);
     }
 
+    public static String formatDate(java.time.LocalDate date) {
+        if (date == null) return "—";
+        return date.toString();
+    }
+
     public static String formatTime(Instant instant) {
         if (instant == null) return "—";
         return TIME_FORMATTER.format(instant);

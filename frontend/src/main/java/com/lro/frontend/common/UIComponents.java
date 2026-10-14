@@ -6,9 +6,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.*;
 
 import java.util.List;
 
@@ -92,13 +93,24 @@ public final class UIComponents {
         return card;
     }
 
+    public static void updateKpiCardValue(VBox card, String newValue) {
+        if (card == null || card.getChildren().size() <= 1) return;
+        Node node = card.getChildren().get(1);
+        if (node instanceof Label lbl) {
+            lbl.setText(newValue);
+        } else if (node instanceof HBox row && !row.getChildren().isEmpty() && row.getChildren().get(0) instanceof Label lbl) {
+            lbl.setText(newValue);
+        }
+    }
+
     /**
      * KPI card with delta percentage badge aligned with LRO color palette.
      */
     public static VBox createLroKpiCard(String title, String value, String deltaText, boolean isPositive,
             String subtitle, String glossaryHelp) {
         String accentColor = isPositive ? "#059669" : "#DC2626";
-        if (title.contains("Cash") || title.contains("Assets") || title.contains("Turnover")) {
+        if (title.contains("Cash") || title.contains("Assets") || title.contains("Turnover")
+                || title.contains("Yield") || title.contains("Bond")) {
             accentColor = "#0284C7";
         } else if (title.contains("Deposits") || title.contains("HQLA") || title.contains("LCR")
                 || title.contains("Index")) {
@@ -293,6 +305,162 @@ public final class UIComponents {
     public static VBox createDualBarChart(String[] days, double[] navyValues, double[] beigeValues, String tooltipDay,
             String tooltipVal) {
         return createDualBarChart(days, navyValues, beigeValues, tooltipDay, tooltipVal, "#0F172A");
+    }
+
+    /**
+     * Line graph representing market movement over time with gradient area fill and interactive tooltip.
+     */
+    public static VBox createLineMovementChart(String[] labels, double[] values, int activeIndex,
+            String activeTooltipTitle, String activeTooltipValue, String primaryColorHex) {
+        VBox container = new VBox(8);
+        container.setPadding(new Insets(10, 0, 8, 0));
+
+        Pane chartPane = new Pane();
+        chartPane.setPrefHeight(150);
+        chartPane.setMinHeight(150);
+        chartPane.setMaxHeight(150);
+        chartPane.setPrefWidth(640);
+        HBox.setHgrow(chartPane, Priority.ALWAYS);
+
+        String colorHex = (primaryColorHex != null && !primaryColorHex.isEmpty()) ? primaryColorHex : "#4F46E5";
+
+        // Initial render for headless/default layout
+        renderLineChart(chartPane, 640.0, 150.0, labels, values, activeIndex, activeTooltipTitle, activeTooltipValue, colorHex);
+
+        chartPane.widthProperty().addListener((obs, oldW, newW) -> {
+            if (newW != null && newW.doubleValue() > 100.0) {
+                renderLineChart(chartPane, newW.doubleValue(), 150.0, labels, values, activeIndex, activeTooltipTitle, activeTooltipValue, colorHex);
+            }
+        });
+
+        container.getChildren().add(chartPane);
+        return container;
+    }
+
+    private static void renderLineChart(Pane chartPane, double width, double height, String[] labels, double[] values,
+            int activeIndex, String activeTooltipTitle, String activeTooltipValue, String primaryColorHex) {
+        chartPane.getChildren().clear();
+
+        if (values == null || values.length < 2) {
+            return;
+        }
+
+        double padLeft = 32.0;
+        double padRight = 32.0;
+        double padTop = 38.0;
+        double padBottom = 26.0;
+
+        double usableW = Math.max(100.0, width - padLeft - padRight);
+        double usableH = Math.max(50.0, height - padTop - padBottom);
+
+        double minVal = Double.MAX_VALUE;
+        double maxVal = Double.MIN_VALUE;
+        for (double v : values) {
+            minVal = Math.min(minVal, v);
+            maxVal = Math.max(maxVal, v);
+        }
+
+        double valRange = maxVal - minVal;
+        if (valRange <= 0.0001) {
+            valRange = 1.0;
+        }
+        double graphMin = minVal - valRange * 0.12;
+        double graphMax = maxVal + valRange * 0.12;
+        double graphRange = graphMax - graphMin;
+
+        // 1. Subtle horizontal dashed grid lines
+        for (int g = 0; g <= 2; g++) {
+            double gy = padTop + g * (usableH / 2.0);
+            Line grid = new Line(padLeft, gy, width - padRight, gy);
+            grid.setStroke(Color.web("#F1F5F9"));
+            grid.setStrokeWidth(1.0);
+            grid.getStrokeDashArray().addAll(4.0, 4.0);
+            chartPane.getChildren().add(grid);
+        }
+
+        int n = values.length;
+        double[] xCoords = new double[n];
+        double[] yCoords = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            xCoords[i] = padLeft + i * (usableW / (n - 1));
+            double norm = (values[i] - graphMin) / graphRange;
+            yCoords[i] = padTop + (1.0 - norm) * usableH;
+        }
+
+        // 2. Area gradient fill under the line
+        Polygon areaFill = new Polygon();
+        areaFill.getPoints().addAll(xCoords[0], padTop + usableH);
+        for (int i = 0; i < n; i++) {
+            areaFill.getPoints().addAll(xCoords[i], yCoords[i]);
+        }
+        areaFill.getPoints().addAll(xCoords[n - 1], padTop + usableH);
+
+        Stop[] stops = new Stop[] {
+                new Stop(0.0, Color.web(primaryColorHex, 0.22)),
+                new Stop(1.0, Color.web(primaryColorHex, 0.01))
+        };
+        LinearGradient gradient = new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE, stops);
+        areaFill.setFill(gradient);
+        chartPane.getChildren().add(areaFill);
+
+        // 3. Polyline curve
+        Polyline polyline = new Polyline();
+        for (int i = 0; i < n; i++) {
+            polyline.getPoints().addAll(xCoords[i], yCoords[i]);
+        }
+        polyline.setStroke(Color.web(primaryColorHex));
+        polyline.setStrokeWidth(3.0);
+        polyline.setStrokeLineCap(StrokeLineCap.ROUND);
+        polyline.setStrokeLineJoin(StrokeLineJoin.ROUND);
+        chartPane.getChildren().add(polyline);
+
+        // 4. Data points, tooltip, and X-axis labels
+        for (int i = 0; i < n; i++) {
+            double xi = xCoords[i];
+            double yi = yCoords[i];
+
+            if (i == activeIndex) {
+                // Highlight glowing halo
+                Circle halo = new Circle(xi, yi, 8.5);
+                halo.setFill(Color.web(primaryColorHex, 0.20));
+
+                Circle dot = new Circle(xi, yi, 4.5);
+                dot.setFill(Color.web(primaryColorHex));
+                dot.setStroke(Color.WHITE);
+                dot.setStrokeWidth(2.0);
+                chartPane.getChildren().addAll(halo, dot);
+
+                // Floating Tooltip Pill
+                VBox tooltipPill = new VBox(2);
+                tooltipPill.getStyleClass().add("dark-tooltip-pill");
+                tooltipPill.setAlignment(Pos.CENTER);
+                Label t1 = new Label(activeTooltipTitle);
+                t1.setStyle("-fx-text-fill: #94A3B8; -fx-font-size: 9px; -fx-font-weight: bold;");
+                Label t2 = new Label(activeTooltipValue);
+                t2.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 11px; -fx-font-weight: 800;");
+                tooltipPill.getChildren().addAll(t1, t2);
+
+                tooltipPill.setLayoutX(xi - 52.0);
+                tooltipPill.setLayoutY(Math.max(2.0, yi - 46.0));
+                chartPane.getChildren().add(tooltipPill);
+            } else {
+                Circle dot = new Circle(xi, yi, 3.5);
+                dot.setFill(Color.WHITE);
+                dot.setStroke(Color.web(primaryColorHex));
+                dot.setStrokeWidth(2.0);
+                chartPane.getChildren().add(dot);
+            }
+
+            if (labels != null && i < labels.length) {
+                Label xLbl = new Label(labels[i]);
+                boolean isActive = (i == activeIndex);
+                xLbl.setStyle("-fx-text-fill: " + (isActive ? primaryColorHex : "#64748B") + "; -fx-font-size: 11px; -fx-font-weight: " + (isActive ? "800" : "600") + ";");
+                xLbl.setLayoutX(xi - 12.0);
+                xLbl.setLayoutY(height - 18.0);
+                chartPane.getChildren().add(xLbl);
+            }
+        }
     }
 
     /**

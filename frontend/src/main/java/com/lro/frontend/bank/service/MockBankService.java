@@ -110,6 +110,7 @@ public class MockBankService implements BankService {
             seedTreasury(p.bankId());
             seedLedger(p.bankId());
             seedLadder(p.bankId(), p.healthStatus());
+            recalculateCustomerRelationshipValues(p.bankId());
         }
     }
 
@@ -402,6 +403,45 @@ public class MockBankService implements BankService {
         loanData.put(bankId, list);
     }
 
+    private void recalculateCustomerRelationshipValues(String bankId) {
+        List<CustomerRecord> custs = customerData.get(bankId);
+        if (custs == null || custs.isEmpty()) return;
+
+        Map<String, Integer> accCounts = new HashMap<>();
+        Map<String, BigDecimal> accBalances = new HashMap<>();
+        for (AccountRecord acc : accountData.getOrDefault(bankId, List.of())) {
+            accCounts.merge(acc.customerId(), 1, Integer::sum);
+            accBalances.merge(acc.customerId(), acc.availableBalance(), BigDecimal::add);
+        }
+
+        Map<String, Integer> loanCounts = new HashMap<>();
+        Map<String, BigDecimal> loanBalances = new HashMap<>();
+        for (LoanRecord loan : loanData.getOrDefault(bankId, List.of())) {
+            loanCounts.merge(loan.customerId(), 1, Integer::sum);
+            loanBalances.merge(loan.customerId(), loan.principalOutstanding(), BigDecimal::add);
+        }
+
+        List<CustomerRecord> updated = new ArrayList<>(custs.size());
+        for (CustomerRecord c : custs) {
+            int totalLinked = accCounts.getOrDefault(c.customerId(), 0) + loanCounts.getOrDefault(c.customerId(), 0);
+            BigDecimal totalVal = accBalances.getOrDefault(c.customerId(), BigDecimal.ZERO)
+                    .add(loanBalances.getOrDefault(c.customerId(), BigDecimal.ZERO));
+
+            updated.add(new CustomerRecord(
+                    c.customerId(),
+                    c.fullName(),
+                    c.segment(),
+                    c.kycStatus(),
+                    c.locationCategory(),
+                    c.riskCategory(),
+                    totalLinked,
+                    totalVal,
+                    c.branchName()
+            ));
+        }
+        customerData.put(bankId, updated);
+    }
+
     private static final String[] TREASURY_CATEGORIES = {
         "Government Bond",
         "Treasury Bill",
@@ -552,10 +592,10 @@ public class MockBankService implements BankService {
         List<LedgerEntry> list = new ArrayList<>();
         Instant now = Instant.now();
 
-        list.add(new LedgerEntry("LGD-1001", "TXN-CCIL-881", now.minusSeconds(3600), "CASH_RBI_RESERVE", "INTERBANK_CLEARING", new BigDecimal("50000000.00"), BigDecimal.ZERO, "RTGS Interbank Settlement - CCIL Clearing", "Posted"));
-        list.add(new LedgerEntry("LGD-1002", "TXN-DEP-401", now.minusSeconds(7200), "CASA_SAVINGS_LIAB", "CUSTOMER_WITHDRAWAL", BigDecimal.ZERO, new BigDecimal("1500000.00"), "High Value Commercial Cash Withdrawal", "Posted"));
-        list.add(new LedgerEntry("LGD-1003", "TXN-SEC-112", now.minusSeconds(10800), "TREASURY_GSEC_HOLDINGS", "CASH_RBI_RESERVE", new BigDecimal("25000000.00"), BigDecimal.ZERO, "Secondary Market Purchase: 7.18% GS 2033", "Posted"));
-        list.add(new LedgerEntry("LGD-1004", "TXN-EMI-992", now.minusSeconds(14400), "LOAN_PORTFOLIO_ASSET", "CASA_SAVINGS_LIAB", BigDecimal.ZERO, new BigDecimal("250000.00"), "Automated Loan EMI Batch Recovery", "Posted"));
+        list.add(new LedgerEntry("LGD-1001", "TXN-CCIL-881", now.minusSeconds(3600), "CASH_RBI_RESERVE", "INTERBANK_CLEARING", new BigDecimal("50000000.00"), BigDecimal.ZERO, "Transfers", "RTGS", "Posted"));
+        list.add(new LedgerEntry("LGD-1002", "TXN-DEP-401", now.minusSeconds(7200), "CASA_SAVINGS_LIAB", "CUSTOMER_WITHDRAWAL", BigDecimal.ZERO, new BigDecimal("1500000.00"), "Withdrawal", "Cash", "Posted"));
+        list.add(new LedgerEntry("LGD-1003", "TXN-SEC-112", now.minusSeconds(10800), "TREASURY_GSEC_HOLDINGS", "CASH_RBI_RESERVE", new BigDecimal("25000000.00"), BigDecimal.ZERO, "Investment", "NEFT", "Posted"));
+        list.add(new LedgerEntry("LGD-1004", "TXN-EMI-992", now.minusSeconds(14400), "LOAN_PORTFOLIO_ASSET", "CASA_SAVINGS_LIAB", BigDecimal.ZERO, new BigDecimal("250000.00"), "Payments", "UPI", "Posted"));
 
         ledgerData.put(bankId, list);
     }
@@ -714,7 +754,8 @@ public class MockBankService implements BankService {
                 type.equalsIgnoreCase("Deposit") ? "CASH_VAULT" : "EXTERNAL_BENEFICIARY",
                 type.equalsIgnoreCase("Deposit") ? amount : BigDecimal.ZERO,
                 type.equalsIgnoreCase("Withdrawal") ? amount : BigDecimal.ZERO,
-                "Demo " + type + " Posting",
+                type.equalsIgnoreCase("Deposit") ? "Deposits" : "Withdrawal",
+                "Cash",
                 "Posted"
         ));
         return true;
@@ -744,7 +785,8 @@ public class MockBankService implements BankService {
                 "CASA_COLLECTION_POOL",
                 BigDecimal.ZERO,
                 emiAmount,
-                "Demo EMI Repayment credited against " + loanId,
+                "Payments",
+                "UPI",
                 "Posted"
         ));
         return true;

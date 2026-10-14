@@ -4,8 +4,6 @@ import com.lro.frontend.bank.service.BankService;
 import com.lro.frontend.bank.service.BankTransactionSimulator;
 import com.lro.frontend.bank.service.MockBankService;
 import com.lro.frontend.bank.service.PostgresBankService;
-import com.lro.frontend.common.Formatters;
-import com.lro.frontend.common.UIComponents;
 import com.lro.frontend.exchange.service.MockExchangeService;
 import com.lro.frontend.lro.service.MockLroService;
 import com.lro.frontend.views.BankViews;
@@ -25,7 +23,6 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.time.Instant;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -69,8 +66,6 @@ public class MainApp extends Application {
     private BorderPane mainLayout;
     private VBox navRail;
     private ScrollPane contentScrollPane;
-    private Label clockLabel;
-    private Label txnCountLabel;
     private Button btnToggleSim;
 
     @Override
@@ -99,25 +94,11 @@ public class MainApp extends Application {
         contentScrollPane.setStyle("-fx-background: #F8FAFC; -fx-background-color: transparent;");
         mainLayout.setCenter(contentScrollPane);
 
-        // Start clock timer and transaction counter
-        Timeline clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            if (clockLabel != null) {
-                clockLabel.setText("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
-            }
-            if (simulator != null && txnCountLabel != null) {
-                txnCountLabel.setText("(" + String.format("%,d", simulator.getTransactionCount()) + " txns)");
-            }
-        }));
-        clockTimeline.setCycleCount(Animation.INDEFINITE);
-        clockTimeline.play();
-
-        // Live data refresh timeline (debounced to 750ms to prevent UI flicker under 8 TPS)
-        Timeline liveRefreshTimeline = new Timeline(new KeyFrame(Duration.millis(750), e -> {
+        // Live data refresh timeline (debounced to 250ms for rapid live ledger updates)
+        Timeline liveRefreshTimeline = new Timeline(new KeyFrame(Duration.millis(250), e -> {
             if (needsLiveRefresh.compareAndSet(true, false)) {
                 if (currentApp == AppMode.BANK_SIMULATOR) {
                     bankViews.refreshActiveView();
-                } else {
-                    refreshCurrentView();
                 }
             }
         }));
@@ -235,52 +216,30 @@ public class MainApp extends Application {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // Status & Simulator Controls
-        HBox statusBox = new HBox(8);
-        statusBox.setAlignment(Pos.CENTER_LEFT);
-
-        Label dbBadge = new Label(isPostgresConnected ? "🟢 PostgreSQL Live" : "🟡 In-Memory Mock");
-        dbBadge.setStyle(isPostgresConnected
-                ? "-fx-background-color: #DCFCE7; -fx-text-fill: #166534; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;"
-                : "-fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-padding: 4 9 4 9; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
-
+        // Pause / Resume Button placed where Glossary was (far right)
         if (simulator != null) {
-            Label simBadge = new Label("⚡ Sim: 8 TPS");
-            simBadge.setStyle("-fx-background-color: #EFF6FF; -fx-text-fill: #1D4ED8; -fx-padding: 4 8 4 8; -fx-background-radius: 6; -fx-font-size: 11px; -fx-font-weight: bold;");
-
-            txnCountLabel = new Label("(" + String.format("%,d", simulator.getTransactionCount()) + " txns)");
-            txnCountLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px; -fx-font-family: monospace; -fx-font-weight: 600;");
-
             btnToggleSim = new Button(simulator.isRunning() ? "⏸ Pause" : "▶ Resume");
-            btnToggleSim.setStyle("-fx-font-size: 11px; -fx-padding: 3 8 3 8; -fx-background-radius: 6; -fx-font-weight: bold; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;");
+            btnToggleSim.getStyleClass().add("btn-secondary");
+            btnToggleSim.setStyle(simulator.isRunning()
+                    ? "-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;"
+                    : "-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-border-color: #FCD34D; -fx-border-radius: 6;");
+
             btnToggleSim.setOnAction(e -> {
                 if (simulator.isRunning()) {
                     simulator.pause();
                     btnToggleSim.setText("▶ Resume");
+                    btnToggleSim.setStyle("-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-border-color: #FCD34D; -fx-border-radius: 6;");
                 } else {
                     simulator.resume();
                     btnToggleSim.setText("⏸ Pause");
+                    btnToggleSim.setStyle("-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;");
                 }
             });
 
-            statusBox.getChildren().addAll(dbBadge, simBadge, txnCountLabel, btnToggleSim);
+            header.getChildren().addAll(brandBox, switcher, spacer, btnToggleSim);
         } else {
-            statusBox.getChildren().add(dbBadge);
+            header.getChildren().addAll(brandBox, switcher);
         }
-
-        clockLabel = new Label("Sim Clock: " + Formatters.formatTime(Instant.now()) + " IST");
-        clockLabel.setStyle(
-                "-fx-text-fill: #475569; -fx-font-size: 12px; -fx-font-family: monospace; -fx-font-weight: 600;");
-
-        Button btnHelp = new Button("📖 Glossary");
-        btnHelp.getStyleClass().add("btn-secondary");
-        btnHelp.setOnAction(e -> UIComponents.showGlossaryDialog(
-                "Liquidity Risk Optimizer Overview",
-                "Educational and research simulation platform modelling bank balance sheets, continuous double-auction market matching, and liquidity risk optimization.",
-                "Three integrated modules: Bank Simulator, Exchange Simulator, and LRO Decision Support Engine.",
-                "Simulated environment complying with RBI/Basel III framework principles."));
-
-        header.getChildren().addAll(brandBox, switcher, spacer, statusBox, clockLabel, btnHelp);
         return header;
     }
 
@@ -326,10 +285,11 @@ public class MainApp extends Application {
             navRail.getChildren().addAll(
                     header,
                     createNavButton("🌐", "Market Overview", "DASHBOARD"),
-                    createNavButton("📋", "Instrument Catalogue", "CATALOGUE"),
+                    createNavButton("📈", "Stock", "STOCKS"),
+                    createNavButton("🏛", "Bond", "BONDS"),
+                    createNavButton("🛡", "Securities", "SECURITIES"),
                     createNavButton("🎟", "Trading Order Ticket", "TICKET"),
                     createNavButton("📊", "Market Depth Order Book", "DEPTH"),
-                    createNavButton("📜", "Order & Trade Blotters", "BLOTTER"),
                     createNavButton("⚙", "Market Regime Controls", "REGIMES"));
         } else {
             header.setText("LIQUIDITY OPTIMIZER (LRO)");
@@ -399,7 +359,25 @@ public class MainApp extends Application {
             };
         } else if (currentApp == AppMode.EXCHANGE_SIMULATOR) {
             view = switch (currentNavTag.toUpperCase()) {
-                case "CATALOGUE" -> exchangeViews.buildInstrumentCatalogue(sym -> {
+                case "STOCKS" -> exchangeViews.buildStocksView(sym -> {
+                    this.selectedInstrument = sym;
+                    this.currentNavTag = "DEPTH";
+                    refreshNavigationRail();
+                    refreshCurrentView();
+                });
+                case "BONDS" -> exchangeViews.buildBondsView(sym -> {
+                    this.selectedInstrument = sym;
+                    this.currentNavTag = "DEPTH";
+                    refreshNavigationRail();
+                    refreshCurrentView();
+                });
+                case "SECURITIES" -> exchangeViews.buildSecuritiesView(sym -> {
+                    this.selectedInstrument = sym;
+                    this.currentNavTag = "DEPTH";
+                    refreshNavigationRail();
+                    refreshCurrentView();
+                });
+                case "CATALOGUE" -> exchangeViews.buildStocksView(sym -> {
                     this.selectedInstrument = sym;
                     this.currentNavTag = "DEPTH";
                     refreshNavigationRail();
@@ -407,7 +385,12 @@ public class MainApp extends Application {
                 });
                 case "TICKET" -> exchangeViews.buildOrderTicket(selectedInstrument);
                 case "DEPTH" -> exchangeViews.buildOrderBookDepth(selectedInstrument);
-                case "BLOTTER" -> exchangeViews.buildBlotter();
+                case "BLOTTER" -> exchangeViews.buildStocksView(sym -> {
+                    this.selectedInstrument = sym;
+                    this.currentNavTag = "DEPTH";
+                    refreshNavigationRail();
+                    refreshCurrentView();
+                });
                 case "REGIMES" -> exchangeViews.buildRegimesControl();
                 default -> exchangeViews.buildOverview();
             };
