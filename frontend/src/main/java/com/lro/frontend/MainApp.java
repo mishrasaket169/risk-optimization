@@ -15,7 +15,6 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,8 +22,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -320,7 +317,6 @@ public class MainApp extends Application {
                     createNavButton("🏛", "Institution Dashboard", "DASHBOARD"),
                     createNavButton("👥", "Customer Directory", "CUSTOMERS"),
                     createNavButton("💳", "Accounts", "ACCOUNTS"),
-                    createNavButton("💰", "Fixed Deposits", "DEPOSITS"),
                     createNavButton("📊", "Loans", "LOANS"),
                     createNavButton("🏛", "Bonds & Equity", "TREASURY"),
                     createNavButton("📖", "General Ledger", "LEDGER"),
@@ -386,24 +382,12 @@ public class MainApp extends Application {
         return btn;
     }
 
-    private Button createNavButton(String fullTitle, String navTag) {
-        String icon = "";
-        String label = fullTitle;
-        int spaceIdx = fullTitle.indexOf(' ');
-        if (spaceIdx > 0) {
-            icon = fullTitle.substring(0, spaceIdx);
-            label = fullTitle.substring(spaceIdx + 1);
-        }
-        return createNavButton(icon, label, navTag);
-    }
-
     private void refreshCurrentView() {
         VBox view;
         if (currentApp == AppMode.BANK_SIMULATOR) {
             view = switch (currentNavTag.toUpperCase()) {
                 case "CUSTOMERS" -> bankViews.buildCustomersView(selectedBankId);
                 case "ACCOUNTS" -> bankViews.buildAccountsView(selectedBankId);
-                case "DEPOSITS" -> bankViews.buildDepositsView(selectedBankId);
                 case "LOANS" -> bankViews.buildLoansView(selectedBankId);
                 case "TREASURY" -> bankViews.buildTreasuryView(selectedBankId);
                 case "LEDGER" -> bankViews.buildLedgerView(selectedBankId);

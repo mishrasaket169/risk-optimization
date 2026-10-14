@@ -3,8 +3,6 @@ package com.lro.bank.service;
 import com.lro.common.model.Money;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -31,8 +29,6 @@ public class BankPopulationGenerator {
     ) {}
 
     public static SyntheticBankPopulation generatePopulation(String bankId, long seed) {
-        Random random = new Random(seed);
-
         long targetCustomers;
         long targetLoans;
         long targetTreasuryLots;

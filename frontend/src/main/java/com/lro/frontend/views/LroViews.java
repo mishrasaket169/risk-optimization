@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -22,6 +23,7 @@ import java.util.List;
  * - Right panel with Regional exposure map widget and composition breakdown donut card
  * - All original formulas, text content, disclaimers, and algorithms preserved.
  */
+@SuppressWarnings("unchecked")
 public class LroViews {
 
     private final LroService lroService;
@@ -99,7 +101,7 @@ public class LroViews {
 
         VBox chartCard = UIComponents.createChartCard(
                 "Liquidity Dynamics & Cash-Flows",
-                Formatters.formatINRCrores(snap.cashAvailableINR().divide(BigDecimal.valueOf(10), BigDecimal.ROUND_HALF_UP)),
+                Formatters.formatINRCrores(snap.cashAvailableINR().divide(BigDecimal.valueOf(10), RoundingMode.HALF_UP)),
                 "+2.32%",
                 "Total net liquidity in week",
                 "Week",

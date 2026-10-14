@@ -3,7 +3,6 @@ package com.lro.frontend.lro.service;
 import com.lro.frontend.lro.model.LroModels.*;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface LroService {
     LiquiditySnapshot getSnapshot(String bankId);

@@ -4,7 +4,6 @@ import com.lro.frontend.bank.service.BankService;
 import com.lro.frontend.bank.service.MockBankService;
 import com.lro.frontend.bank.service.PostgresBankService;
 import com.lro.frontend.common.Formatters;
-import com.lro.frontend.common.UIComponents;
 import com.lro.frontend.exchange.service.MockExchangeService;
 import com.lro.frontend.lro.service.MockLroService;
 import com.lro.frontend.views.BankViews;
@@ -20,8 +19,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
@@ -67,9 +64,10 @@ public class RenderSnapshotsTest {
 
     private void renderFullAppScreenshots() throws Exception {
         BankService bankService;
+        PostgresBankService pg = null;
         boolean isPg = false;
         try {
-            PostgresBankService pg = new PostgresBankService();
+            pg = new PostgresBankService();
             if (pg.isConnected()) {
                 bankService = pg;
                 isPg = true;
@@ -120,14 +118,10 @@ public class RenderSnapshotsTest {
         // 3. Liquidity Optimizer Shell
         BorderPane lroShell = buildFullShell("LRO", "Liquidity Dashboard", lroViews.buildDashboard("BANK-01-LRG", id -> {}), isPg);
         saveSceneSnapshot(lroShell, cssPath, ARTIFACTS_DIR + "lro_optimizer_full_app.png");
-    }
 
-    private BorderPane buildFullShell(String mode, Pane viewContent) {
-        return buildFullShell(mode, null, viewContent, false);
-    }
-
-    private BorderPane buildFullShell(String mode, String activeNavTitle, Pane viewContent) {
-        return buildFullShell(mode, activeNavTitle, viewContent, false);
+        if (pg != null) {
+            pg.close();
+        }
     }
 
     private BorderPane buildFullShell(String mode, String activeNavTitle, Pane viewContent, boolean isPg) {
@@ -233,7 +227,6 @@ public class RenderSnapshotsTest {
                     createNavRow("🏛", "Institution Dashboard", "Institution Dashboard".equals(selectedTitle)),
                     createNavRow("👥", "Customer Directory", "Customer Directory".equals(selectedTitle)),
                     createNavRow("💳", "Accounts & CASA", "Accounts & CASA".equals(selectedTitle)),
-                    createNavRow("💰", "Fixed Deposits", "Fixed Deposits".equals(selectedTitle)),
                     createNavRow("📊", "Loans & NPA Management", "Loans & NPA Management".equals(selectedTitle)),
                     createNavRow("🏛", "Treasury & G-Sec Holdings", "Treasury & G-Sec Holdings".equals(selectedTitle)),
                     createNavRow("📖", "General Ledger", "General Ledger".equals(selectedTitle)),

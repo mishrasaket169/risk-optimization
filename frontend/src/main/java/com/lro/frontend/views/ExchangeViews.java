@@ -19,6 +19,7 @@ import java.util.List;
  * Market Overview, Instrument Catalogue, Trading Ticket, Market Depth Order Book,
  * Order/Trade Blotters, and Market Regime controls.
  */
+@SuppressWarnings("unchecked")
 public class ExchangeViews {
 
     private final ExchangeService exchangeService;
@@ -94,7 +95,7 @@ public class ExchangeViews {
 
         VBox chartCard = UIComponents.createChartCard(
                 "Spending Statistic (Trading Volume & Turnover)",
-                Formatters.formatINRCrores(ov.totalTurnoverINR().divide(BigDecimal.valueOf(10), BigDecimal.ROUND_HALF_UP)),
+                Formatters.formatINRCrores(ov.totalTurnoverINR().divide(BigDecimal.valueOf(10), RoundingMode.HALF_UP)),
                 "+2.32%",
                 "Total traded value in week",
                 "Week",

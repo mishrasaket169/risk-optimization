@@ -1,6 +1,5 @@
 package com.lro.app;
 
-import com.lro.analytics.LiquidityMetricsEngine;
 import com.lro.analytics.PortfolioValuationEngine;
 import com.lro.analytics.PortfolioValuationEngine.PortfolioLot;
 import com.lro.bank.service.BankPopulationGenerator;
@@ -20,10 +19,7 @@ import com.lro.ml.adapter.Model2ExecutionCostAdapter;
 import com.lro.orchestration.RecommendationRankingEngine;
 import com.lro.orchestration.ScenarioOrchestrator;
 import com.lro.persistence.DatabaseManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 
@@ -33,8 +29,6 @@ import java.util.List;
  * messaging brokers, analytics engines, and ML inference adapters.
  */
 public class BackendLauncher {
-
-    private static final Logger log = LoggerFactory.getLogger(BackendLauncher.class);
 
     private final DatabaseManager dbManager;
     private final StompEventBroker broker;
@@ -85,7 +79,7 @@ public class BackendLauncher {
         SyntheticBankPopulation medium = BankPopulationGenerator.generatePopulation("BANK-02-MED", 42L);
         SyntheticBankPopulation small = BankPopulationGenerator.generatePopulation("BANK-03-SML", 42L);
         SyntheticBankPopulation distressed = BankPopulationGenerator.generatePopulation("BANK-04-DST", 42L);
-        System.out.println("SUCCESS (Large: " + large.customerCount() + " custs, Distressed: " + distressed.grossNpaRatio() + "% NPA)");
+        System.out.println("SUCCESS (Large: " + large.customerCount() + ", Med: " + medium.customerCount() + ", Sml: " + small.customerCount() + ", Distressed: " + distressed.grossNpaRatio() + "% NPA)");
 
         // 3. Post Initial Balancing Ledger Entries
         System.out.print("[3/6] Initializing double-entry general ledger with balanced trial balances... ");
@@ -127,6 +121,7 @@ public class BackendLauncher {
     public DoubleEntryLedgerService getLedgerService() { return ledgerService; }
     public ExchangeInstrumentCatalogue getCatalogue() { return catalogue; }
     public ContinuousMatchingEngine getMatchingEngine() { return matchingEngine; }
+    public MarketRegimeEngine getRegimeEngine() { return regimeEngine; }
     public PortfolioValuationEngine getValuationEngine() { return valuationEngine; }
     public RecommendationRankingEngine getRankingEngine() { return rankingEngine; }
     public ScenarioOrchestrator getScenarioOrchestrator() { return scenarioOrchestrator; }

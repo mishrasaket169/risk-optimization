@@ -637,19 +637,12 @@ public class MockBankService implements BankService {
 
     @Override
     public List<DepositRecord> getDeposits(String bankId) {
-        return getDeposits(bankId, "");
+        return Collections.emptyList();
     }
 
     @Override
     public List<DepositRecord> getDeposits(String bankId, String query) {
-        List<DepositRecord> all = depositData.getOrDefault(bankId, List.of());
-        if (query == null || query.isBlank()) {
-            return all;
-        }
-        String q = query.toLowerCase();
-        return all.stream()
-                .filter(d -> d.depositId().toLowerCase().contains(q) || d.customerId().toLowerCase().contains(q))
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     @Override

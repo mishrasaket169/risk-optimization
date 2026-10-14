@@ -297,29 +297,12 @@ public class PostgresBankService implements BankService, AutoCloseable {
 
     @Override
     public List<DepositRecord> getDeposits(String bankId) {
-        return getDeposits(bankId, "");
+        return Collections.emptyList();
     }
 
     @Override
     public List<DepositRecord> getDeposits(String bankId, String query) {
-        List<AccountRecord> accounts = getAccounts(bankId, query, "Fixed Deposit");
-        List<DepositRecord> list = new ArrayList<>();
-        LocalDate today = LocalDate.now();
-
-        for (AccountRecord a : accounts) {
-            list.add(new DepositRecord(
-                    "DEP-" + a.accountId(),
-                    a.customerId(),
-                    a.accountType(),
-                    a.availableBalance(),
-                    new BigDecimal("7.25"),
-                    today.minusMonths(3),
-                    today.plusMonths(9),
-                    a.availableBalance().multiply(new BigDecimal("1.0725")).setScale(2, RoundingMode.HALF_UP),
-                    "Auto-Renew Principal & Interest"
-            ));
-        }
-        return list;
+        return Collections.emptyList();
     }
 
     @Override
@@ -476,19 +459,35 @@ public class PostgresBankService implements BankService, AutoCloseable {
 
         BigDecimal b1In = new BigDecimal("450000000.00");
         BigDecimal b1Out = isDistressed ? new BigDecimal("850000000.00") : new BigDecimal("420000000.00");
-        list.add(new CashFlowBucket("Day 1 (Overnight)", b1In, b1Out, b1In.subtract(b1Out), b1In.subtract(b1Out), isDistressed ? "Deficit" : "Surplus"));
+        BigDecimal gap1 = b1In.subtract(b1Out);
 
         BigDecimal b2In = new BigDecimal("1200000000.00");
         BigDecimal b2Out = isDistressed ? new BigDecimal("1900000000.00") : new BigDecimal("1100000000.00");
-        list.add(new CashFlowBucket("Days 2-7 (1 Week)", b2In, b2Out, b2In.subtract(b2Out), b1In.subtract(b1Out).add(b2In.subtract(b2Out)), isDistressed ? "Deficit" : "Surplus"));
+        BigDecimal gap2 = b2In.subtract(b2Out);
 
-        BigDecimal b3In = new BigDecimal("3400000000.00");
-        BigDecimal b3Out = isDistressed ? new BigDecimal("4200000000.00") : new BigDecimal("2800000000.00");
-        list.add(new CashFlowBucket("Days 8-14 (2 Weeks)", b3In, b3Out, b3In.subtract(b3Out), new BigDecimal("150000000.00"), isDistressed ? "Strained" : "Surplus"));
+        BigDecimal b3In = new BigDecimal("3500000000.00");
+        BigDecimal b3Out = isDistressed ? new BigDecimal("4200000000.00") : new BigDecimal("3200000000.00");
+        BigDecimal gap3 = b3In.subtract(b3Out);
 
-        BigDecimal b4In = new BigDecimal("6800000000.00");
-        BigDecimal b4Out = isDistressed ? new BigDecimal("8900000000.00") : new BigDecimal("510000000.00");
-        list.add(new CashFlowBucket("Days 15-30 (1 Month)", b4In, b4Out, b4In.subtract(b4Out), new BigDecimal("400000000.00"), isDistressed ? "Strained" : "Surplus"));
+        BigDecimal b4In = new BigDecimal("8200000000.00");
+        BigDecimal b4Out = isDistressed ? new BigDecimal("8900000000.00") : new BigDecimal("7400000000.00");
+        BigDecimal gap4 = b4In.subtract(b4Out);
+
+        BigDecimal b5In = new BigDecimal("25000000000.00");
+        BigDecimal b5Out = new BigDecimal("21000000000.00");
+        BigDecimal gap5 = b5In.subtract(b5Out);
+
+        BigDecimal cum1 = gap1;
+        BigDecimal cum2 = cum1.add(gap2);
+        BigDecimal cum3 = cum2.add(gap3);
+        BigDecimal cum4 = cum3.add(gap4);
+        BigDecimal cum5 = cum4.add(gap5);
+
+        list.add(new CashFlowBucket("Same Day (1D)", b1In, b1Out, gap1, cum1));
+        list.add(new CashFlowBucket("2 - 7 Days", b2In, b2Out, gap2, cum2));
+        list.add(new CashFlowBucket("8 - 30 Days", b3In, b3Out, gap3, cum3));
+        list.add(new CashFlowBucket("31 - 90 Days", b4In, b4Out, gap4, cum4));
+        list.add(new CashFlowBucket("> 90 Days", b5In, b5Out, gap5, cum5));
 
         return list;
     }

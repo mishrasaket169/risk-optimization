@@ -1,6 +1,5 @@
 package com.lro.orchestration;
 
-import com.lro.analytics.LiquidityMetricsEngine;
 import com.lro.common.model.Money;
 import com.lro.common.security.SecurityContext.Role;
 import com.lro.common.security.SecurityContext.UserPrincipal;
@@ -9,7 +8,6 @@ import com.lro.ml.adapter.Model2ExecutionCostAdapter;
 import com.lro.ml.adapter.Model2ExecutionCostAdapter.ExecutionEstimate;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -71,8 +69,17 @@ public class RecommendationRankingEngine {
         this.model2Adapter = model2;
     }
 
+    public Model1MomentumAdapter getModel1Adapter() { return model1Adapter; }
+    public Model2ExecutionCostAdapter getModel2Adapter() { return model2Adapter; }
+
     public RankedRecommendation generateRecommendation(String bankId, String assetName, String category,
                                                         long quantity, Money ltp, String action, String rationale) {
+        Model1MomentumAdapter.MomentumPrediction momentum = model1Adapter.predict(
+                assetName, new BigDecimal("0.01"), new BigDecimal("0.02"),
+                new BigDecimal("0.03"), new BigDecimal("0.015"), new BigDecimal("55.0")
+        );
+        BigDecimal confidence = momentum.confidenceScore().multiply(BigDecimal.valueOf(100));
+
         ExecutionEstimate est = model2Adapter.estimate(
                 assetName, category, quantity, ltp, new BigDecimal("4.00"), 20000L, new BigDecimal("0.02"), "Normal"
         );
@@ -81,7 +88,7 @@ public class RecommendationRankingEngine {
         RankedRecommendation rec = new RankedRecommendation(
                 id, bankId, assetName, category, action, quantity,
                 ltp.multiply(quantity), est.estimatedExecutionCostINR(), est.netAchievableProceedsINR(),
-                est.expectedSlippageBps(), new BigDecimal("3.50"), new BigDecimal("94.00"),
+                est.expectedSlippageBps(), new BigDecimal("3.50"), confidence,
                 rationale, ApprovalStatus.PENDING_REVIEW, null, null, Instant.now()
         );
 

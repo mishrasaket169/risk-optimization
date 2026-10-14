@@ -112,6 +112,7 @@ class EndToEndAcceptanceTest {
     @Test
     @DisplayName("E2E Phase 3: Continuous matching engine executes double auction with price-time priority")
     void testOrderMatchingAndTradeGeneration() {
+        assertFalse(catalogue.getAllInstruments().isEmpty(), "Catalogue should contain seeded instruments");
         // Submit Sell Limit order (Ask)
         Order ask = new Order("ASK-01", "RELIANCE", Side.SELL, OrderType.LIMIT, 500, Money.of("2850.00"));
         matchingEngine.submitOrder(ask);

@@ -1,7 +1,6 @@
 package com.lro.app;
 
 import com.lro.bank.service.DoubleEntryLedgerService;
-import com.lro.common.exception.ValidationException;
 import com.lro.common.model.Money;
 
 import java.util.Map;

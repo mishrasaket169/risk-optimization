@@ -1,2 +1,3 @@
 com\lro\frontend\FrontendUnitTests.class
+com\lro\frontend\PostgresBankServiceIntegrationTest.class
 com\lro\frontend\RenderSnapshotsTest.class

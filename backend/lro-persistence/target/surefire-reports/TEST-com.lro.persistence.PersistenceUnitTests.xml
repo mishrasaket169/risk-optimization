@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.persistence.PersistenceUnitTests" time="1.897" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.persistence.PersistenceUnitTests" time="1.956" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="D:\Liquidity Optimizer\backend\lro-persistence\target\test-classes;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\com\lro\lro-common\1.0.0-SNAPSHOT\lro-common-1.0.0-SNAPSHOT.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
+    <property name="java.class.path" value="D:\Liquidity Optimizer\backend\lro-persistence\target\test-classes;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
     <property name="java.vm.vendor" value="Eclipse Adoptium"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="user.variant" value=""/>
@@ -15,10 +15,9 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IN"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire8735806379110916904\surefirebooter-20261012131502946_3.jar C:\Users\Saket\AppData\Local\Temp\surefire8735806379110916904 2026-10-12T13-15-02_608-jvmRun1 surefire-20261012131502946_1tmp surefire_0-20261012131502946_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire180522355331120944\surefirebooter-20261014055154014_6.jar C:\Users\Saket\AppData\Local\Temp\surefire180522355331120944 2026-10-14T05-51-51_888-jvmRun1 surefire-20261014055154014_4tmp surefire_1-20261014055154014_5tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="test" value="PersistenceUnitTests"/>
-    <property name="surefire.test.class.path" value="D:\Liquidity Optimizer\backend\lro-persistence\target\test-classes;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\com\lro\lro-common\1.0.0-SNAPSHOT\lro-common-1.0.0-SNAPSHOT.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
+    <property name="surefire.test.class.path" value="D:\Liquidity Optimizer\backend\lro-persistence\target\test-classes;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Saket"/>
     <property name="user.language" value="en"/>
@@ -31,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire8735806379110916904\surefirebooter-20261012131502946_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire180522355331120944\surefirebooter-20261014055154014_6.jar"/>
     <property name="user.script" value=""/>
     <property name="polyglot.engine.WarnInterpreterOnly" value="false"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -53,7 +52,7 @@
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Users/Saket/.gemini/antigravity-ide/bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\\bin;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\18\bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Users\Saket\tools\apache-maven-3.9.9\bin;C:\Users\Saket\AppData\Local\agy\bin;C:\Users\Saket\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\Saket\AppData\Local\Programs\Python\Python314\;C:\Users\Saket\.local\bin;C:\Users\Saket\AppData\Local\Microsoft\WindowsApps;C:\Users\Saket\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Saket\AppData\Local\Python\bin;C:\msys64\ucrt64\bin;C:\Users\Saket\AppData\Roaming\npm;C:\Program Files\JetBrains\PyCharm 2026.1\bin;C:\Users\Saket\go\bin;C:\Users\Saket\AppData\Local\Programs\Antigravity IDE\bin;C:\Program Files\PostgreSQL\18\bin;C:\Users\Saket\AppData\Local\Programs\cursor\resources\app\bin;."/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\\bin;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\18\bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Users\Saket\tools\apache-maven-3.9.9\bin;C:\Users\Saket\AppData\Local\agy\bin;C:\Users\Saket\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\Saket\AppData\Local\Programs\Python\Python314\;C:\Users\Saket\.local\bin;C:\Users\Saket\AppData\Local\Microsoft\WindowsApps;C:\Users\Saket\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Saket\AppData\Local\Python\bin;C:\msys64\ucrt64\bin;C:\Users\Saket\AppData\Roaming\npm;C:\Program Files\JetBrains\PyCharm 2026.1\bin;C:\Users\Saket\go\bin;C:\Users\Saket\AppData\Local\Programs\Antigravity IDE\bin;C:\Program Files\PostgreSQL\18\bin;C:\Users\Saket\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Saket\.platformio\penv\Scripts;c:\Users\Saket\.antigravity-ide\extensions\vscjava.vscode-java-debug-0.59.0-universal\bundled\scripts\noConfigScripts;c:\Users\Saket\.antigravity-ide\extensions\ms-python.debugpy-2026.6.0-win32-x64\bundled\scripts\noConfigScripts;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="stderr.encoding" value="Cp1252"/>
     <property name="java.vendor" value="Eclipse Adoptium"/>
@@ -62,54 +61,20 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testFlywayMigrationsAndTopology" classname="com.lro.persistence.PersistenceUnitTests" time="1.853">
+  <testcase name="testFlywayMigrationsAndTopology" classname="com.lro.persistence.PersistenceUnitTests" time="1.92">
     <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
 SLF4J(W): Defaulting to no-operation (NOP) logger implementation
 SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.FlywayExecutor execute
+Oct 14, 2026 5:51:56 AM org.flywaydb.core.FlywayExecutor execute
 INFO: Database: jdbc:postgresql://localhost:5432/lro_db (PostgreSQL 18.6)
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.database.base.Database recommendFlywayUpgrade
+Oct 14, 2026 5:51:56 AM org.flywaydb.core.internal.database.base.Database recommendFlywayUpgrade
 WARNING: Flyway upgrade recommended: PostgreSQL 18.6 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 17.
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.command.DbValidate validate
-INFO: Successfully validated 12 migrations (execution time 00:00.093s)
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.command.DbMigrate migrateGroup
-INFO: Current version of schema "public": 11
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.command.DbMigrate doMigrateGroup
-INFO: Migrating schema "public" to version "12 - add bidirectional sync triggers"
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_large_accounts_cdc" for relation "bank_large.accounts" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_large_loans_cdc" for relation "bank_large.loans" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_large_ledger_cdc" for relation "bank_large.ledger_entries" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_large_treasury_cdc" for relation "bank_large.treasury_holdings" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_medium_accounts_cdc" for relation "bank_medium.accounts" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_medium_loans_cdc" for relation "bank_medium.loans" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_medium_ledger_cdc" for relation "bank_medium.ledger_entries" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_medium_treasury_cdc" for relation "bank_medium.treasury_holdings" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_small_accounts_cdc" for relation "bank_small.accounts" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_small_loans_cdc" for relation "bank_small.loans" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_small_ledger_cdc" for relation "bank_small.ledger_entries" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_small_treasury_cdc" for relation "bank_small.treasury_holdings" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_distressed_accounts_cdc" for relation "bank_distressed.accounts" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_distressed_loans_cdc" for relation "bank_distressed.loans" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_distressed_ledger_cdc" for relation "bank_distressed.ledger_entries" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.sqlscript.DefaultSqlScriptExecutor printWarnings
-INFO: DB: trigger "trg_bank_distressed_treasury_cdc" for relation "bank_distressed.treasury_holdings" does not exist, skipping
-Oct 12, 2026 1:15:05 PM org.flywaydb.core.internal.command.DbMigrate logSummary
-INFO: Successfully applied 1 migration to schema "public", now at version v12 (execution time 00:00.108s)
+Oct 14, 2026 5:51:56 AM org.flywaydb.core.internal.command.DbValidate validate
+INFO: Successfully validated 13 migrations (execution time 00:00.095s)
+Oct 14, 2026 5:51:56 AM org.flywaydb.core.internal.command.DbMigrate migrateGroup
+INFO: Current version of schema "public": 13
+Oct 14, 2026 5:51:56 AM org.flywaydb.core.internal.command.DbMigrate logSummary
+INFO: Schema "public" is up to date. No migration necessary.
 ]]></system-err>
   </testcase>
 </testsuite>

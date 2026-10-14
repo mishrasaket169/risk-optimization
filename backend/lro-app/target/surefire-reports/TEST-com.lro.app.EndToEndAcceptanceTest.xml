@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.app.EndToEndAcceptanceTest" time="2.033" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.app.EndToEndAcceptanceTest" time="2.058" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IN"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire6044945149854575442\surefirebooter-20261012072724400_31.jar C:\Users\Saket\AppData\Local\Temp\surefire6044945149854575442 2026-10-12T07-27-08_145-jvmRun1 surefire-20261012072724400_29tmp surefire_8-20261012072724400_30tmp"/>
+    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire13189988974028772141\surefirebooter-20261014055208544_31.jar C:\Users\Saket\AppData\Local\Temp\surefire13189988974028772141 2026-10-14T05-51-51_888-jvmRun1 surefire-20261014055208544_29tmp surefire_8-20261014055208544_30tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="D:\Liquidity Optimizer\backend\lro-app\target\test-classes;D:\Liquidity Optimizer\backend\lro-app\target\classes;D:\Liquidity Optimizer\backend\lro-common\target\classes;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;D:\Liquidity Optimizer\backend\lro-persistence\target\classes;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-core\11.1.0\flyway-core-11.1.0.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-toml\2.15.2\jackson-dataformat-toml-2.15.2.jar;C:\Users\Saket\.m2\repository\org\flywaydb\flyway-database-postgresql\11.1.0\flyway-database-postgresql-11.1.0.jar;D:\Liquidity Optimizer\backend\lro-bank-services\target\classes;D:\Liquidity Optimizer\backend\lro-exchange-services\target\classes;D:\Liquidity Optimizer\backend\lro-messaging\target\classes;D:\Liquidity Optimizer\backend\lro-analytics\target\classes;D:\Liquidity Optimizer\backend\lro-ml-adapter\target\classes;D:\Liquidity Optimizer\backend\lro-orchestration\target\classes;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-classic\1.5.16\logback-classic-1.5.16.jar;C:\Users\Saket\.m2\repository\ch\qos\logback\logback-core\1.5.16\logback-core-1.5.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire6044945149854575442\surefirebooter-20261012072724400_31.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire13189988974028772141\surefirebooter-20261014055208544_31.jar"/>
     <property name="user.script" value=""/>
     <property name="polyglot.engine.WarnInterpreterOnly" value="false"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -52,7 +52,7 @@
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\\bin;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\18\bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Users\Saket\tools\apache-maven-3.9.9\bin;C:\Users\Saket\AppData\Local\agy\bin;C:\Users\Saket\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\Saket\AppData\Local\Programs\Python\Python314\;C:\Users\Saket\.local\bin;C:\Users\Saket\AppData\Local\Microsoft\WindowsApps;C:\Users\Saket\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Saket\AppData\Local\Python\bin;C:\msys64\ucrt64\bin;C:\Users\Saket\AppData\Roaming\npm;C:\Program Files\JetBrains\PyCharm 2026.1\bin;C:\Users\Saket\go\bin;C:\Users\Saket\AppData\Local\Programs\Antigravity IDE\bin;C:\Program Files\PostgreSQL\18\bin;C:\Users\Saket\AppData\Local\Programs\cursor\resources\app\bin;c:\Users\Saket\.antigravity-ide\extensions\vscjava.vscode-java-debug-0.59.0-universal\bundled\scripts\noConfigScripts;c:\Users\Saket\.antigravity-ide\extensions\ms-python.debugpy-2026.6.0-win32-x64\bundled\scripts\noConfigScripts;."/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\\bin;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Go\bin;C:\Program Files\Git\cmd;C:\Program Files\PostgreSQL\18\bin;C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin;C:\Users\Saket\tools\apache-maven-3.9.9\bin;C:\Users\Saket\AppData\Local\agy\bin;C:\Users\Saket\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\Saket\AppData\Local\Programs\Python\Python314\;C:\Users\Saket\.local\bin;C:\Users\Saket\AppData\Local\Microsoft\WindowsApps;C:\Users\Saket\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Saket\AppData\Local\Python\bin;C:\msys64\ucrt64\bin;C:\Users\Saket\AppData\Roaming\npm;C:\Program Files\JetBrains\PyCharm 2026.1\bin;C:\Users\Saket\go\bin;C:\Users\Saket\AppData\Local\Programs\Antigravity IDE\bin;C:\Program Files\PostgreSQL\18\bin;C:\Users\Saket\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\Saket\.platformio\penv\Scripts;c:\Users\Saket\.antigravity-ide\extensions\vscjava.vscode-java-debug-0.59.0-universal\bundled\scripts\noConfigScripts;c:\Users\Saket\.antigravity-ide\extensions\ms-python.debugpy-2026.6.0-win32-x64\bundled\scripts\noConfigScripts;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="stderr.encoding" value="Cp1252"/>
     <property name="java.vendor" value="Eclipse Adoptium"/>
@@ -61,124 +61,149 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testMacroCrashScenarioShock" classname="com.lro.app.EndToEndAcceptanceTest" time="0.815">
-    <system-out><![CDATA[07:27:25.767 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
-07:27:26.381 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'test-client' to /topic/risk/alerts
+  <testcase name="testMacroCrashScenarioShock" classname="com.lro.app.EndToEndAcceptanceTest" time="0.866">
+    <system-out><![CDATA[05:52:09.916 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+05:52:10.579 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'test-client' to /topic/risk/alerts
 ]]></system-out>
   </testcase>
   <testcase name="testPortfolioValuationAndMarkToMarket" classname="com.lro.app.EndToEndAcceptanceTest" time="0.011">
-    <system-out><![CDATA[07:27:26.423 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+    <system-out><![CDATA[05:52:10.615 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
-  <testcase name="testIdempotencyAndFailurePaths" classname="com.lro.app.EndToEndAcceptanceTest" time="0.176">
-    <system-out><![CDATA[07:27:26.436 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
-07:27:26.592 [main] DEBUG com.lro.ml.adapter.Model1MomentumAdapter -- ML microservice call failed (null), falling back to deterministic model
-07:27:26.607 [main] DEBUG com.lro.ml.adapter.Model2ExecutionCostAdapter -- Model 2 HTTP service call failed (null), activating deterministic fallback
+  <testcase name="testIdempotencyAndFailurePaths" classname="com.lro.app.EndToEndAcceptanceTest" time="0.196">
+    <system-out><![CDATA[05:52:10.631 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+05:52:10.808 [main] DEBUG com.lro.ml.adapter.Model1MomentumAdapter -- ML microservice call failed (null), falling back to deterministic model
+05:52:10.821 [main] DEBUG com.lro.ml.adapter.Model2ExecutionCostAdapter -- Model 2 HTTP service call failed (null), activating deterministic fallback
 ]]></system-out>
   </testcase>
-  <testcase name="testLiquidityMetricsCalculation" classname="com.lro.app.EndToEndAcceptanceTest" time="0.011">
-    <system-out><![CDATA[07:27:26.613 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testLiquidityMetricsCalculation" classname="com.lro.app.EndToEndAcceptanceTest" time="0.013">
+    <system-out><![CDATA[05:52:10.827 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
-  <testcase name="testRecommendationRankingAndMakerCheckerWorkflow" classname="com.lro.app.EndToEndAcceptanceTest" time="0.023">
-    <system-out><![CDATA[07:27:26.624 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
-07:27:26.638 [main] DEBUG com.lro.ml.adapter.Model2ExecutionCostAdapter -- Model 2 HTTP service call failed (null), activating deterministic fallback
+  <testcase name="testRecommendationRankingAndMakerCheckerWorkflow" classname="com.lro.app.EndToEndAcceptanceTest" time="0.035">
+    <system-out><![CDATA[05:52:10.841 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+05:52:10.858 [main] DEBUG com.lro.ml.adapter.Model1MomentumAdapter -- ML microservice call failed (null), falling back to deterministic model
+05:52:10.864 [main] DEBUG com.lro.ml.adapter.Model2ExecutionCostAdapter -- Model 2 HTTP service call failed (null), activating deterministic fallback
 ]]></system-out>
   </testcase>
-  <testcase name="testDatabaseMigrationAndBankSeeding" classname="com.lro.app.EndToEndAcceptanceTest" time="0.918">
-    <system-out><![CDATA[07:27:26.649 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
-07:27:26.655 [main] INFO com.lro.persistence.DatabaseManager -- Running Flyway migrations on jdbc:postgresql://localhost:5432/lro_db
-07:27:26.859 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Multiple databases found that handle url 'jdbc:postgresql://localhost:5432/lro_db': CockroachDB,PostgreSQL
-07:27:26.860 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/callback' ...
-07:27:26.860 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/callback using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
-07:27:26.860 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Unable to resolve location classpath:db/callback.
-07:27:26.860 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/migration' ...
-07:27:26.860 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/migration using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
-07:27:26.862 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning URL: file:/D:/Liquidity%20Optimizer/backend/lro-persistence/target/classes/db/migration
-07:27:26.864 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning starting at classpath root in filesystem: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\
-07:27:26.865 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning for resources in path: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\db\migration (db/migration)
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V1__init_banking_schemas.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V2__init_exchange_schemas.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V3__init_lro_schemas.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V4__add_constraints_and_seed.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V5__update_customer_kyc_and_location.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V6__seed_bulk_customers.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql
-07:27:26.868 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql
-07:27:26.869 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V9__standardize_and_seed_bulk_loans.sql
-07:27:26.869 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classes at classpath:db/migration
-07:27:27.219 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V2__init_exchange_schemas.sql
-07:27:27.221 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V7__standardize_and_seed_bulk_accounts.sql
-07:27:27.221 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V8__reformat_customer_and_account_ids_to_5_digits.sql
-07:27:27.221 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V3__init_lro_schemas.sql
-07:27:27.222 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V1__init_banking_schemas.sql
-07:27:27.222 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V6__seed_bulk_customers.sql
-07:27:27.222 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V9__standardize_and_seed_bulk_loans.sql
-07:27:27.222 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V5__update_customer_kyc_and_location.sql
-07:27:27.223 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V4__add_constraints_and_seed.sql
-07:27:27.231 [main] DEBUG org.flywaydb.core.internal.database.DatabaseTypeRegister -- Multiple databases found that handle url 'jdbc:postgresql://localhost:5432/lro_db': CockroachDB,PostgreSQL
-07:27:27.231 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:5432/lro_db (PostgreSQL 18.6)
-07:27:27.232 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Database Type: PostgreSQL
-07:27:27.232 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Driver: PostgreSQL JDBC Driver 42.7.4
-07:27:27.233 [main] DEBUG org.flywaydb.core.FlywayExecutor -- DDL Transactions Supported: true
-07:27:27.235 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Schemas: 
-07:27:27.235 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Default schema: null
-07:27:27.253 [main] WARN org.flywaydb.core.internal.database.base.Database -- Flyway upgrade recommended: PostgreSQL 18.6 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 17.
-07:27:27.255 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Scanning for script callbacks ...
-07:27:27.259 [main] DEBUG org.flywaydb.core.internal.callback.SqlScriptCallbackFactory -- Scanning for SQL callbacks ...
-07:27:27.275 [main] DEBUG org.flywaydb.core.internal.command.DbValidate -- Validating migrations ...
-07:27:27.279 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-07:27:27.391 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
-07:27:27.392 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
-07:27:27.393 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
-07:27:27.394 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-07:27:27.394 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
-07:27:27.394 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
-07:27:27.394 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-07:27:27.394 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-07:27:27.394 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
-07:27:27.395 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
-07:27:27.395 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
-07:27:27.395 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
-07:27:27.397 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-07:27:27.397 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
-07:27:27.397 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
-07:27:27.399 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
-07:27:27.400 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
-07:27:27.400 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
-07:27:27.400 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
-07:27:27.400 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
-07:27:27.400 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
-07:27:27.400 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
-07:27:27.442 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 9 migrations (execution time 00:00.165s)
-07:27:27.450 [main] DEBUG org.flywaydb.core.internal.command.DbSchemas -- Skipping creation of existing schema: "public"
-07:27:27.540 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
-07:27:27.545 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": 9
-07:27:27.550 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "public" is up to date. No migration necessary.
-07:27:27.558 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Memory usage: 22 of 40M
-07:27:27.558 [main] INFO com.lro.persistence.DatabaseManager -- Successfully executed 0 database migrations.
+  <testcase name="testDatabaseMigrationAndBankSeeding" classname="com.lro.app.EndToEndAcceptanceTest" time="0.848">
+    <system-out><![CDATA[05:52:10.877 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+05:52:10.887 [main] INFO com.lro.persistence.DatabaseManager -- Running Flyway migrations on jdbc:postgresql://localhost:5432/lro_db
+05:52:11.105 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Multiple databases found that handle url 'jdbc:postgresql://localhost:5432/lro_db': CockroachDB,PostgreSQL
+05:52:11.105 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/callback' ...
+05:52:11.106 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/callback using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
+05:52:11.106 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Unable to resolve location classpath:db/callback.
+05:52:11.106 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classpath resources at 'classpath:db/migration' ...
+05:52:11.106 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Determining location urls for classpath:db/migration using ClassLoader jdk.internal.loader.ClassLoaders$AppClassLoader@105be200 ...
+05:52:11.107 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning URL: file:/D:/Liquidity%20Optimizer/backend/lro-persistence/target/classes/db/migration
+05:52:11.109 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning starting at classpath root in filesystem: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\
+05:52:11.109 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.FileSystemClassPathLocationScanner -- Scanning for resources in path: D:\Liquidity Optimizer\backend\lro-persistence\target\classes\db\migration (db/migration)
+05:52:11.112 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V10__standardize_and_seed_bulk_treasury_holdings.sql
+05:52:11.112 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V11__update_treasury_holding_categories.sql
+05:52:11.112 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V12__add_bidirectional_sync_triggers.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V13__drop_deposits_tables.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V1__init_banking_schemas.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V2__init_exchange_schemas.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V3__init_lro_schemas.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V4__add_constraints_and_seed.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V5__update_customer_kyc_and_location.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V6__seed_bulk_customers.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql
+05:52:11.113 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Found resource: db/migration/V9__standardize_and_seed_bulk_loans.sql
+05:52:11.114 [main] DEBUG org.flywaydb.core.internal.scanner.classpath.ClassPathScanner -- Scanning for classes at classpath:db/migration
+05:52:11.436 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V2__init_exchange_schemas.sql
+05:52:11.438 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V13__drop_deposits_tables.sql
+05:52:11.438 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V3__init_lro_schemas.sql
+05:52:11.439 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V4__add_constraints_and_seed.sql
+05:52:11.439 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V10__standardize_and_seed_bulk_treasury_holdings.sql
+05:52:11.439 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V7__standardize_and_seed_bulk_accounts.sql
+05:52:11.439 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V11__update_treasury_holding_categories.sql
+05:52:11.439 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V12__add_bidirectional_sync_triggers.sql
+05:52:11.440 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V8__reformat_customer_and_account_ids_to_5_digits.sql
+05:52:11.440 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V1__init_banking_schemas.sql
+05:52:11.440 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V6__seed_bulk_customers.sql
+05:52:11.440 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V9__standardize_and_seed_bulk_loans.sql
+05:52:11.440 [main] DEBUG org.flywaydb.core.internal.resource.ResourceNameValidator -- Validating V5__update_customer_kyc_and_location.sql
+05:52:11.450 [main] DEBUG org.flywaydb.core.internal.database.DatabaseTypeRegister -- Multiple databases found that handle url 'jdbc:postgresql://localhost:5432/lro_db': CockroachDB,PostgreSQL
+05:52:11.451 [main] INFO org.flywaydb.core.FlywayExecutor -- Database: jdbc:postgresql://localhost:5432/lro_db (PostgreSQL 18.6)
+05:52:11.451 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Database Type: PostgreSQL
+05:52:11.451 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Driver: PostgreSQL JDBC Driver 42.7.4
+05:52:11.453 [main] DEBUG org.flywaydb.core.FlywayExecutor -- DDL Transactions Supported: true
+05:52:11.454 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Schemas: 
+05:52:11.454 [main] DEBUG org.flywaydb.core.internal.schemahistory.SchemaHistoryFactory -- Default schema: null
+05:52:11.476 [main] WARN org.flywaydb.core.internal.database.base.Database -- Flyway upgrade recommended: PostgreSQL 18.6 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 17.
+05:52:11.477 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Scanning for script callbacks ...
+05:52:11.484 [main] DEBUG org.flywaydb.core.internal.callback.SqlScriptCallbackFactory -- Scanning for SQL callbacks ...
+05:52:11.501 [main] DEBUG org.flywaydb.core.internal.command.DbValidate -- Validating migrations ...
+05:52:11.506 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
+05:52:11.547 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+05:52:11.547 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V13__drop_deposits_tables.sql (filename: V13__drop_deposits_tables.sql)
+05:52:11.547 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+05:52:11.547 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+05:52:11.547 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V10__standardize_and_seed_bulk_treasury_holdings.sql (filename: V10__standardize_and_seed_bulk_treasury_holdings.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V11__update_treasury_holding_categories.sql (filename: V11__update_treasury_holding_categories.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V12__add_bidirectional_sync_triggers.sql (filename: V12__add_bidirectional_sync_triggers.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
+05:52:11.548 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
+05:52:11.549 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V13__drop_deposits_tables.sql (filename: V13__drop_deposits_tables.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V10__standardize_and_seed_bulk_treasury_holdings.sql (filename: V10__standardize_and_seed_bulk_treasury_holdings.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V11__update_treasury_holding_categories.sql (filename: V11__update_treasury_holding_categories.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V12__add_bidirectional_sync_triggers.sql (filename: V12__add_bidirectional_sync_triggers.sql)
+05:52:11.550 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
+05:52:11.551 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+05:52:11.551 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
+05:52:11.551 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
+05:52:11.551 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
+05:52:11.553 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+05:52:11.553 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V13__drop_deposits_tables.sql (filename: V13__drop_deposits_tables.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V10__standardize_and_seed_bulk_treasury_holdings.sql (filename: V10__standardize_and_seed_bulk_treasury_holdings.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V11__update_treasury_holding_categories.sql (filename: V11__update_treasury_holding_categories.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V12__add_bidirectional_sync_triggers.sql (filename: V12__add_bidirectional_sync_triggers.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
+05:52:11.555 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
+05:52:11.556 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
+05:52:11.556 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V2__init_exchange_schemas.sql (filename: V2__init_exchange_schemas.sql)
+05:52:11.556 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V13__drop_deposits_tables.sql (filename: V13__drop_deposits_tables.sql)
+05:52:11.556 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V3__init_lro_schemas.sql (filename: V3__init_lro_schemas.sql)
+05:52:11.556 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V4__add_constraints_and_seed.sql (filename: V4__add_constraints_and_seed.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V10__standardize_and_seed_bulk_treasury_holdings.sql (filename: V10__standardize_and_seed_bulk_treasury_holdings.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V7__standardize_and_seed_bulk_accounts.sql (filename: V7__standardize_and_seed_bulk_accounts.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V11__update_treasury_holding_categories.sql (filename: V11__update_treasury_holding_categories.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V12__add_bidirectional_sync_triggers.sql (filename: V12__add_bidirectional_sync_triggers.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V8__reformat_customer_and_account_ids_to_5_digits.sql (filename: V8__reformat_customer_and_account_ids_to_5_digits.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V1__init_banking_schemas.sql (filename: V1__init_banking_schemas.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V6__seed_bulk_customers.sql (filename: V6__seed_bulk_customers.sql)
+05:52:11.557 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V9__standardize_and_seed_bulk_loans.sql (filename: V9__standardize_and_seed_bulk_loans.sql)
+05:52:11.558 [main] DEBUG org.flywaydb.core.internal.scanner.Scanner -- Filtering out resource: db/migration/V5__update_customer_kyc_and_location.sql (filename: V5__update_customer_kyc_and_location.sql)
+05:52:11.597 [main] INFO org.flywaydb.core.internal.command.DbValidate -- Successfully validated 13 migrations (execution time 00:00.092s)
+05:52:11.603 [main] DEBUG org.flywaydb.core.internal.command.DbSchemas -- Skipping creation of existing schema: "public"
+05:52:11.694 [main] DEBUG org.flywaydb.core.api.configuration.ClassicConfiguration -- CherryPickConfigurationExtension not found
+05:52:11.698 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Current version of schema "public": 13
+05:52:11.705 [main] INFO org.flywaydb.core.internal.command.DbMigrate -- Schema "public" is up to date. No migration necessary.
+05:52:11.714 [main] DEBUG org.flywaydb.core.FlywayExecutor -- Memory usage: 24 of 40M
+05:52:11.715 [main] INFO com.lro.persistence.DatabaseManager -- Successfully executed 0 database migrations.
 ]]></system-out>
   </testcase>
-  <testcase name="testOrderMatchingAndTradeGeneration" classname="com.lro.app.EndToEndAcceptanceTest" time="0.021">
-    <system-out><![CDATA[07:27:27.566 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+  <testcase name="testOrderMatchingAndTradeGeneration" classname="com.lro.app.EndToEndAcceptanceTest" time="0.012">
+    <system-out><![CDATA[05:52:11.727 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
   <testcase name="testDoubleEntryLedgerBalancing" classname="com.lro.app.EndToEndAcceptanceTest" time="0.012">
-    <system-out><![CDATA[07:27:27.588 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
+    <system-out><![CDATA[05:52:11.740 [main] DEBUG com.lro.messaging.StompEventBroker -- Subscribed subscriber 'anonymous' to /topic/market.quotes
 ]]></system-out>
   </testcase>
 </testsuite>

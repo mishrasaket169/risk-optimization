@@ -7,7 +7,6 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -16,6 +15,14 @@ public class MockExchangeService implements ExchangeService {
     private String currentRegime = "Normal";
     private int simulationSpeed = 1;
     private long currentSeed = 42L;
+
+    public int getSimulationSpeed() {
+        return simulationSpeed;
+    }
+
+    public long getCurrentSeed() {
+        return currentSeed;
+    }
 
     private final List<MarketIndex> indices = new ArrayList<>();
     private final List<InstrumentRecord> instruments = new ArrayList<>();

@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ import java.util.List;
  * Dashboard, Bank Selector, Customer directory, Accounts, Deposits, Loans & NPAs,
  * Treasury holdings, Double-entry Ledger, and Cash-Flow maturity ladder.
  */
+@SuppressWarnings("unchecked")
 public class BankViews {
 
     private final BankService bankService;
@@ -102,7 +104,7 @@ public class BankViews {
 
         VBox chartCard = UIComponents.createChartCard(
                 "Asset & Liability Flow Statistics",
-                Formatters.formatINRCrores(profile.cashBalance().divide(BigDecimal.valueOf(10), BigDecimal.ROUND_HALF_UP)),
+                Formatters.formatINRCrores(profile.cashBalance().divide(BigDecimal.valueOf(10), RoundingMode.HALF_UP)),
                 "+2.32%",
                 "Total net flow in week",
                 "Week",
@@ -768,7 +770,7 @@ public class BankViews {
     }
 
     // Modal dialogs
-    private void showOpenAccountModal(String bankId) {
+    public void showOpenAccountModal(String bankId) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Open Synthetic Deposit Account");
         dialog.setHeaderText("Create a new demo account for selected institution");
@@ -809,7 +811,7 @@ public class BankViews {
         });
     }
 
-    private void showPostTransactionModal(String bankId) {
+    public void showPostTransactionModal(String bankId) {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Record Demo Transaction");
         dialog.setHeaderText("Post cash deposit or withdrawal event to ledger");

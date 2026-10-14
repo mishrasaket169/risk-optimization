@@ -4,10 +4,6 @@ import com.lro.analytics.PortfolioValuationEngine;
 import com.lro.analytics.PortfolioValuationEngine.PortfolioLot;
 import com.lro.common.event.EventEnvelope;
 import com.lro.common.model.Money;
-import com.lro.exchange.service.ContinuousMatchingEngine;
-import com.lro.exchange.service.ContinuousMatchingEngine.Order;
-import com.lro.exchange.service.ContinuousMatchingEngine.OrderType;
-import com.lro.exchange.service.ContinuousMatchingEngine.Side;
 import com.lro.exchange.service.ExchangeInstrumentCatalogue;
 import com.lro.exchange.service.ExchangeInstrumentCatalogue.Instrument;
 import com.lro.messaging.StompEventBroker;
@@ -26,14 +22,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class ServiceContractTest {
 
     private ExchangeInstrumentCatalogue catalogue;
-    private ContinuousMatchingEngine matchingEngine;
     private PortfolioValuationEngine valuationEngine;
     private StompEventBroker broker;
 
     @BeforeEach
     void setUp() {
         catalogue = new ExchangeInstrumentCatalogue();
-        matchingEngine = new ContinuousMatchingEngine();
         broker = new StompEventBroker();
         valuationEngine = new PortfolioValuationEngine(broker);
     }
