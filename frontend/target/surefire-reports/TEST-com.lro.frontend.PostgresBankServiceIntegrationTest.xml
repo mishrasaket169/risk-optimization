@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.frontend.PostgresBankServiceIntegrationTest" time="1.436" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.985" tests="3" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IN"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-25.0.4.101-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire56811336715505038\surefirebooter-20261014074911889_3.jar C:\Users\Saket\AppData\Local\Temp\surefire56811336715505038 2026-10-14T07-49-11_565-jvmRun1 surefire-20261014074911889_1tmp surefire_0-20261014074911889_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Saket\AppData\Local\Temp\surefire3027656583601157188\surefirebooter-20261014085844155_53.jar C:\Users\Saket\AppData\Local\Temp\surefire3027656583601157188 2026-10-14T08-58-23_629-jvmRun1 surefire-20261014085844155_51tmp surefire_9-20261014085844155_52tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="D:\Liquidity Optimizer\frontend\target\test-classes;D:\Liquidity Optimizer\frontend\target\classes;C:\Users\Saket\.m2\repository\org\openjfx\javafx-controls\23.0.1\javafx-controls-23.0.1.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-controls\23.0.1\javafx-controls-23.0.1-win.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-fxml\23.0.1\javafx-fxml-23.0.1.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-fxml\23.0.1\javafx-fxml-23.0.1-win.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-graphics\23.0.1\javafx-graphics-23.0.1.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-graphics\23.0.1\javafx-graphics-23.0.1-win.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-base\23.0.1\javafx-base-23.0.1.jar;C:\Users\Saket\.m2\repository\org\openjfx\javafx-base\23.0.1\javafx-base-23.0.1-win.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\Saket\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;C:\Users\Saket\.m2\repository\org\postgresql\postgresql\42.7.4\postgresql-42.7.4.jar;C:\Users\Saket\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\Saket\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-api\2.0.16\slf4j-api-2.0.16.jar;C:\Users\Saket\.m2\repository\org\slf4j\slf4j-simple\2.0.16\slf4j-simple-2.0.16.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\Saket\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\Saket\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Saket\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\Saket\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire56811336715505038\surefirebooter-20261014074911889_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Saket\AppData\Local\Temp\surefire3027656583601157188\surefirebooter-20261014085844155_53.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="25.0.4.1+1-LTS"/>
@@ -60,15 +60,15 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="69.0"/>
   </properties>
-  <testcase name="testLiveQueries" classname="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.488">
+  <testcase name="testLiveQueries" classname="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.399">
     <system-err><![CDATA[[main] INFO com.zaxxer.hikari.HikariDataSource - LroBankPool - Starting...
-[main] INFO com.zaxxer.hikari.pool.HikariPool - LroBankPool - Added connection org.postgresql.jdbc.PgConnection@24ba9639
+[main] INFO com.zaxxer.hikari.pool.HikariPool - LroBankPool - Added connection org.postgresql.jdbc.PgConnection@2f16c6b3
 [main] INFO com.zaxxer.hikari.HikariDataSource - LroBankPool - Start completed.
 [Lro-Postgres-CDC-Listener] INFO com.lro.frontend.bank.service.PostgresBankService - Starting PostgreSQL LISTEN bank_events background thread...
 ]]></system-err>
   </testcase>
-  <testcase name="testConnectionAndProfiles" classname="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.095"/>
-  <testcase name="testSimulatorAndCdcNotification" classname="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.032">
+  <testcase name="testConnectionAndProfiles" classname="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.101"/>
+  <testcase name="testSimulatorAndCdcNotification" classname="com.lro.frontend.PostgresBankServiceIntegrationTest" time="0.085">
     <system-err><![CDATA[[main] INFO com.lro.frontend.bank.service.BankTransactionSimulator - Starting live transaction simulator at 10 txns/second...
 [main] INFO com.lro.frontend.bank.service.BankTransactionSimulator - Pausing live transaction simulator.
 ]]></system-err>

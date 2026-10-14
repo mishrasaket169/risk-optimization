@@ -29,6 +29,44 @@ public class ExchangeModels {
             BigDecimal lowLevel
     ) {}
 
+    public record StockRecord(
+            String symbol,
+            String companyName,
+            String sector,
+            BigDecimal lastTradedPrice,
+            BigDecimal changePercent,
+            BigDecimal bidPrice,
+            BigDecimal askPrice,
+            long dayVolume,
+            BigDecimal dayTurnoverINR
+    ) {}
+
+    public record BondRecord(
+            String symbol,
+            String issuerSeries,
+            String sectorType,
+            BigDecimal couponRatePercent,
+            BigDecimal cleanPrice,
+            BigDecimal changePercent,
+            BigDecimal bidPrice,
+            BigDecimal askPrice,
+            long dayVolume,
+            LocalDate maturityDate
+    ) {}
+
+    public record SecurityRecord(
+            String symbol,
+            String securityDescription,
+            String category,
+            BigDecimal benchmarkYieldPercent,
+            BigDecimal cleanPrice,
+            BigDecimal changePercent,
+            BigDecimal bidPrice,
+            BigDecimal askPrice,
+            long dayVolume,
+            LocalDate maturityDate
+    ) {}
+
     public record InstrumentRecord(
             String isinOrId,
             String symbol,

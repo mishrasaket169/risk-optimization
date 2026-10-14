@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public interface ExchangeService {
     MarketOverview getMarketOverview();
+    List<StockRecord> getStocks(String sectorFilter, String query);
+    List<BondRecord> getBonds(String sectorFilter, String query);
+    List<SecurityRecord> getSecurities(String categoryFilter, String query);
     List<InstrumentRecord> getInstruments(String categoryFilter, String query);
     Optional<InstrumentRecord> getInstrument(String symbol);
     List<OrderBookLevel> getOrderBookDepth(String symbol);

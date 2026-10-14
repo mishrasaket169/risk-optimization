@@ -138,4 +138,26 @@ public class FrontendUnitTests {
         ModelInsight m2 = insights.stream().filter(m -> m.modelId().equals("MODEL-02-EXEC-COST")).findFirst().orElseThrow();
         assertTrue(m2.targetDefinition().contains("slippage"));
     }
+
+    @Test
+    @DisplayName("Verify Stock, Bond, and Securities tables each have >= 1,000 entries and canonical entries")
+    void testStockBondSecuritiesDirectoryCoverage() {
+        List<StockRecord> stocks = exchangeService.getStocks("All", "");
+        assertTrue(stocks.size() >= 1000, "Must have >= 1,000 stocks, found: " + stocks.size());
+        StockRecord reliance = stocks.stream().filter(s -> s.symbol().equals("RELIANCE")).findFirst().orElseThrow();
+        assertEquals("Reliance Industries Limited", reliance.companyName());
+        assertEquals("Energy / Conglomerate", reliance.sector());
+
+        List<BondRecord> bonds = exchangeService.getBonds("All", "");
+        assertTrue(bonds.size() >= 1000, "Must have >= 1,000 bonds, found: " + bonds.size());
+        BondRecord hdfcBond = bonds.stream().filter(b -> b.symbol().equals("HDFCB-8.15-29")).findFirst().orElseThrow();
+        assertEquals("8.15% HDFC Bank AAA Bond 2029", hdfcBond.issuerSeries());
+        assertEquals("Financial Services", hdfcBond.sectorType());
+
+        List<SecurityRecord> securities = exchangeService.getSecurities("All", "");
+        assertTrue(securities.size() >= 1000, "Must have >= 1,000 securities, found: " + securities.size());
+        SecurityRecord gsec = securities.stream().filter(s -> s.symbol().equals("GS-7.18-2033")).findFirst().orElseThrow();
+        assertEquals("7.18% Government of India Sovereign 2033", gsec.securityDescription());
+        assertEquals("G-Sec", gsec.category());
+    }
 }

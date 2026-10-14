@@ -24,10 +24,17 @@ public class ExchangeViews {
 
     private final ExchangeService exchangeService;
     private final Runnable onDataChanged;
+    private Runnable activeViewRefresher;
 
     public ExchangeViews(ExchangeService exchangeService, Runnable onDataChanged) {
         this.exchangeService = exchangeService;
         this.onDataChanged = onDataChanged;
+    }
+
+    public void refreshActiveView() {
+        if (activeViewRefresher != null) {
+            activeViewRefresher.run();
+        }
     }
 
     /**
@@ -240,62 +247,64 @@ public class ExchangeViews {
 
         filterBar.getChildren().addAll(new Label("Sector:"), sectorCombo, searchField, countLabel);
 
-        TableView<InstrumentRecord> table = new TableView<>();
+        TableView<StockRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
-        TableColumn<InstrumentRecord, String> colSym = new TableColumn<>("Symbol");
+        TableColumn<StockRecord, String> colSym = new TableColumn<>("Symbol");
         colSym.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
 
-        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Company Name");
-        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
+        TableColumn<StockRecord, String> colName = new TableColumn<>("Company Name");
+        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().companyName()));
 
-        TableColumn<InstrumentRecord, String> colSector = new TableColumn<>("Sector / Industry");
+        TableColumn<StockRecord, String> colSector = new TableColumn<>("Sector / Industry");
         colSector.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().sector()));
 
-        TableColumn<InstrumentRecord, String> colLtp = new TableColumn<>("LTP (₹)");
+        TableColumn<StockRecord, String> colLtp = new TableColumn<>("LTP (₹)");
         colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().lastTradedPrice())));
 
-        TableColumn<InstrumentRecord, String> colChg = new TableColumn<>("Change %");
+        TableColumn<StockRecord, String> colChg = new TableColumn<>("Change %");
         colChg.setCellValueFactory(d -> new SimpleStringProperty((d.getValue().changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(d.getValue().changePercent())));
 
-        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid Price (₹)");
+        TableColumn<StockRecord, String> colBid = new TableColumn<>("Bid Price (₹)");
         colBid.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().bidPrice())));
 
-        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask Price (₹)");
+        TableColumn<StockRecord, String> colAsk = new TableColumn<>("Ask Price (₹)");
         colAsk.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().askPrice())));
 
-        TableColumn<InstrumentRecord, String> colVol = new TableColumn<>("Volume");
+        TableColumn<StockRecord, String> colVol = new TableColumn<>("Volume");
         colVol.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().dayVolume())));
 
-        TableColumn<InstrumentRecord, String> colTurnover = new TableColumn<>("Turnover (₹)");
+        TableColumn<StockRecord, String> colTurnover = new TableColumn<>("Turnover (₹)");
         colTurnover.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINRCrores(d.getValue().dayTurnoverINR())));
 
         table.getColumns().addAll(colSym, colName, colSector, colLtp, colChg, colBid, colAsk, colVol, colTurnover);
 
         table.setOnMouseClicked(e -> {
-            InstrumentRecord sel = table.getSelectionModel().getSelectedItem();
+            StockRecord sel = table.getSelectionModel().getSelectedItem();
             if (sel != null && onSelectInstrument != null) {
                 onSelectInstrument.accept(sel.symbol());
             }
         });
 
+        UIComponents.PaginationBar<StockRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
         Runnable refreshTable = () -> {
             String selectedSec = sectorCombo.getValue();
             String q = searchField.getText();
-            List<InstrumentRecord> list = exchangeService.getInstruments("Stock", q).stream()
-                    .filter(i -> selectedSec == null || selectedSec.equalsIgnoreCase("All") || i.sector().equalsIgnoreCase(selectedSec))
-                    .collect(java.util.stream.Collectors.toList());
-            table.getItems().setAll(list);
-            countLabel.setText("Total: " + list.size() + " stocks");
+            List<StockRecord> list = exchangeService.getStocks(selectedSec, q);
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " stocks");
         };
         sectorCombo.setOnAction(e -> refreshTable.run());
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
+
         Label tip = new Label("Tip: Click any stock to view its order book depth or launch an order ticket.");
         tip.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
 
-        root.getChildren().addAll(titleBox, filterBar, table, tip);
+        root.getChildren().addAll(titleBox, filterBar, table, paginationBar, tip);
         VBox.setVgrow(table, Priority.ALWAYS);
         return root;
     }
@@ -322,7 +331,7 @@ public class ExchangeViews {
 
         ComboBox<String> sectorCombo = new ComboBox<>();
         sectorCombo.getItems().addAll("All", "Financial Services", "PSU / Infrastructure", "Power & Utilities",
-                "Energy & Petrochem", "Metals & Mining", "National Highways");
+                "Energy & Petrochem", "Metals & Mining", "National Highways", "Automotive & Transport", "Telecommunications");
         sectorCombo.setValue("All");
 
         TextField searchField = new TextField();
@@ -334,65 +343,67 @@ public class ExchangeViews {
 
         filterBar.getChildren().addAll(new Label("Issuer Sector:"), sectorCombo, searchField, countLabel);
 
-        TableView<InstrumentRecord> table = new TableView<>();
+        TableView<BondRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
-        TableColumn<InstrumentRecord, String> colSym = new TableColumn<>("Bond Symbol");
+        TableColumn<BondRecord, String> colSym = new TableColumn<>("Bond Symbol");
         colSym.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
 
-        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Issuer / Bond Series");
-        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
+        TableColumn<BondRecord, String> colName = new TableColumn<>("Issuer / Bond Series");
+        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().issuerSeries()));
 
-        TableColumn<InstrumentRecord, String> colSector = new TableColumn<>("Sector / Type");
-        colSector.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().sector()));
+        TableColumn<BondRecord, String> colSector = new TableColumn<>("Sector / Type");
+        colSector.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().sectorType()));
 
-        TableColumn<InstrumentRecord, String> colCoupon = new TableColumn<>("Coupon Rate %");
-        colCoupon.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().couponOrYieldPercent() != null ? Formatters.formatPercent(d.getValue().couponOrYieldPercent()) : "N/A"));
+        TableColumn<BondRecord, String> colCoupon = new TableColumn<>("Coupon Rate %");
+        colCoupon.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().couponRatePercent() != null ? Formatters.formatPercent(d.getValue().couponRatePercent()) : "N/A"));
 
-        TableColumn<InstrumentRecord, String> colLtp = new TableColumn<>("Clean Price (₹)");
-        colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().lastTradedPrice())));
+        TableColumn<BondRecord, String> colLtp = new TableColumn<>("Clean Price (₹)");
+        colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().cleanPrice())));
 
-        TableColumn<InstrumentRecord, String> colChg = new TableColumn<>("Change %");
+        TableColumn<BondRecord, String> colChg = new TableColumn<>("Change %");
         colChg.setCellValueFactory(d -> new SimpleStringProperty((d.getValue().changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(d.getValue().changePercent())));
 
-        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid (₹)");
+        TableColumn<BondRecord, String> colBid = new TableColumn<>("Bid (₹)");
         colBid.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().bidPrice())));
 
-        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask (₹)");
+        TableColumn<BondRecord, String> colAsk = new TableColumn<>("Ask (₹)");
         colAsk.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().askPrice())));
 
-        TableColumn<InstrumentRecord, String> colVol = new TableColumn<>("Volume");
+        TableColumn<BondRecord, String> colVol = new TableColumn<>("Volume");
         colVol.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().dayVolume())));
 
-        TableColumn<InstrumentRecord, String> colMaturity = new TableColumn<>("Maturity Date");
-        colMaturity.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().maturityOrExpiryDate() != null ? d.getValue().maturityOrExpiryDate().toString() : "Perpetual"));
+        TableColumn<BondRecord, String> colMaturity = new TableColumn<>("Maturity Date");
+        colMaturity.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().maturityDate() != null ? d.getValue().maturityDate().toString() : "Perpetual"));
 
         table.getColumns().addAll(colSym, colName, colSector, colCoupon, colLtp, colChg, colBid, colAsk, colVol, colMaturity);
 
         table.setOnMouseClicked(e -> {
-            InstrumentRecord sel = table.getSelectionModel().getSelectedItem();
+            BondRecord sel = table.getSelectionModel().getSelectedItem();
             if (sel != null && onSelectInstrument != null) {
                 onSelectInstrument.accept(sel.symbol());
             }
         });
 
+        UIComponents.PaginationBar<BondRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
         Runnable refreshTable = () -> {
             String selectedSec = sectorCombo.getValue();
             String q = searchField.getText();
-            List<InstrumentRecord> list = exchangeService.getInstruments("Bond", q).stream()
-                    .filter(i -> selectedSec == null || selectedSec.equalsIgnoreCase("All") || i.sector().equalsIgnoreCase(selectedSec))
-                    .collect(java.util.stream.Collectors.toList());
-            table.getItems().setAll(list);
-            countLabel.setText("Total: " + list.size() + " bonds");
+            List<BondRecord> list = exchangeService.getBonds(selectedSec, q);
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " bonds");
         };
         sectorCombo.setOnAction(e -> refreshTable.run());
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
+
         Label tip = new Label("Tip: Click any bond to view its order book depth or launch an order ticket.");
         tip.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
 
-        root.getChildren().addAll(titleBox, filterBar, table, tip);
+        root.getChildren().addAll(titleBox, filterBar, table, paginationBar, tip);
         VBox.setVgrow(table, Priority.ALWAYS);
         return root;
     }
@@ -430,65 +441,67 @@ public class ExchangeViews {
 
         filterBar.getChildren().addAll(new Label("Security Type:"), typeCombo, searchField, countLabel);
 
-        TableView<InstrumentRecord> table = new TableView<>();
+        TableView<SecurityRecord> table = new TableView<>();
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
 
-        TableColumn<InstrumentRecord, String> colSym = new TableColumn<>("Security Symbol");
+        TableColumn<SecurityRecord, String> colSym = new TableColumn<>("Security Symbol");
         colSym.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().symbol()));
 
-        TableColumn<InstrumentRecord, String> colName = new TableColumn<>("Security Description");
-        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().name()));
+        TableColumn<SecurityRecord, String> colName = new TableColumn<>("Security Description");
+        colName.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().securityDescription()));
 
-        TableColumn<InstrumentRecord, String> colType = new TableColumn<>("Category");
+        TableColumn<SecurityRecord, String> colType = new TableColumn<>("Category");
         colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().category()));
 
-        TableColumn<InstrumentRecord, String> colYield = new TableColumn<>("Benchmark Yield %");
-        colYield.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().couponOrYieldPercent() != null ? Formatters.formatPercent(d.getValue().couponOrYieldPercent()) : "N/A"));
+        TableColumn<SecurityRecord, String> colYield = new TableColumn<>("Benchmark Yield %");
+        colYield.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().benchmarkYieldPercent() != null ? Formatters.formatPercent(d.getValue().benchmarkYieldPercent()) : "N/A"));
 
-        TableColumn<InstrumentRecord, String> colLtp = new TableColumn<>("Clean Price (₹)");
-        colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().lastTradedPrice())));
+        TableColumn<SecurityRecord, String> colLtp = new TableColumn<>("Clean Price (₹)");
+        colLtp.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().cleanPrice())));
 
-        TableColumn<InstrumentRecord, String> colChg = new TableColumn<>("Change %");
+        TableColumn<SecurityRecord, String> colChg = new TableColumn<>("Change %");
         colChg.setCellValueFactory(d -> new SimpleStringProperty((d.getValue().changePercent().compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") + Formatters.formatPercent(d.getValue().changePercent())));
 
-        TableColumn<InstrumentRecord, String> colBid = new TableColumn<>("Bid (₹)");
+        TableColumn<SecurityRecord, String> colBid = new TableColumn<>("Bid (₹)");
         colBid.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().bidPrice())));
 
-        TableColumn<InstrumentRecord, String> colAsk = new TableColumn<>("Ask (₹)");
+        TableColumn<SecurityRecord, String> colAsk = new TableColumn<>("Ask (₹)");
         colAsk.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().askPrice())));
 
-        TableColumn<InstrumentRecord, String> colVol = new TableColumn<>("Volume");
+        TableColumn<SecurityRecord, String> colVol = new TableColumn<>("Volume");
         colVol.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatQuantity(d.getValue().dayVolume())));
 
-        TableColumn<InstrumentRecord, String> colMaturity = new TableColumn<>("Maturity Date");
-        colMaturity.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().maturityOrExpiryDate() != null ? d.getValue().maturityOrExpiryDate().toString() : "N/A"));
+        TableColumn<SecurityRecord, String> colMaturity = new TableColumn<>("Maturity Date");
+        colMaturity.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().maturityDate() != null ? d.getValue().maturityDate().toString() : "N/A"));
 
         table.getColumns().addAll(colSym, colName, colType, colYield, colLtp, colChg, colBid, colAsk, colVol, colMaturity);
 
         table.setOnMouseClicked(e -> {
-            InstrumentRecord sel = table.getSelectionModel().getSelectedItem();
+            SecurityRecord sel = table.getSelectionModel().getSelectedItem();
             if (sel != null && onSelectInstrument != null) {
                 onSelectInstrument.accept(sel.symbol());
             }
         });
 
+        UIComponents.PaginationBar<SecurityRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
         Runnable refreshTable = () -> {
             String selectedType = typeCombo.getValue();
             String q = searchField.getText();
-            List<InstrumentRecord> list = exchangeService.getInstruments("Securities", q).stream()
-                    .filter(i -> selectedType == null || selectedType.equalsIgnoreCase("All") || i.category().equalsIgnoreCase(selectedType))
-                    .collect(java.util.stream.Collectors.toList());
-            table.getItems().setAll(list);
-            countLabel.setText("Total: " + list.size() + " securities");
+            List<SecurityRecord> list = exchangeService.getSecurities(selectedType, q);
+            paginationBar.setData(list);
+            countLabel.setText("Total: " + String.format("%,d", list.size()) + " securities");
         };
         typeCombo.setOnAction(e -> refreshTable.run());
         searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
         refreshTable.run();
 
+        this.activeViewRefresher = refreshTable;
+
         Label tip = new Label("Tip: Click any security to view its order book depth or launch an order ticket.");
         tip.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
 
-        root.getChildren().addAll(titleBox, filterBar, table, tip);
+        root.getChildren().addAll(titleBox, filterBar, table, paginationBar, tip);
         VBox.setVgrow(table, Priority.ALWAYS);
         return root;
     }
