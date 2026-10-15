@@ -34,6 +34,7 @@ graph LR
 ---
 
 ## 1. Directory Structure & Layout Boundaries
+
 Per project requirements, the codebase is cleanly partitioned into three dedicated directories:
 
 - **`frontend/` (Prompts 01–08)**:
@@ -68,13 +69,13 @@ Per project requirements, the codebase is cleanly partitioned into three dedicat
 
 ## 3. Quick Start & Execution Guide
 
-### Prerequisites
 - Windows 11 or Fedora Linux
 - OpenJDK 25 LTS
 - Apache Maven 3.9+
 - Python 3.10+
 
 ### Option A: Complete Ecosystem (One-Click Launch)
+
 ```powershell
 # Windows PowerShell
 .\backend\scripts\run-ecosystem.ps1
@@ -86,12 +87,15 @@ bash ./backend/scripts/run-ecosystem.sh
 ### Option B: Running Individual Subsystems
 
 #### 1. Launch ML Inference Microservice
+
 ```powershell
 python "D:\Liquidity Optimizer\model\inference_server.py"
 ```
+
 Verify health by visiting `http://127.0.0.1:8082/health` in your browser.
 
 #### 2. Run Backend Reactor Test Suite & Initialization
+
 ```powershell
 # Build and run all 42 automated tests across the 9 modules
 mvn -f "D:\Liquidity Optimizer\backend\pom.xml" clean test
@@ -101,6 +105,7 @@ mvn -f "D:\Liquidity Optimizer\backend\lro-app\pom.xml" exec:java -Dexec.mainCla
 ```
 
 #### 3. Launch Frontend JavaFX Desktop Application
+
 ```powershell
 cd "D:\Liquidity Optimizer\frontend"
 mvn clean javafx:run
@@ -109,7 +114,9 @@ mvn clean javafx:run
 ---
 
 ## 4. Documentation Index
+
 Comprehensive architectural, regulatory, and technical documentation is located in `backend/docs/`:
+
 - [System Architecture](backend/docs/ARCHITECTURE.md)
 - [Database Data Dictionary](backend/docs/DATA_DICTIONARY.md)
 - [Service Contracts & STOMP Catalogue](backend/docs/SERVICE_CONTRACTS.md)
@@ -122,5 +129,6 @@ Comprehensive architectural, regulatory, and technical documentation is located 
 ---
 
 ## 5. Educational Simulation Disclaimer
+
 > [!NOTE]
 > All institutions, customers, accounts, loan balances, transactions, and exchange orders generated in this software are entirely **fictional and synthetic**. This system is intended solely for academic research and simulation purposes and contains no connection to real-money banking systems, payment rails, or licensed financial exchanges.

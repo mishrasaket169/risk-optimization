@@ -28,6 +28,14 @@ public interface BankService {
     }
     List<LedgerEntry> getLedgerEntries(String bankId);
     List<CashFlowBucket> getCashFlowLadder(String bankId);
+    List<BalanceSheetRecord> getBalanceSheetRecords(String bankId);
+    default List<BalanceSheetRecord> getBalanceSheetRecords(String bankId, String query, String categoryFilter) {
+        return getBalanceSheetRecords(bankId);
+    }
+    default List<BalanceSheetRecord> getBalanceSheetRecords(String bankId, String query, String categoryFilter, int limit) {
+        return getBalanceSheetRecords(bankId, query, categoryFilter);
+    }
+    BalanceSheetSummary getBalanceSheetSummary(String bankId);
 
     // Synthetic operational actions (demo previews)
     boolean openSyntheticAccount(String bankId, String customerId, String accountType, BigDecimal initialDeposit);

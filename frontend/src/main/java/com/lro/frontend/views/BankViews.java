@@ -747,6 +747,255 @@ public class BankViews {
     }
 
     /**
+     * Balance Sheet View: Executive Financial Position & 2-Year Daily Transaction Ledger.
+     */
+    public VBox buildBalanceSheetView(String bankId) {
+        VBox root = new VBox(16);
+        root.setPadding(new Insets(20));
+        root.setFillWidth(true);
+
+        BankProfile profile = bankService.getBankProfile(bankId).orElse(null);
+
+        // 1. Header & Bank Status Bar
+        HBox headerBar = new HBox(12);
+        headerBar.setAlignment(Pos.CENTER_LEFT);
+
+        Label pageTitle = new Label("Institutional Balance Sheet & 2-Year Historical Ledger");
+        pageTitle.setStyle("-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #0F172A;");
+
+        Region spacerHeader = new Region();
+        HBox.setHgrow(spacerHeader, Priority.ALWAYS);
+
+        Label bankBadge = new Label(profile != null ? (profile.bankName() + " (" + profile.tierDescription() + ")") : bankId);
+        bankBadge.setStyle("-fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 6px; -fx-font-size: 11px; -fx-border-color: #CBD5E1; -fx-border-radius: 6px;");
+
+        Label livePill = new Label("● LIVE RUNNING LEDGER ATTACHED");
+        livePill.setStyle("-fx-background-color: #ECFDF5; -fx-text-fill: #059669; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 6px; -fx-font-size: 11px;");
+
+        headerBar.getChildren().addAll(pageTitle, spacerHeader, bankBadge, livePill);
+
+        // 2. Top Executive KPI Cards
+        BalanceSheetSummary summary = bankService.getBalanceSheetSummary(bankId);
+
+        HBox kpiRow = new HBox(12);
+        VBox cardAssets = UIComponents.createKpiCard("Total Assets", Formatters.formatINRCrores(summary.totalAssets()), "Resources Owned", "Sum of loan advances, treasury holdings, and cash/RBI reserves.", "#0284C7");
+        VBox cardLiabilities = UIComponents.createKpiCard("Total Liabilities", Formatters.formatINRCrores(summary.totalLiabilities()), "Obligations & Deposits", "Core customer CASA, term deposits, and interbank borrowings.", "#D97706");
+        VBox cardEquity = UIComponents.createKpiCard("Total Equity / Net Worth", Formatters.formatINRCrores(summary.totalEquity()), "Shareholder Funds", "Paid-up share capital and accumulated statutory surplus reserves.", "#059669");
+        VBox cardInvariance = UIComponents.createKpiCard("Accounting Invariance", summary.isBalanced() ? "BALANCED ✓" : "IMBALANCE ⚠", "Assets = Liabilities + Equity", "Fundamental accounting identity: Total Assets must equal Liabilities plus Equity.", summary.isBalanced() ? "#10B981" : "#EF4444");
+
+        kpiRow.getChildren().addAll(cardAssets, cardLiabilities, cardEquity, cardInvariance);
+
+        // 3. Dual-Panel Classified Financial Statement Card
+        VBox statementCard = new VBox(12);
+        statementCard.getStyleClass().add("lro-card");
+        statementCard.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius: 8px; -fx-border-color: #E2E8F0; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-padding: 16px;");
+
+        HBox stmtHeader = new HBox(10);
+        stmtHeader.setAlignment(Pos.CENTER_LEFT);
+        Label stmtTitle = new Label("Classified Financial Balance Sheet Position (RBI Form A Format)");
+        stmtTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+        Label stmtSubtitle = new Label("Authoritative Double-Entry Position");
+        stmtSubtitle.setStyle("-fx-text-fill: #64748B; -fx-font-size: 11px;");
+        stmtHeader.getChildren().addAll(stmtTitle, stmtSubtitle);
+
+        HBox dualPanels = new HBox(16);
+        dualPanels.setAlignment(Pos.TOP_LEFT);
+
+        // Left Panel: ASSETS
+        VBox assetsPanel = new VBox(8);
+        HBox.setHgrow(assetsPanel, Priority.ALWAYS);
+        assetsPanel.setStyle("-fx-background-color: #F8FAFC; -fx-background-radius: 6px; -fx-border-color: #E2E8F0; -fx-border-radius: 6px; -fx-padding: 12px;");
+
+        Label assetsTitle = new Label("ASSETS (Application of Funds)");
+        assetsTitle.setStyle("-fx-font-size: 12px; -fx-font-weight: 800; -fx-text-fill: #0284C7;");
+
+        VBox assetsItems = new VBox(6);
+        assetsItems.getChildren().addAll(
+                createBalanceSheetRow("Loans & Advances (Credit Portfolio)", Formatters.formatINRCrores(summary.loansAndAdvances()), calcShare(summary.loansAndAdvances(), summary.totalAssets())),
+                createBalanceSheetRow("Treasury & G-Sec Investments", Formatters.formatINRCrores(summary.treasuryInvestments()), calcShare(summary.treasuryInvestments(), summary.totalAssets())),
+                createBalanceSheetRow("Cash & Balances with RBI (CRR)", Formatters.formatINRCrores(summary.cashAndRbiReserves()), calcShare(summary.cashAndRbiReserves(), summary.totalAssets())),
+                createBalanceSheetRow("Other Assets & Clearing Placements", Formatters.formatINRCrores(summary.otherAssets()), calcShare(summary.otherAssets(), summary.totalAssets()))
+        );
+
+        HBox assetsTotalRow = createTotalBalanceSheetRow("TOTAL ASSETS", Formatters.formatINRCrores(summary.totalAssets()), "#0284C7");
+        assetsPanel.getChildren().addAll(assetsTitle, new Separator(), assetsItems, new Separator(), assetsTotalRow);
+
+        // Right Panel: LIABILITIES & EQUITY
+        VBox liabPanel = new VBox(8);
+        HBox.setHgrow(liabPanel, Priority.ALWAYS);
+        liabPanel.setStyle("-fx-background-color: #F8FAFC; -fx-background-radius: 6px; -fx-border-color: #E2E8F0; -fx-border-radius: 6px; -fx-padding: 12px;");
+
+        Label liabTitle = new Label("LIABILITIES & EQUITY (Sources of Funds)");
+        liabTitle.setStyle("-fx-font-size: 12px; -fx-font-weight: 800; -fx-text-fill: #D97706;");
+
+        VBox liabItems = new VBox(6);
+        liabItems.getChildren().addAll(
+                createBalanceSheetRow("CASA Deposits (Demand Liabilities)", Formatters.formatINRCrores(summary.casaDeposits()), calcShare(summary.casaDeposits(), summary.totalAssets())),
+                createBalanceSheetRow("Term & Fixed Deposits (Time Liabilities)", Formatters.formatINRCrores(summary.termDeposits()), calcShare(summary.termDeposits(), summary.totalAssets())),
+                createBalanceSheetRow("Interbank Borrowings & Repo", Formatters.formatINRCrores(summary.interbankBorrowings()), calcShare(summary.interbankBorrowings(), summary.totalAssets())),
+                createBalanceSheetRow("Other Liabilities & Provisions", Formatters.formatINRCrores(summary.otherLiabilities()), calcShare(summary.otherLiabilities(), summary.totalAssets())),
+                createBalanceSheetRow("Share Capital & Core Equity", Formatters.formatINRCrores(summary.shareCapital()), calcShare(summary.shareCapital(), summary.totalAssets())),
+                createBalanceSheetRow("Statutory Reserves & Retained Surplus", Formatters.formatINRCrores(summary.reservesAndSurplus()), calcShare(summary.reservesAndSurplus(), summary.totalAssets()))
+        );
+
+        BigDecimal totalLiabAndEquity = summary.totalLiabilities().add(summary.totalEquity());
+        HBox liabTotalRow = createTotalBalanceSheetRow("TOTAL LIABILITIES & EQUITY", Formatters.formatINRCrores(totalLiabAndEquity), "#059669");
+        liabPanel.getChildren().addAll(liabTitle, new Separator(), liabItems, new Separator(), liabTotalRow);
+
+        dualPanels.getChildren().addAll(assetsPanel, liabPanel);
+        statementCard.getChildren().addAll(stmtHeader, dualPanels);
+
+        // 4. Historical 2-Year Daily Transaction & Running Balance Ledger Table
+        VBox tableContainer = new VBox(12);
+        tableContainer.setFillWidth(true);
+        VBox.setVgrow(tableContainer, Priority.ALWAYS);
+
+        HBox filterBar = new HBox(12);
+        filterBar.setAlignment(Pos.CENTER_LEFT);
+
+        Label tableHeader = new Label("2-Year Daily Transaction & Running Balance Ledger");
+        tableHeader.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #0F172A;");
+
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search record ID, account, line item, type, or method...");
+        searchField.setPrefWidth(300);
+
+        ComboBox<String> categoryCombo = new ComboBox<>();
+        categoryCombo.getItems().addAll("All Categories", "Asset", "Liability", "Equity");
+        categoryCombo.setValue("All Categories");
+
+        Label countLabel = new Label("Total: " + String.format("%,d", summary.totalHistoricalTransactions()) + " historical transactions");
+        countLabel.setStyle("-fx-text-fill: #64748B; -fx-font-size: 12px; -fx-font-weight: 600;");
+
+        filterBar.getChildren().addAll(tableHeader, searchField, categoryCombo, countLabel);
+
+        TableView<BalanceSheetRecord> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
+        table.setMaxHeight(Double.MAX_VALUE);
+        table.setPrefHeight(450);
+        VBox.setVgrow(table, Priority.ALWAYS);
+
+        TableColumn<BalanceSheetRecord, String> colRecId = new TableColumn<>("Record ID");
+        colRecId.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().recordId()));
+        colRecId.setMinWidth(110);
+
+        TableColumn<BalanceSheetRecord, String> colTime = new TableColumn<>("Timestamp (IST)");
+        colTime.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatDateTime(d.getValue().timestamp())));
+        colTime.setMinWidth(140);
+
+        TableColumn<BalanceSheetRecord, String> colLineItem = new TableColumn<>("Line Item Head");
+        colLineItem.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().lineItem()));
+        colLineItem.setMinWidth(170);
+
+        TableColumn<BalanceSheetRecord, String> colCategory = new TableColumn<>("Category");
+        colCategory.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().category()));
+        colCategory.setMinWidth(90);
+
+        TableColumn<BalanceSheetRecord, String> colAccRef = new TableColumn<>("Account Ref");
+        colAccRef.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().accountReference()));
+        colAccRef.setMinWidth(120);
+
+        TableColumn<BalanceSheetRecord, String> colDebit = new TableColumn<>("Debit (INR)");
+        colDebit.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().debitINR().compareTo(BigDecimal.ZERO) > 0 ? Formatters.formatINR(d.getValue().debitINR()) : "—"));
+        colDebit.setMinWidth(120);
+
+        TableColumn<BalanceSheetRecord, String> colCredit = new TableColumn<>("Credit (INR)");
+        colCredit.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().creditINR().compareTo(BigDecimal.ZERO) > 0 ? Formatters.formatINR(d.getValue().creditINR()) : "—"));
+        colCredit.setMinWidth(120);
+
+        TableColumn<BalanceSheetRecord, String> colRunningBal = new TableColumn<>("Running Balance (INR)");
+        colRunningBal.setCellValueFactory(d -> new SimpleStringProperty(Formatters.formatINR(d.getValue().runningBalanceINR())));
+        colRunningBal.setMinWidth(150);
+
+        TableColumn<BalanceSheetRecord, String> colType = new TableColumn<>("Type");
+        colType.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().type()));
+        colType.setMinWidth(120);
+
+        TableColumn<BalanceSheetRecord, String> colMethod = new TableColumn<>("Method");
+        colMethod.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().method()));
+        colMethod.setMinWidth(90);
+
+        TableColumn<BalanceSheetRecord, String> colStatus = new TableColumn<>("Status");
+        colStatus.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().status()));
+        colStatus.setMinWidth(80);
+
+        table.getColumns().addAll(colRecId, colTime, colLineItem, colCategory, colAccRef, colDebit, colCredit, colRunningBal, colType, colMethod, colStatus);
+
+        UIComponents.PaginationBar<BalanceSheetRecord> paginationBar = new UIComponents.PaginationBar<>(table, 500);
+
+        Runnable refreshTable = () -> {
+            String q = searchField.getText() == null ? "" : searchField.getText().trim();
+            String cat = categoryCombo.getValue();
+            List<BalanceSheetRecord> records = bankService.getBalanceSheetRecords(bankId, q, cat, 2000);
+            paginationBar.setData(records);
+            countLabel.setText(String.format("Loaded %,d entries (of %,d total in 2-year history)", records.size(), summary.totalHistoricalTransactions()));
+        };
+
+        searchField.textProperty().addListener((obs, o, n) -> refreshTable.run());
+        categoryCombo.setOnAction(e -> refreshTable.run());
+        refreshTable.run();
+
+        tableContainer.getChildren().addAll(filterBar, table, paginationBar);
+
+        this.activeViewRefresher = () -> {
+            BalanceSheetSummary latestSummary = bankService.getBalanceSheetSummary(bankId);
+            UIComponents.updateKpiCardValue(cardAssets, Formatters.formatINRCrores(latestSummary.totalAssets()));
+            UIComponents.updateKpiCardValue(cardLiabilities, Formatters.formatINRCrores(latestSummary.totalLiabilities()));
+            UIComponents.updateKpiCardValue(cardEquity, Formatters.formatINRCrores(latestSummary.totalEquity()));
+            UIComponents.updateKpiCardValue(cardInvariance, latestSummary.isBalanced() ? "BALANCED ✓" : "IMBALANCE ⚠");
+            refreshTable.run();
+        };
+
+        root.getChildren().addAll(headerBar, kpiRow, statementCard, tableContainer);
+        return root;
+    }
+
+    private HBox createBalanceSheetRow(String title, String amount, String sharePct) {
+        HBox row = new HBox(8);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPadding(new Insets(3, 4, 3, 4));
+
+        Label lblTitle = new Label(title);
+        lblTitle.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px;");
+        HBox.setHgrow(lblTitle, Priority.ALWAYS);
+
+        Label lblShare = new Label(sharePct);
+        lblShare.setStyle("-fx-text-fill: #94A3B8; -fx-font-size: 11px; -fx-font-weight: 500;");
+        lblShare.setMinWidth(48);
+        lblShare.setAlignment(Pos.CENTER_RIGHT);
+
+        Label lblAmt = new Label(amount);
+        lblAmt.setStyle("-fx-text-fill: #0F172A; -fx-font-size: 12px; -fx-font-weight: 700;");
+        lblAmt.setMinWidth(110);
+        lblAmt.setAlignment(Pos.CENTER_RIGHT);
+
+        row.getChildren().addAll(lblTitle, lblShare, lblAmt);
+        return row;
+    }
+
+    private HBox createTotalBalanceSheetRow(String title, String amount, String accentColor) {
+        HBox row = new HBox(8);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color: #0F172A; -fx-padding: 8 12; -fx-background-radius: 4px;");
+
+        Label lblTitle = new Label(title);
+        lblTitle.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 12px; -fx-font-weight: 800;");
+        HBox.setHgrow(lblTitle, Priority.ALWAYS);
+
+        Label lblAmt = new Label(amount);
+        lblAmt.setStyle("-fx-text-fill: " + accentColor + "; -fx-font-size: 13px; -fx-font-weight: 800;");
+
+        row.getChildren().addAll(lblTitle, lblAmt);
+        return row;
+    }
+
+    private String calcShare(BigDecimal part, BigDecimal whole) {
+        if (part == null || whole == null || whole.compareTo(BigDecimal.ZERO) <= 0) return "0.0%";
+        BigDecimal pct = part.multiply(new BigDecimal("100")).divide(whole, 1, RoundingMode.HALF_UP);
+        return pct + "%";
+    }
+
+    /**
      * PROMPT 04: Contractual Cash-Flow Maturity Ladder Screen.
      */
     public VBox buildLadderView(String bankId) {

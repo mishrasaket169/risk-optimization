@@ -24,6 +24,7 @@ public class MockBankService implements BankService {
     private final Map<String, List<TreasuryHolding>> treasuryData = new ConcurrentHashMap<>();
     private final Map<String, List<LedgerEntry>> ledgerData = new ConcurrentHashMap<>();
     private final Map<String, List<CashFlowBucket>> ladderData = new ConcurrentHashMap<>();
+    private final Map<String, List<BalanceSheetRecord>> balanceSheetData = new ConcurrentHashMap<>();
 
     public MockBankService() {
         seedAllData();
@@ -109,6 +110,7 @@ public class MockBankService implements BankService {
             seedLoans(p.bankId(), p.healthStatus());
             seedTreasury(p.bankId());
             seedLedger(p.bankId());
+            seedBalanceSheet(p.bankId());
             seedLadder(p.bankId(), p.healthStatus());
             recalculateCustomerRelationshipValues(p.bankId());
         }
@@ -600,6 +602,27 @@ public class MockBankService implements BankService {
         ledgerData.put(bankId, list);
     }
 
+    private void seedBalanceSheet(String bankId) {
+        List<BalanceSheetRecord> list = new ArrayList<>();
+        Instant now = Instant.now();
+        String pfx = bankId.contains("LRG") ? "LRG" : bankId.contains("MED") ? "MED" : bankId.contains("SML") ? "SML" : "DST";
+        BigDecimal baseBal = bankId.contains("LRG") ? new BigDecimal("1950000000000.00")
+                : bankId.contains("MED") ? new BigDecimal("790000000000.00")
+                : bankId.contains("SML") ? new BigDecimal("410000000000.00") : new BigDecimal("128000000000.00");
+
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000001", now.minusSeconds(120), "ACC-" + pfx + "-00101", "Loans & Advances", "Asset", new BigDecimal("2500000.00"), BigDecimal.ZERO, baseBal.add(new BigDecimal("2500000.00")), "Loan Disbursement", "RTGS", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000002", now.minusSeconds(360), "ACC-" + pfx + "-00204", "CASA Deposits", "Liability", BigDecimal.ZERO, new BigDecimal("150000.00"), baseBal.add(new BigDecimal("2650000.00")), "Deposits", "UPI", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000003", now.minusSeconds(900), "ACC-" + pfx + "-00350", "Treasury & G-Sec Investments", "Asset", new BigDecimal("50000000.00"), BigDecimal.ZERO, baseBal.add(new BigDecimal("52650000.00")), "Investment", "RTGS", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000004", now.minusSeconds(1800), "ACC-" + pfx + "-00412", "CASA Deposits", "Liability", new BigDecimal("45000.00"), BigDecimal.ZERO, baseBal.add(new BigDecimal("52605000.00")), "Withdrawal", "IMPS", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000005", now.minusSeconds(3600), "ACC-" + pfx + "-00520", "Loans & Advances", "Asset", BigDecimal.ZERO, new BigDecimal("35000.00"), baseBal.add(new BigDecimal("52570000.00")), "EMI Repayment", "UPI", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000006", now.minusSeconds(7200), "ACC-" + pfx + "-00688", "Term & Fixed Deposits", "Liability", BigDecimal.ZERO, new BigDecimal("1000000.00"), baseBal.add(new BigDecimal("53570000.00")), "Deposits", "NEFT", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000007", now.minusSeconds(10800), "ACC-" + pfx + "-00719", "Cash & RBI Reserves", "Asset", new BigDecimal("15000000.00"), BigDecimal.ZERO, baseBal.add(new BigDecimal("68570000.00")), "Transfers", "RTGS", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000008", now.minusSeconds(14400), "ACC-" + pfx + "-00892", "Interbank Borrowings & Repo", "Liability", BigDecimal.ZERO, new BigDecimal("25000000.00"), baseBal.add(new BigDecimal("93570000.00")), "Interbank Borrowing", "RTGS", "Posted"));
+        list.add(new BalanceSheetRecord("BS-" + pfx + "-0000009", now.minusSeconds(21600), "ACC-" + pfx + "-00955", "Statutory Reserves & Retained Surplus", "Equity", BigDecimal.ZERO, new BigDecimal("5000000.00"), baseBal.add(new BigDecimal("98570000.00")), "Reserve Adjustment", "Internal", "Posted"));
+
+        balanceSheetData.put(bankId, list);
+    }
+
     private void seedLadder(String bankId, String health) {
         List<CashFlowBucket> list = new ArrayList<>();
         boolean isDistressed = health.equals("Distressed");
@@ -729,6 +752,94 @@ public class MockBankService implements BankService {
     @Override
     public List<CashFlowBucket> getCashFlowLadder(String bankId) {
         return ladderData.getOrDefault(bankId, List.of());
+    }
+
+    @Override
+    public List<BalanceSheetRecord> getBalanceSheetRecords(String bankId) {
+        return balanceSheetData.getOrDefault(bankId, List.of());
+    }
+
+    @Override
+    public List<BalanceSheetRecord> getBalanceSheetRecords(String bankId, String query, String categoryFilter) {
+        return getBalanceSheetRecords(bankId, query, categoryFilter, 2000);
+    }
+
+    @Override
+    public List<BalanceSheetRecord> getBalanceSheetRecords(String bankId, String query, String categoryFilter, int limit) {
+        List<BalanceSheetRecord> all = balanceSheetData.getOrDefault(bankId, List.of());
+        boolean isAllCategories = categoryFilter == null || categoryFilter.isBlank() || categoryFilter.trim().toLowerCase().startsWith("all");
+        return all.stream()
+                .filter(r -> isAllCategories || r.category().equalsIgnoreCase(categoryFilter.trim()))
+                .filter(r -> {
+                    if (query == null || query.isBlank()) return true;
+                    String q = query.toLowerCase().trim();
+                    return r.recordId().toLowerCase().contains(q)
+                            || r.accountReference().toLowerCase().contains(q)
+                            || r.lineItem().toLowerCase().contains(q)
+                            || r.type().toLowerCase().contains(q)
+                            || r.method().toLowerCase().contains(q);
+                })
+                .limit(limit > 0 ? limit : 2000)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public BalanceSheetSummary getBalanceSheetSummary(String bankId) {
+        BankProfile p = getBankProfile(bankId).orElse(null);
+        if (p == null) {
+            return new BalanceSheetSummary(
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, true, BigDecimal.ZERO,
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                    BigDecimal.ZERO, BigDecimal.ZERO, 0L
+            );
+        }
+
+        BigDecimal totalAssets = p.totalAssets();
+        BigDecimal totalLiabilities = p.totalLiabilities();
+        BigDecimal totalEquity = totalAssets.subtract(totalLiabilities);
+
+        BigDecimal casaDeposits = p.totalDeposits().multiply(new BigDecimal("0.55")).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal termDeposits = p.totalDeposits().subtract(casaDeposits);
+        BigDecimal nonDepositLiab = totalLiabilities.subtract(p.totalDeposits());
+        BigDecimal interbankBorrowings = nonDepositLiab.multiply(new BigDecimal("0.65")).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal otherLiabilities = nonDepositLiab.subtract(interbankBorrowings);
+
+        BigDecimal loansAndAdvances = p.totalLoans();
+        BigDecimal treasuryInvestments = p.securitiesHoldings();
+        BigDecimal cashAndRbiReserves = p.cashBalance();
+        BigDecimal otherAssets = totalAssets.subtract(loansAndAdvances).subtract(treasuryInvestments).subtract(cashAndRbiReserves);
+
+        BigDecimal shareCapital = totalEquity.multiply(new BigDecimal("0.35")).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal reservesAndSurplus = totalEquity.subtract(shareCapital);
+
+        long txnCount = switch (bankId) {
+            case "BANK-01-LRG" -> 1000000L;
+            case "BANK-02-MED" -> 500000L;
+            case "BANK-03-SML" -> 300000L;
+            case "BANK-04-DST" -> 180000L;
+            default -> 100000L;
+        };
+
+        return new BalanceSheetSummary(
+                totalAssets,
+                totalLiabilities,
+                totalEquity,
+                totalEquity,
+                true,
+                BigDecimal.ZERO,
+                loansAndAdvances,
+                treasuryInvestments,
+                cashAndRbiReserves,
+                otherAssets,
+                casaDeposits,
+                termDeposits,
+                interbankBorrowings,
+                otherLiabilities,
+                shareCapital,
+                reservesAndSurplus,
+                txnCount
+        );
     }
 
     @Override

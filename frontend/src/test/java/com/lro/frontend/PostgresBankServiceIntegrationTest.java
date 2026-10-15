@@ -75,6 +75,13 @@ public class PostgresBankServiceIntegrationTest {
 
         List<LedgerEntry> ledger = pgService.getLedgerEntries(bankId);
         assertNotNull(ledger);
+
+        List<BalanceSheetRecord> bsRecords = pgService.getBalanceSheetRecords(bankId);
+        assertFalse(bsRecords.isEmpty(), "Should retrieve balance sheet records from bank_large.balance_sheet");
+        BalanceSheetSummary bsSummary = pgService.getBalanceSheetSummary(bankId);
+        assertNotNull(bsSummary);
+        assertTrue(bsSummary.totalAssets().compareTo(BigDecimal.ZERO) > 0);
+        assertTrue(bsSummary.totalHistoricalTransactions() >= 1000000L, "Large bank should have >= 1,000,000 historical transactions");
     }
 
     @Test

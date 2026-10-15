@@ -107,4 +107,38 @@ public class BankModels {
             BigDecimal netFundingGap,
             BigDecimal cumulativeFundingGap
     ) {}
+
+    public record BalanceSheetRecord(
+            String recordId,
+            Instant timestamp,
+            String accountReference,
+            String lineItem,
+            String category, // "Asset", "Liability", "Equity"
+            BigDecimal debitINR,
+            BigDecimal creditINR,
+            BigDecimal runningBalanceINR,
+            String type,
+            String method,
+            String status // "Posted", "Pending", "Reversed"
+    ) {}
+
+    public record BalanceSheetSummary(
+            BigDecimal totalAssets,
+            BigDecimal totalLiabilities,
+            BigDecimal totalEquity,
+            BigDecimal netWorth,
+            boolean isBalanced,
+            BigDecimal discrepancy,
+            BigDecimal loansAndAdvances,
+            BigDecimal treasuryInvestments,
+            BigDecimal cashAndRbiReserves,
+            BigDecimal otherAssets,
+            BigDecimal casaDeposits,
+            BigDecimal termDeposits,
+            BigDecimal interbankBorrowings,
+            BigDecimal otherLiabilities,
+            BigDecimal shareCapital,
+            BigDecimal reservesAndSurplus,
+            long totalHistoricalTransactions
+    ) {}
 }

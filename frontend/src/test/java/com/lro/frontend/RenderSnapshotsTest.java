@@ -110,6 +110,10 @@ public class RenderSnapshotsTest {
         BorderPane bankLedgerShell = buildFullShell("BANK", "General Ledger", bankViews.buildLedgerView("BANK-01-LRG"), isPg);
         saveSceneSnapshot(bankLedgerShell, cssPath, ARTIFACTS_DIR + "lro_bank_ledger.png");
 
+        // 1g. Bank Simulator - Institutional Balance Sheet (Executive KPI, Classified Statement & 2-Year Ledger)
+        BorderPane bankBalanceSheetShell = buildFullShell("BANK", "Balance Sheet", bankViews.buildBalanceSheetView("BANK-01-LRG"), isPg);
+        saveSceneSnapshot(bankBalanceSheetShell, cssPath, ARTIFACTS_DIR + "lro_bank_balance_sheet.png");
+
         // 2. Exchange Simulator Shell - Market Overview
         BorderPane exchShell = buildFullShell("EXCHANGE", "Market Overview", exchangeViews.buildOverview(), isPg);
         saveSceneSnapshot(exchShell, cssPath, ARTIFACTS_DIR + "lro_exchange_full_app.png");
@@ -245,6 +249,7 @@ public class RenderSnapshotsTest {
                     createNavRow("📊", "Loans & NPA Management", "Loans & NPA Management".equals(selectedTitle)),
                     createNavRow("🏛", "Treasury & G-Sec Holdings", "Treasury & G-Sec Holdings".equals(selectedTitle)),
                     createNavRow("📖", "General Ledger", "General Ledger".equals(selectedTitle)),
+                    createNavRow("⚖", "Balance Sheet", "Balance Sheet".equals(selectedTitle)),
                     createNavRow("⌛", "Cash-Flow Maturity Ladder", "Cash-Flow Maturity Ladder".equals(selectedTitle))
             );
         } else if ("EXCHANGE".equals(mode)) {

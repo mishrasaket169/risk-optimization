@@ -160,4 +160,31 @@ public class FrontendUnitTests {
         assertEquals("7.18% Government of India Sovereign 2033", gsec.securityDescription());
         assertEquals("G-Sec", gsec.category());
     }
+
+    @Test
+    @DisplayName("Verify Balance Sheet table, 2-year history scale, and accounting invariance across 4 banks")
+    void testBalanceSheetAcrossFourBanks() {
+        String[] bankIds = {"BANK-01-LRG", "BANK-02-MED", "BANK-03-SML", "BANK-04-DST"};
+        long[] expectedTxns = {1000000L, 500000L, 300000L, 180000L};
+
+        for (int i = 0; i < bankIds.length; i++) {
+            String bId = bankIds[i];
+            BalanceSheetSummary summary = bankService.getBalanceSheetSummary(bId);
+            assertNotNull(summary);
+            assertTrue(summary.totalAssets().compareTo(BigDecimal.ZERO) > 0, "Total assets must be positive for " + bId);
+            assertTrue(summary.totalLiabilities().compareTo(BigDecimal.ZERO) > 0, "Total liabilities must be positive for " + bId);
+            assertTrue(summary.totalEquity().compareTo(BigDecimal.ZERO) > 0, "Total equity must be positive for " + bId);
+            assertTrue(summary.isBalanced(), "Balance sheet must be balanced (Assets = Liabilities + Equity) for " + bId);
+            assertEquals(expectedTxns[i], summary.totalHistoricalTransactions(), "Historical transaction scale must match expected for " + bId);
+
+            List<BalanceSheetRecord> records = bankService.getBalanceSheetRecords(bId);
+            assertFalse(records.isEmpty(), "Balance sheet records must not be empty for " + bId);
+            for (BalanceSheetRecord r : records) {
+                assertNotNull(r.recordId());
+                assertNotNull(r.lineItem());
+                assertNotNull(r.category());
+                assertTrue(r.category().equals("Asset") || r.category().equals("Liability") || r.category().equals("Equity"));
+            }
+        }
+    }
 }

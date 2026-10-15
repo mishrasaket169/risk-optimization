@@ -199,6 +199,18 @@ public class BankTransactionSimulator {
             ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
+
+        // Attach live transaction to running balance sheet
+        String bsSql = "INSERT INTO " + schema + ".balance_sheet (record_id, timestamp, account_reference, line_item, category, debit_inr, credit_inr, running_balance_inr, type, method, status) " +
+                "VALUES ('BS-' || to_char(random()*10000000, 'FM0000000'), CURRENT_TIMESTAMP, ?, 'CASA Deposits', 'Liability', 0.00, ?, (SELECT coalesce(running_balance_inr, 200000000000) FROM " + schema + ".balance_sheet ORDER BY timestamp DESC LIMIT 1) + ?, ?, ?, 'Posted');";
+        try (PreparedStatement ps = conn.prepareStatement(bsSql)) {
+            ps.setString(1, accId);
+            ps.setBigDecimal(2, amount);
+            ps.setBigDecimal(3, amount);
+            ps.setString(4, tm[0]);
+            ps.setString(5, tm[1]);
+            ps.executeUpdate();
+        }
     }
 
     private void simulateDebit(Connection conn, String schema) throws SQLException {
@@ -236,6 +248,18 @@ public class BankTransactionSimulator {
             ps.setBigDecimal(2, amount);
             ps.setString(3, tm[0]);
             ps.setString(4, tm[1]);
+            ps.executeUpdate();
+        }
+
+        // Attach live transaction to running balance sheet
+        String bsSql = "INSERT INTO " + schema + ".balance_sheet (record_id, timestamp, account_reference, line_item, category, debit_inr, credit_inr, running_balance_inr, type, method, status) " +
+                "VALUES ('BS-' || to_char(random()*10000000, 'FM0000000'), CURRENT_TIMESTAMP, ?, 'CASA Deposits', 'Liability', ?, 0.00, (SELECT coalesce(running_balance_inr, 200000000000) FROM " + schema + ".balance_sheet ORDER BY timestamp DESC LIMIT 1) - ?, ?, ?, 'Posted');";
+        try (PreparedStatement ps = conn.prepareStatement(bsSql)) {
+            ps.setString(1, accId);
+            ps.setBigDecimal(2, amount);
+            ps.setBigDecimal(3, amount);
+            ps.setString(4, tm[0]);
+            ps.setString(5, tm[1]);
             ps.executeUpdate();
         }
     }
@@ -299,6 +323,17 @@ public class BankTransactionSimulator {
             ps.setString(4, tm[1]);
             ps.executeUpdate();
         }
+
+        // Attach live transaction to running balance sheet
+        String bsSql = "INSERT INTO " + schema + ".balance_sheet (record_id, timestamp, account_reference, line_item, category, debit_inr, credit_inr, running_balance_inr, type, method, status) " +
+                "VALUES ('BS-' || to_char(random()*10000000, 'FM0000000'), CURRENT_TIMESTAMP, ?, 'Loans & Advances', 'Asset', 0.00, ?, (SELECT coalesce(running_balance_inr, 200000000000) FROM " + schema + ".balance_sheet ORDER BY timestamp DESC LIMIT 1) - ?, 'EMI Repayment', ?, 'Posted');";
+        try (PreparedStatement ps = conn.prepareStatement(bsSql)) {
+            ps.setString(1, custId);
+            ps.setBigDecimal(2, principalPortion);
+            ps.setBigDecimal(3, principalPortion);
+            ps.setString(4, tm[1]);
+            ps.executeUpdate();
+        }
     }
 
     private void simulateLoanOrigination(Connection conn, String schema) throws SQLException {
@@ -352,6 +387,17 @@ public class BankTransactionSimulator {
             ps.setString(1, custId);
             ps.setBigDecimal(2, sanctionedAmount);
             ps.setString(3, tm[0]);
+            ps.setString(4, tm[1]);
+            ps.executeUpdate();
+        }
+
+        // Attach live transaction to running balance sheet
+        String bsSql = "INSERT INTO " + schema + ".balance_sheet (record_id, timestamp, account_reference, line_item, category, debit_inr, credit_inr, running_balance_inr, type, method, status) " +
+                "VALUES ('BS-' || to_char(random()*10000000, 'FM0000000'), CURRENT_TIMESTAMP, ?, 'Loans & Advances', 'Asset', ?, 0.00, (SELECT coalesce(running_balance_inr, 200000000000) FROM " + schema + ".balance_sheet ORDER BY timestamp DESC LIMIT 1) + ?, 'Loan Disbursement', ?, 'Posted');";
+        try (PreparedStatement ps = conn.prepareStatement(bsSql)) {
+            ps.setString(1, custId);
+            ps.setBigDecimal(2, sanctionedAmount);
+            ps.setBigDecimal(3, sanctionedAmount);
             ps.setString(4, tm[1]);
             ps.executeUpdate();
         }

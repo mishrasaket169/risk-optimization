@@ -279,6 +279,7 @@ public class MainApp extends Application {
                     createNavButton("📊", "Loans", "LOANS"),
                     createNavButton("🏛", "Bonds & Equity", "TREASURY"),
                     createNavButton("📖", "General Ledger", "LEDGER"),
+                    createNavButton("⚖", "Balance Sheet", "BALANCE_SHEET"),
                     createNavButton("⌛", "Cash-Flow Maturity Ladder", "LADDER"));
         } else if (currentApp == AppMode.EXCHANGE_SIMULATOR) {
             header.setText("EXCHANGE SIMULATOR NAVIGATION");
@@ -351,6 +352,7 @@ public class MainApp extends Application {
                 case "LOANS" -> bankViews.buildLoansView(selectedBankId);
                 case "TREASURY" -> bankViews.buildTreasuryView(selectedBankId);
                 case "LEDGER" -> bankViews.buildLedgerView(selectedBankId);
+                case "BALANCE_SHEET" -> bankViews.buildBalanceSheetView(selectedBankId);
                 case "LADDER" -> bankViews.buildLadderView(selectedBankId);
                 default -> bankViews.buildDashboard(selectedBankId, bankId -> {
                     this.selectedBankId = bankId;
