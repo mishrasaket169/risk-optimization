@@ -28,17 +28,30 @@ public class MockExchangeService implements ExchangeService {
         return currentSeed;
     }
 
-    private final List<MarketIndex> indices = new ArrayList<>();
-    private final List<StockRecord> stocks = new ArrayList<>();
-    private final List<BondRecord> bonds = new ArrayList<>();
-    private final List<SecurityRecord> securities = new ArrayList<>();
-    private final List<InstrumentRecord> instruments = new ArrayList<>();
+    private final List<MarketIndex> indices = new CopyOnWriteArrayList<>();
+    private final List<StockRecord> stocks = new CopyOnWriteArrayList<>();
+    private final List<BondRecord> bonds = new CopyOnWriteArrayList<>();
+    private final List<SecurityRecord> securities = new CopyOnWriteArrayList<>();
+    private final List<InstrumentRecord> instruments = new CopyOnWriteArrayList<>();
     private final List<OrderRecord> orders = new CopyOnWriteArrayList<>();
     private final List<TradeRecord> trades = new CopyOnWriteArrayList<>();
     private final List<String> marketEvents = new CopyOnWriteArrayList<>();
 
+    private final Map<String, Integer> stockIndices = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<String, Integer> bondIndices = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<String, Integer> securityIndices = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<String, Integer> instrumentIndices = new java.util.concurrent.ConcurrentHashMap<>();
+    private final Map<String, BigDecimal> basePrices = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private final ExchangeMarketSimulator simulator;
+
     public MockExchangeService() {
+        this(null);
+    }
+
+    public MockExchangeService(javax.sql.DataSource dataSource) {
         seedExchangeData();
+        this.simulator = new ExchangeMarketSimulator(this, dataSource);
     }
 
     private void seedExchangeData() {
@@ -148,6 +161,7 @@ public class MockExchangeService implements ExchangeService {
         marketEvents.add("Simulated Morning Auction completed cleanly.");
         marketEvents.add("RBI Monetary Policy Stance simulated in Normal regime.");
         marketEvents.add("Sovereign G-Sec matching active with tight bid-ask spreads.");
+        rebuildLookupIndices();
     }
 
     private boolean loadFromPostgresIfAvailable() {
@@ -422,15 +436,35 @@ public class MockExchangeService implements ExchangeService {
 
     @Override
     public MarketOverview getMarketOverview() {
+        int advances = 0;
+        int declines = 0;
+        int unchanged = 0;
+        BigDecimal totalTurnover = BigDecimal.ZERO;
+        long totalVol = 0L;
+
+        for (StockRecord s : stocks) {
+            int cmp = s.changePercent().compareTo(BigDecimal.ZERO);
+            if (cmp > 0) advances++;
+            else if (cmp < 0) declines++;
+            else unchanged++;
+
+            totalTurnover = totalTurnover.add(s.dayTurnoverINR());
+            totalVol += s.dayVolume();
+        }
+
+        String status = simulator != null && simulator.isRunning()
+                ? "OPEN (Simulating: " + currentRegime.toUpperCase() + ")"
+                : "OPEN (Simulated)";
+
         return new MarketOverview(
-                "OPEN (Simulated)",
+                status,
                 Instant.now(),
                 currentRegime,
-                new BigDecimal("68500000000.00"), // ₹ 6,850 Cr turnover
-                18450000L,
-                48,
-                32,
-                10,
+                totalTurnover.compareTo(BigDecimal.ZERO) > 0 ? totalTurnover : new BigDecimal("68500000000.00"),
+                totalVol > 0 ? totalVol : 18450000L,
+                advances > 0 ? advances : 48,
+                declines > 0 ? declines : 32,
+                unchanged > 0 ? unchanged : 10,
                 Collections.unmodifiableList(indices),
                 Collections.unmodifiableList(marketEvents)
         );
@@ -491,12 +525,27 @@ public class MockExchangeService implements ExchangeService {
         BigDecimal base = inst.lastTradedPrice();
         BigDecimal tick = inst.tickSize();
 
+        BigDecimal spreadMult = simulator != null ? simulator.getSpreadMultiplier() : BigDecimal.ONE;
+        BigDecimal step = tick.multiply(spreadMult).setScale(2, RoundingMode.HALF_UP);
+        if (step.compareTo(tick) < 0) step = tick;
+
+        double bidWeight = simulator != null ? simulator.getBidQueueWeight() : 1.0;
+        double askWeight = simulator != null ? simulator.getAskQueueWeight() : 1.0;
+
         List<OrderBookLevel> levels = new ArrayList<>();
-        levels.add(new OrderBookLevel(1, 14, 2500L, base.subtract(tick), base.add(tick), 3100L, 19));
-        levels.add(new OrderBookLevel(2, 22, 5200L, base.subtract(tick.multiply(new BigDecimal("2"))), base.add(tick.multiply(new BigDecimal("2"))), 6400L, 27));
-        levels.add(new OrderBookLevel(3, 31, 8900L, base.subtract(tick.multiply(new BigDecimal("3"))), base.add(tick.multiply(new BigDecimal("3"))), 7800L, 24));
-        levels.add(new OrderBookLevel(4, 18, 4100L, base.subtract(tick.multiply(new BigDecimal("4"))), base.add(tick.multiply(new BigDecimal("4"))), 5900L, 16));
-        levels.add(new OrderBookLevel(5, 45, 12500L, base.subtract(tick.multiply(new BigDecimal("5"))), base.add(tick.multiply(new BigDecimal("5"))), 14200L, 38));
+        for (int i = 1; i <= 5; i++) {
+            BigDecimal offset = step.multiply(BigDecimal.valueOf(i));
+            BigDecimal bPrice = base.subtract(offset).setScale(2, RoundingMode.HALF_UP);
+            if (bPrice.compareTo(BigDecimal.ZERO) <= 0) bPrice = new BigDecimal("0.05");
+            BigDecimal aPrice = base.add(offset).setScale(2, RoundingMode.HALF_UP);
+
+            long baseBidQty = Math.max(50, (long) ((1500 + i * 2200) * bidWeight));
+            long baseAskQty = Math.max(50, (long) ((1800 + i * 2000) * askWeight));
+            int bidOrders = Math.max(1, (int) (12 * bidWeight) + i * 3);
+            int askOrders = Math.max(1, (int) (12 * askWeight) + i * 3);
+
+            levels.add(new OrderBookLevel(i, bidOrders, baseBidQty, bPrice, aPrice, baseAskQty, askOrders));
+        }
         return levels;
     }
 
@@ -573,6 +622,207 @@ public class MockExchangeService implements ExchangeService {
         this.currentRegime = newRegime;
         this.simulationSpeed = speedFactor;
         this.currentSeed = seed;
-        marketEvents.add(0, "Market regime altered to " + newRegime.toUpperCase() + " (Speed: " + speedFactor + "x, Seed: " + seed + ")");
+        if (simulator != null) {
+            simulator.setRegime(newRegime, speedFactor, seed);
+        } else {
+            marketEvents.add(0, "Market regime altered to " + newRegime.toUpperCase() + " (Speed: " + speedFactor + "x, Seed: " + seed + ")");
+        }
+    }
+
+    @Override
+    public ExchangeMarketSimulator getSimulator() {
+        return simulator;
+    }
+
+    @Override
+    public boolean isSimulationRunning() {
+        return simulator != null && simulator.isRunning();
+    }
+
+    @Override
+    public void startSimulation() {
+        if (simulator != null) {
+            simulator.start();
+        }
+    }
+
+    @Override
+    public void pauseSimulation() {
+        if (simulator != null) {
+            simulator.pause();
+        }
+    }
+
+    @Override
+    public void resumeSimulation() {
+        if (simulator != null) {
+            simulator.resume();
+        }
+    }
+
+    @Override
+    public String getCurrentRegime() {
+        return currentRegime;
+    }
+
+    @Override
+    public void addDataChangeListener(Runnable listener) {
+        if (simulator != null) {
+            simulator.addDataChangeListener(listener);
+        }
+    }
+
+    public void recordMarketEvent(String event) {
+        marketEvents.add(0, event);
+        if (marketEvents.size() > 200) {
+            marketEvents.remove(marketEvents.size() - 1);
+        }
+    }
+
+    public void rebuildLookupIndices() {
+        stockIndices.clear();
+        for (int i = 0; i < stocks.size(); i++) {
+            StockRecord s = stocks.get(i);
+            stockIndices.put(s.symbol().toUpperCase(), i);
+            basePrices.putIfAbsent(s.symbol().toUpperCase(), s.lastTradedPrice());
+        }
+        bondIndices.clear();
+        for (int i = 0; i < bonds.size(); i++) {
+            BondRecord b = bonds.get(i);
+            bondIndices.put(b.symbol().toUpperCase(), i);
+            basePrices.putIfAbsent(b.symbol().toUpperCase(), b.cleanPrice());
+        }
+        securityIndices.clear();
+        for (int i = 0; i < securities.size(); i++) {
+            SecurityRecord sc = securities.get(i);
+            securityIndices.put(sc.symbol().toUpperCase(), i);
+            basePrices.putIfAbsent(sc.symbol().toUpperCase(), sc.cleanPrice());
+        }
+        instrumentIndices.clear();
+        for (int i = 0; i < instruments.size(); i++) {
+            InstrumentRecord inst = instruments.get(i);
+            instrumentIndices.put(inst.symbol().toUpperCase(), i);
+            basePrices.putIfAbsent(inst.symbol().toUpperCase(), inst.lastTradedPrice());
+        }
+    }
+
+    public void recordTickExecution(String symbol, BigDecimal newLtp, BigDecimal newBid, BigDecimal newAsk,
+                                    long quantity, BigDecimal notional, OrderRecord order, TradeRecord trade) {
+        String symUpper = symbol.toUpperCase();
+
+        // 1. Update Stock if applicable
+        Integer sIdx = stockIndices.get(symUpper);
+        if (sIdx != null && sIdx < stocks.size()) {
+            StockRecord cur = stocks.get(sIdx);
+            BigDecimal base = basePrices.getOrDefault(symUpper, cur.lastTradedPrice());
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+            long newVol = cur.dayVolume() + quantity;
+            BigDecimal newTurnover = cur.dayTurnoverINR().add(notional);
+            stocks.set(sIdx, new StockRecord(cur.symbol(), cur.companyName(), cur.sector(), newLtp, chgPct, newBid, newAsk, newVol, newTurnover));
+        }
+
+        // 2. Update Bond if applicable
+        Integer bIdx = bondIndices.get(symUpper);
+        if (bIdx != null && bIdx < bonds.size()) {
+            BondRecord cur = bonds.get(bIdx);
+            BigDecimal base = basePrices.getOrDefault(symUpper, cur.cleanPrice());
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+            long newVol = cur.dayVolume() + quantity;
+            bonds.set(bIdx, new BondRecord(cur.symbol(), cur.issuerSeries(), cur.sectorType(), cur.couponRatePercent(), newLtp, chgPct, newBid, newAsk, newVol, cur.maturityDate()));
+        }
+
+        // 3. Update Security if applicable
+        Integer scIdx = securityIndices.get(symUpper);
+        if (scIdx != null && scIdx < securities.size()) {
+            SecurityRecord cur = securities.get(scIdx);
+            BigDecimal base = basePrices.getOrDefault(symUpper, cur.cleanPrice());
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+            long newVol = cur.dayVolume() + quantity;
+            securities.set(scIdx, new SecurityRecord(cur.symbol(), cur.securityDescription(), cur.category(), cur.benchmarkYieldPercent(), newLtp, chgPct, newBid, newAsk, newVol, cur.maturityDate()));
+        }
+
+        // 4. Update Instrument Record
+        Integer instIdx = instrumentIndices.get(symUpper);
+        if (instIdx != null && instIdx < instruments.size()) {
+            InstrumentRecord cur = instruments.get(instIdx);
+            BigDecimal base = basePrices.getOrDefault(symUpper, cur.lastTradedPrice());
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+            long newVol = cur.dayVolume() + quantity;
+            BigDecimal newTurnover = cur.dayTurnoverINR().add(notional);
+            instruments.set(instIdx, new InstrumentRecord(
+                    cur.isinOrId(), cur.symbol(), cur.name(), cur.category(), cur.sector(),
+                    cur.tickSize(), cur.lotSize(), newLtp, chgPct, newBid, newAsk, newVol, newTurnover,
+                    Instant.now(), cur.couponOrYieldPercent(), cur.maturityOrExpiryDate(), cur.strikePrice(), cur.optionType()
+            ));
+        }
+
+        // 5. Update Indices
+        updateBenchmarkIndices();
+
+        // 6. Record Order & Trade
+        if (order != null) {
+            orders.add(0, order);
+            if (orders.size() > 500) {
+                orders.remove(orders.size() - 1);
+            }
+        }
+        if (trade != null) {
+            trades.add(0, trade);
+            if (trades.size() > 500) {
+                trades.remove(trades.size() - 1);
+            }
+        }
+    }
+
+    private void updateBenchmarkIndices() {
+        if (indices.size() >= 3 && !stocks.isEmpty()) {
+            // Nifty 50 approximation based on top constituent stocks
+            double niftySumChange = 0.0;
+            int count = 0;
+            for (String sym : new String[]{"RELIANCE", "TCS", "HDFCBANK", "INFY", "ICICIBANK", "SBIN", "BHARTIARTL", "LT", "TATAMOTORS", "ITC"}) {
+                Integer idx = stockIndices.get(sym);
+                if (idx != null && idx < stocks.size()) {
+                    niftySumChange += stocks.get(idx).changePercent().doubleValue();
+                    count++;
+                }
+            }
+            double avgChange = count > 0 ? (niftySumChange / count) : 0.0;
+
+            BigDecimal nBase = new BigDecimal("24800.00");
+            BigDecimal nLvl = nBase.multiply(BigDecimal.valueOf(1.0 + (avgChange / 100.0))).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal nChg = BigDecimal.valueOf(avgChange).setScale(2, RoundingMode.HALF_UP);
+
+            indices.set(0, new MarketIndex("SIM-NIFTY50", "Simulated Nifty 50 Index", nLvl, nChg, nLvl.add(new BigDecimal("120")), nLvl.subtract(new BigDecimal("90"))));
+
+            // Bank Nifty approximation
+            double bankSumChange = 0.0;
+            int bCount = 0;
+            for (String sym : new String[]{"HDFCBANK", "ICICIBANK", "SBIN", "KOTAKBANK", "AXISBANK"}) {
+                Integer idx = stockIndices.get(sym);
+                if (idx != null && idx < stocks.size()) {
+                    bankSumChange += stocks.get(idx).changePercent().doubleValue();
+                    bCount++;
+                }
+            }
+            double bAvg = bCount > 0 ? (bankSumChange / bCount) : avgChange;
+            BigDecimal bBase = new BigDecimal("51200.00");
+            BigDecimal bLvl = bBase.multiply(BigDecimal.valueOf(1.0 + (bAvg / 100.0))).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal bChg = BigDecimal.valueOf(bAvg).setScale(2, RoundingMode.HALF_UP);
+            indices.set(1, new MarketIndex("SIM-BANKNIFTY", "Simulated Bank Nifty Index", bLvl, bChg, bLvl.add(new BigDecimal("250")), bLvl.subtract(new BigDecimal("210"))));
+
+            // Midcap
+            BigDecimal mBase = new BigDecimal("56100.00");
+            BigDecimal mLvl = mBase.multiply(BigDecimal.valueOf(1.0 + (avgChange * 1.2 / 100.0))).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal mChg = BigDecimal.valueOf(avgChange * 1.2).setScale(2, RoundingMode.HALF_UP);
+            indices.set(2, new MarketIndex("SIM-MIDCAP", "Simulated Nifty Midcap 100", mLvl, mChg, mLvl.add(new BigDecimal("300")), mLvl.subtract(new BigDecimal("240"))));
+        }
     }
 }

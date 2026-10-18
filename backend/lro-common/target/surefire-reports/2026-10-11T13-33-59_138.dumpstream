@@ -1,5 +1,0 @@
-# Created at 2026-10-11T13:33:59.535
-Boot Manifest-JAR contains absolute paths in classpath 'D:\Liquidity Optimizer\backend\lro-common\target\test-classes'
-Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-'other' has different root
-

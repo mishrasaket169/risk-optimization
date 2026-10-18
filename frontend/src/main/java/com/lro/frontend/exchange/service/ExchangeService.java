@@ -21,4 +21,14 @@ public interface ExchangeService {
     OrderRecord submitSimulatedOrder(String symbol, String side, String orderType, long quantity, BigDecimal price, String tif);
     boolean cancelSimulatedOrder(String orderId);
     void updateMarketRegime(String newRegime, int speedFactor, long seed);
+
+    ExchangeMarketSimulator getSimulator();
+    boolean isSimulationRunning();
+    void startSimulation();
+    void pauseSimulation();
+    void resumeSimulation();
+    String getCurrentRegime();
+    int getSimulationSpeed();
+    long getCurrentSeed();
+    void addDataChangeListener(Runnable listener);
 }
