@@ -7,6 +7,7 @@ D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\bank\service\Post
 D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\common\Formatters.java
 D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\common\UIComponents.java
 D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\exchange\model\ExchangeModels.java
+D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\exchange\service\ExchangeMarketSimulator.java
 D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\exchange\service\ExchangeService.java
 D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\exchange\service\MockExchangeService.java
 D:\Liquidity Optimizer\frontend\src\main\java\com\lro\frontend\lro\model\LroModels.java

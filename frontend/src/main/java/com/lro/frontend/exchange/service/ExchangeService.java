@@ -23,6 +23,7 @@ public interface ExchangeService {
     void updateMarketRegime(String newRegime, int speedFactor, long seed);
 
     ExchangeMarketSimulator getSimulator();
+    BigDecimal getBasePrice(String symbol);
     boolean isSimulationRunning();
     void startSimulation();
     void pauseSimulation();

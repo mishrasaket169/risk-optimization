@@ -635,6 +635,12 @@ public class MockExchangeService implements ExchangeService {
     }
 
     @Override
+    public BigDecimal getBasePrice(String symbol) {
+        if (symbol == null) return new BigDecimal("100.00");
+        return basePrices.getOrDefault(symbol.toUpperCase(), new BigDecimal("100.00"));
+    }
+
+    @Override
     public boolean isSimulationRunning() {
         return simulator != null && simulator.isRunning();
     }
@@ -780,6 +786,90 @@ public class MockExchangeService implements ExchangeService {
                 trades.remove(trades.size() - 1);
             }
         }
+    }
+
+    /**
+     * Updates an individual stock quote during market-wide background tick fluctuations.
+     */
+    public void updateStockFluctuation(String symbol, BigDecimal newLtp, BigDecimal newBid, BigDecimal newAsk,
+                                       long quantity, BigDecimal notional) {
+        String symUpper = symbol.toUpperCase();
+        Integer sIdx = stockIndices.get(symUpper);
+        if (sIdx != null && sIdx < stocks.size()) {
+            StockRecord cur = stocks.get(sIdx);
+            BigDecimal base = basePrices.getOrDefault(symUpper, cur.lastTradedPrice());
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+            long newVol = cur.dayVolume() + quantity;
+            BigDecimal newTurnover = cur.dayTurnoverINR().add(notional);
+            stocks.set(sIdx, new StockRecord(cur.symbol(), cur.companyName(), cur.sector(), newLtp, chgPct, newBid, newAsk, newVol, newTurnover));
+        }
+
+        Integer instIdx = instrumentIndices.get(symUpper);
+        if (instIdx != null && instIdx < instruments.size()) {
+            InstrumentRecord cur = instruments.get(instIdx);
+            BigDecimal base = basePrices.getOrDefault(symUpper, cur.lastTradedPrice());
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+            long newVol = cur.dayVolume() + quantity;
+            BigDecimal newTurnover = cur.dayTurnoverINR().add(notional);
+            instruments.set(instIdx, new InstrumentRecord(
+                    cur.isinOrId(), cur.symbol(), cur.name(), cur.category(), cur.sector(),
+                    cur.tickSize(), cur.lotSize(), newLtp, chgPct, newBid, newAsk, newVol, newTurnover,
+                    Instant.now(), cur.couponOrYieldPercent(), cur.maturityOrExpiryDate(), cur.strikePrice(), cur.optionType()
+            ));
+        }
+    }
+
+    /**
+     * Re-aligns all stocks, instruments, and benchmark indices to the target distribution of a newly selected regime.
+     */
+    public void realignMarketToRegime(ExchangeMarketSimulator.MarketRegime regime, Random random) {
+        if (stocks.isEmpty()) return;
+        BigDecimal spreadMult = regime.getSpreadMultiplier();
+
+        for (int i = 0; i < stocks.size(); i++) {
+            StockRecord cur = stocks.get(i);
+            String sym = cur.symbol().toUpperCase();
+            BigDecimal base = basePrices.getOrDefault(sym, cur.lastTradedPrice());
+
+            double target = regime.getTargetReturn();
+            double noise = random.nextGaussian() * regime.getPriceDriftStdDev() * 2.5;
+            double r = target + noise;
+            r = Math.max(regime.getMinReturnBound(), Math.min(regime.getMaxReturnBound(), r));
+
+            BigDecimal newLtp = base.multiply(BigDecimal.valueOf(1.0 + r)).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal tick = new BigDecimal("0.05");
+            long units = Math.round(newLtp.divide(tick, 0, RoundingMode.HALF_UP).doubleValue());
+            newLtp = tick.multiply(BigDecimal.valueOf(units)).setScale(2, RoundingMode.HALF_UP);
+            if (newLtp.compareTo(tick) < 0) newLtp = tick;
+
+            BigDecimal chgPct = base.compareTo(BigDecimal.ZERO) != 0
+                    ? newLtp.subtract(base).divide(base, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP)
+                    : BigDecimal.ZERO;
+
+            long halfSpreadTicks = Math.max(1, Math.round(spreadMult.doubleValue() * 2.0));
+            BigDecimal halfSpread = tick.multiply(BigDecimal.valueOf(halfSpreadTicks));
+            BigDecimal newBid = newLtp.subtract(halfSpread).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal newAsk = newLtp.add(halfSpread).setScale(2, RoundingMode.HALF_UP);
+            if (newBid.compareTo(BigDecimal.ZERO) <= 0) newBid = new BigDecimal("0.05");
+
+            stocks.set(i, new StockRecord(cur.symbol(), cur.companyName(), cur.sector(), newLtp, chgPct, newBid, newAsk, cur.dayVolume(), cur.dayTurnoverINR()));
+
+            Integer instIdx = instrumentIndices.get(sym);
+            if (instIdx != null && instIdx < instruments.size()) {
+                InstrumentRecord ci = instruments.get(instIdx);
+                instruments.set(instIdx, new InstrumentRecord(
+                        ci.isinOrId(), ci.symbol(), ci.name(), ci.category(), ci.sector(),
+                        ci.tickSize(), ci.lotSize(), newLtp, chgPct, newBid, newAsk, ci.dayVolume(), ci.dayTurnoverINR(),
+                        Instant.now(), ci.couponOrYieldPercent(), ci.maturityOrExpiryDate(), ci.strikePrice(), ci.optionType()
+                ));
+            }
+        }
+
+        updateBenchmarkIndices();
     }
 
     private void updateBenchmarkIndices() {

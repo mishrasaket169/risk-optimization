@@ -94,11 +94,13 @@ public class MainApp extends Application {
         contentScrollPane.setStyle("-fx-background: #F8FAFC; -fx-background-color: transparent;");
         mainLayout.setCenter(contentScrollPane);
 
-        // Live data refresh timeline (debounced to 250ms for rapid live ledger updates)
-        Timeline liveRefreshTimeline = new Timeline(new KeyFrame(Duration.millis(250), e -> {
+        // Live data refresh timeline (debounced to 200ms for rapid live updates)
+        Timeline liveRefreshTimeline = new Timeline(new KeyFrame(Duration.millis(200), e -> {
             if (needsLiveRefresh.compareAndSet(true, false)) {
                 if (currentApp == AppMode.BANK_SIMULATOR) {
                     bankViews.refreshActiveView();
+                } else if (currentApp == AppMode.EXCHANGE_SIMULATOR) {
+                    exchangeViews.refreshActiveView();
                 }
             }
         }));
@@ -119,6 +121,9 @@ public class MainApp extends Application {
         primaryStage.setOnCloseRequest(e -> {
             if (simulator != null) {
                 simulator.stop();
+            }
+            if (exchangeService != null && exchangeService.getSimulator() != null) {
+                exchangeService.getSimulator().stop();
             }
             if (pgBankService != null) {
                 pgBankService.close();
@@ -157,7 +162,12 @@ public class MainApp extends Application {
             pgBankService.addDataChangeListener(() -> needsLiveRefresh.set(true));
         }
 
-        this.exchangeService = new MockExchangeService();
+        this.exchangeService = (isPostgresConnected && pgBankService != null)
+                ? new MockExchangeService(pgBankService.getDataSource())
+                : new MockExchangeService();
+        this.exchangeService.addDataChangeListener(() -> needsLiveRefresh.set(true));
+        this.exchangeService.startSimulation();
+
         this.lroService = new MockLroService();
 
         Runnable onDataChanged = this::refreshCurrentView;
@@ -217,30 +227,58 @@ public class MainApp extends Application {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         // Pause / Resume Button placed where Glossary was (far right)
-        if (simulator != null) {
-            btnToggleSim = new Button(simulator.isRunning() ? "⏸ Pause" : "▶ Resume");
-            btnToggleSim.getStyleClass().add("btn-secondary");
-            btnToggleSim.setStyle(simulator.isRunning()
+        btnToggleSim = new Button();
+        btnToggleSim.getStyleClass().add("btn-secondary");
+        updateToggleSimButtonState();
+
+        btnToggleSim.setOnAction(e -> {
+            if (currentApp == AppMode.BANK_SIMULATOR) {
+                if (simulator != null) {
+                    if (simulator.isRunning()) {
+                        simulator.pause();
+                    } else {
+                        simulator.resume();
+                    }
+                }
+            } else if (currentApp == AppMode.EXCHANGE_SIMULATOR) {
+                if (exchangeService != null && exchangeService.getSimulator() != null) {
+                    if (exchangeService.isSimulationRunning()) {
+                        exchangeService.pauseSimulation();
+                    } else {
+                        exchangeService.resumeSimulation();
+                    }
+                }
+            }
+            updateToggleSimButtonState();
+            refreshCurrentView();
+        });
+
+        header.getChildren().addAll(brandBox, switcher, spacer, btnToggleSim);
+        return header;
+    }
+
+    private void updateToggleSimButtonState() {
+        if (btnToggleSim == null) return;
+        if (currentApp == AppMode.BANK_SIMULATOR) {
+            boolean isRunning = simulator != null && simulator.isRunning();
+            btnToggleSim.setVisible(true);
+            btnToggleSim.setManaged(true);
+            btnToggleSim.setText(isRunning ? "⏸ Pause Bank Sim" : "▶ Resume Bank Sim");
+            btnToggleSim.setStyle(isRunning
                     ? "-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;"
                     : "-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-border-color: #FCD34D; -fx-border-radius: 6;");
-
-            btnToggleSim.setOnAction(e -> {
-                if (simulator.isRunning()) {
-                    simulator.pause();
-                    btnToggleSim.setText("▶ Resume");
-                    btnToggleSim.setStyle("-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-border-color: #FCD34D; -fx-border-radius: 6;");
-                } else {
-                    simulator.resume();
-                    btnToggleSim.setText("⏸ Pause");
-                    btnToggleSim.setStyle("-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;");
-                }
-            });
-
-            header.getChildren().addAll(brandBox, switcher, spacer, btnToggleSim);
+        } else if (currentApp == AppMode.EXCHANGE_SIMULATOR) {
+            boolean isRunning = exchangeService != null && exchangeService.isSimulationRunning();
+            btnToggleSim.setVisible(true);
+            btnToggleSim.setManaged(true);
+            btnToggleSim.setText(isRunning ? "⏸ Pause Exchange Sim" : "▶ Resume Exchange Sim");
+            btnToggleSim.setStyle(isRunning
+                    ? "-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #F1F5F9; -fx-text-fill: #334155; -fx-border-color: #CBD5E1; -fx-border-radius: 6;"
+                    : "-fx-font-size: 12px; -fx-padding: 6 14 6 14; -fx-background-radius: 6; -fx-font-weight: 600; -fx-cursor: hand; -fx-background-color: #FEF3C7; -fx-text-fill: #92400E; -fx-border-color: #FCD34D; -fx-border-radius: 6;");
         } else {
-            header.getChildren().addAll(brandBox, switcher);
+            btnToggleSim.setVisible(false);
+            btnToggleSim.setManaged(false);
         }
-        return header;
     }
 
     private Button createTabButton(String label, AppMode mode, String activeClass) {
@@ -387,12 +425,7 @@ public class MainApp extends Application {
                 });
                 case "TICKET" -> exchangeViews.buildOrderTicket(selectedInstrument);
                 case "DEPTH" -> exchangeViews.buildOrderBookDepth(selectedInstrument);
-                case "BLOTTER" -> exchangeViews.buildStocksView(sym -> {
-                    this.selectedInstrument = sym;
-                    this.currentNavTag = "DEPTH";
-                    refreshNavigationRail();
-                    refreshCurrentView();
-                });
+                case "BLOTTER" -> exchangeViews.buildBlotter();
                 case "REGIMES" -> exchangeViews.buildRegimesControl();
                 default -> exchangeViews.buildOverview();
             };

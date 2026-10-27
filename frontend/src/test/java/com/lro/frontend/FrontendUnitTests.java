@@ -187,4 +187,87 @@ public class FrontendUnitTests {
             }
         }
     }
+
+    @Test
+    @DisplayName("Verify Exchange Simulator Lifecycle & Start/Pause/Resume")
+    void testExchangeSimulatorLifecycle() throws Exception {
+        assertNotNull(exchangeService.getSimulator());
+        assertFalse(exchangeService.isSimulationRunning(), "Simulator should initially be idle");
+
+        exchangeService.startSimulation();
+        assertTrue(exchangeService.isSimulationRunning(), "Simulator must be running after startSimulation()");
+
+        // Wait a short moment for ticks to process
+        Thread.sleep(150);
+        assertTrue(exchangeService.getSimulator().getTickCount() > 0, "Ticks must increment while simulation is active");
+
+        exchangeService.pauseSimulation();
+        assertFalse(exchangeService.isSimulationRunning(), "Simulator must be paused after pauseSimulation()");
+
+        long ticksPaused = exchangeService.getSimulator().getTickCount();
+        Thread.sleep(100);
+        assertEquals(ticksPaused, exchangeService.getSimulator().getTickCount(), "Ticks must not increment while paused");
+
+        exchangeService.resumeSimulation();
+        assertTrue(exchangeService.isSimulationRunning(), "Simulator must be running after resumeSimulation()");
+        exchangeService.pauseSimulation();
+    }
+
+    @Test
+    @DisplayName("Verify Stock Values Fluctuate According to Defined Market Regimes")
+    void testStockFluctuationAccordingToMarketRegimes() {
+        var sim = exchangeService.getSimulator();
+        assertNotNull(sim);
+
+        // 1. Test BULL Regime: strong buying momentum, green gains dominate (>70% advances)
+        exchangeService.updateMarketRegime("Bull", 1, 42L);
+        assertEquals("Bull", exchangeService.getCurrentRegime());
+        assertEquals(com.lro.frontend.exchange.service.ExchangeMarketSimulator.MarketRegime.BULL, sim.getRegime());
+        assertEquals(new BigDecimal("0.85"), sim.getSpreadMultiplier());
+
+        MarketOverview bullOverview = exchangeService.getMarketOverview();
+        assertTrue(bullOverview.advancesCount() > bullOverview.declinesCount(), "Bull regime must have more advances than declines");
+        double bullAdvRatio = (double) bullOverview.advancesCount() / (bullOverview.advancesCount() + bullOverview.declinesCount());
+        assertTrue(bullAdvRatio >= 0.70, "Bull regime must have >= 70% advancing stocks, found: " + bullAdvRatio);
+
+        // Run discrete ticks in Bull regime
+        sim.step(15);
+        assertTrue(sim.getTickCount() >= 15);
+        assertTrue(sim.getTradesCount() >= 15);
+
+        // 2. Test BEAR Regime: selling pressure, red decliners dominate (>70% declines)
+        exchangeService.updateMarketRegime("Bear", 1, 42L);
+        assertEquals("Bear", exchangeService.getCurrentRegime());
+        assertEquals(com.lro.frontend.exchange.service.ExchangeMarketSimulator.MarketRegime.BEAR, sim.getRegime());
+        assertEquals(new BigDecimal("1.60"), sim.getSpreadMultiplier());
+
+        MarketOverview bearOverview = exchangeService.getMarketOverview();
+        assertTrue(bearOverview.declinesCount() > bearOverview.advancesCount(), "Bear regime must have more declines than advances");
+        double bearDecRatio = (double) bearOverview.declinesCount() / (bearOverview.advancesCount() + bearOverview.declinesCount());
+        assertTrue(bearDecRatio >= 0.70, "Bear regime must have >= 70% declining stocks, found: " + bearDecRatio);
+
+        sim.step(15);
+
+        // 3. Test CRASH Regime: panic liquidation, blown out spreads (3.80x), overwhelming decliners (>90%)
+        exchangeService.updateMarketRegime("Crash", 1, 42L);
+        assertEquals("Crash", exchangeService.getCurrentRegime());
+        assertEquals(com.lro.frontend.exchange.service.ExchangeMarketSimulator.MarketRegime.CRASH, sim.getRegime());
+        assertEquals(new BigDecimal("3.80"), sim.getSpreadMultiplier());
+
+        MarketOverview crashOverview = exchangeService.getMarketOverview();
+        double crashDecRatio = (double) crashOverview.declinesCount() / (crashOverview.advancesCount() + crashOverview.declinesCount());
+        assertTrue(crashDecRatio >= 0.90, "Crash regime must have >= 90% declining stocks under panic selling, found: " + crashDecRatio);
+
+        sim.step(15);
+
+        // 4. Test NORMAL Regime: balanced continuous auction
+        exchangeService.updateMarketRegime("Normal", 1, 42L);
+        assertEquals("Normal", exchangeService.getCurrentRegime());
+        assertEquals(com.lro.frontend.exchange.service.ExchangeMarketSimulator.MarketRegime.NORMAL, sim.getRegime());
+        assertEquals(new BigDecimal("1.00"), sim.getSpreadMultiplier());
+
+        MarketOverview normOverview = exchangeService.getMarketOverview();
+        double normAdvRatio = (double) normOverview.advancesCount() / (normOverview.advancesCount() + normOverview.declinesCount());
+        assertTrue(normAdvRatio >= 0.35 && normAdvRatio <= 0.65, "Normal regime must have balanced advances/declines, found: " + normAdvRatio);
+    }
 }

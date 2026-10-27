@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.lro.app.EndToEndAcceptanceTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.161 s -- in com.lro.app.EndToEndAcceptanceTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.095 s -- in com.lro.app.EndToEndAcceptanceTest

@@ -27,28 +27,35 @@ public class ExchangeMarketSimulator {
     private static final Logger log = LoggerFactory.getLogger(ExchangeMarketSimulator.class);
 
     public enum MarketRegime {
-        NORMAL(new BigDecimal("1.00"), new BigDecimal("1.00"), 0.50, 0.0000, 0.0020, 1.0, 1.0, "Normal continuous auction matching: balanced liquidity"),
-        BULL(new BigDecimal("0.85"), new BigDecimal("1.20"), 0.72, 0.0018, 0.0030, 2.4, 0.6, "Bull regime: strong buying momentum, tight spreads, heavy bid depth"),
-        BEAR(new BigDecimal("1.60"), new BigDecimal("1.80"), 0.28, -0.0022, 0.0045, 0.6, 2.2, "Bear regime: institutional selling pressure, wider spreads, thin bids"),
-        CRASH(new BigDecimal("3.80"), new BigDecimal("4.50"), 0.10, -0.0120, 0.0150, 0.15, 4.5, "CRASH REGIME: panic liquidation, severe illiquidity, spreads blown out 3.8x");
+        NORMAL(new BigDecimal("1.00"), new BigDecimal("1.00"), 0.50, 0.0000, 0.0015, -0.020, 0.020, 0.000, 1.0, 1.0, "Normal continuous auction matching: balanced liquidity and two-way order flow"),
+        BULL(new BigDecimal("0.85"), new BigDecimal("1.25"), 0.74, 0.0018, 0.0020, 0.005, 0.090, 0.045, 2.4, 0.6, "Bull regime: strong buying momentum, tight spreads, heavy bid depth, green rally"),
+        BEAR(new BigDecimal("1.60"), new BigDecimal("1.75"), 0.26, -0.0020, 0.0026, -0.090, -0.005, -0.045, 0.6, 2.2, "Bear regime: institutional selling pressure, wider spreads, red market breadth"),
+        CRASH(new BigDecimal("3.80"), new BigDecimal("4.50"), 0.10, -0.0060, 0.0065, -0.200, -0.040, -0.120, 0.15, 4.5, "CRASH REGIME: panic liquidation, severe illiquidity, circuit warning, spreads blown out 3.8x");
 
         private final BigDecimal spreadMultiplier;
         private final BigDecimal volatilityFactor;
         private final double buyProbability;
         private final double priceDriftMean;
         private final double priceDriftStdDev;
+        private final double minReturnBound;
+        private final double maxReturnBound;
+        private final double targetReturn;
         private final double bidQueueWeight;
         private final double askQueueWeight;
         private final String description;
 
         MarketRegime(BigDecimal spreadMultiplier, BigDecimal volatilityFactor, double buyProbability,
-                     double priceDriftMean, double priceDriftStdDev, double bidQueueWeight,
-                     double askQueueWeight, String description) {
+                     double priceDriftMean, double priceDriftStdDev,
+                     double minReturnBound, double maxReturnBound, double targetReturn,
+                     double bidQueueWeight, double askQueueWeight, String description) {
             this.spreadMultiplier = spreadMultiplier;
             this.volatilityFactor = volatilityFactor;
             this.buyProbability = buyProbability;
             this.priceDriftMean = priceDriftMean;
             this.priceDriftStdDev = priceDriftStdDev;
+            this.minReturnBound = minReturnBound;
+            this.maxReturnBound = maxReturnBound;
+            this.targetReturn = targetReturn;
             this.bidQueueWeight = bidQueueWeight;
             this.askQueueWeight = askQueueWeight;
             this.description = description;
@@ -59,6 +66,9 @@ public class ExchangeMarketSimulator {
         public double getBuyProbability() { return buyProbability; }
         public double getPriceDriftMean() { return priceDriftMean; }
         public double getPriceDriftStdDev() { return priceDriftStdDev; }
+        public double getMinReturnBound() { return minReturnBound; }
+        public double getMaxReturnBound() { return maxReturnBound; }
+        public double getTargetReturn() { return targetReturn; }
         public double getBidQueueWeight() { return bidQueueWeight; }
         public double getAskQueueWeight() { return askQueueWeight; }
         public String getDescription() { return description; }
@@ -191,6 +201,9 @@ public class ExchangeMarketSimulator {
         this.currentSeed = seed;
         this.random = new Random(seed);
 
+        // Re-align all market stocks, depth quotes, and indices to the newly defined regime
+        exchangeService.realignMarketToRegime(this.currentRegime, this.random);
+
         String eventMsg = String.format("MARKET REGIME SHIFT: %s -> %s (Speed: %dx, Seed: %d) — Spread Multiplier: %sx, Volatility: %sx",
                 prevRegime.name(), currentRegime.name(), simulationSpeed, seed,
                 currentRegime.getSpreadMultiplier(), currentRegime.getVolatilityFactor());
@@ -232,13 +245,77 @@ public class ExchangeMarketSimulator {
     }
 
     /**
+     * Advances the simulation by a fixed number of ticks (useful for interactive step-testing).
+     */
+    public synchronized void step(int count) {
+        int ticksToRun = Math.max(1, count);
+        for (int i = 0; i < ticksToRun; i++) {
+            executeSimulationTick();
+        }
+        notifyDataChanged();
+    }
+
+    /**
+     * Calculates realistic regime-linked prices, spreads, and quotes.
+     * Incorporates drift, order pressure, mean-reversion toward regime target, and volatility bounds.
+     */
+    private BigDecimal[] calculateRegimePrice(String symbol, BigDecimal currentLtp, BigDecimal tickSize, boolean isBuy) {
+        BigDecimal base = exchangeService.getBasePrice(symbol);
+        double r = base.compareTo(BigDecimal.ZERO) != 0
+                ? currentLtp.subtract(base).divide(base, 6, RoundingMode.HALF_UP).doubleValue()
+                : 0.0;
+
+        double baseDrift = currentRegime.getPriceDriftMean() + (random.nextGaussian() * currentRegime.getPriceDriftStdDev());
+        double volFactor = currentRegime.getVolatilityFactor().doubleValue();
+        double effectiveDrift = baseDrift * volFactor;
+
+        double sidePressure = (isBuy ? 0.0004 : -0.0004) * volFactor;
+        double pull = (currentRegime.getTargetReturn() - r) * 0.05;
+
+        double shock = 0.0;
+        if (currentRegime == MarketRegime.CRASH && random.nextDouble() < 0.12) {
+            shock = -(0.015 + random.nextDouble() * 0.035);
+        } else if (currentRegime == MarketRegime.BULL && random.nextDouble() < 0.10) {
+            shock = +(0.008 + random.nextDouble() * 0.018);
+        }
+
+        double rNew = r + effectiveDrift + sidePressure + pull + shock;
+        rNew = Math.max(currentRegime.getMinReturnBound(), Math.min(currentRegime.getMaxReturnBound(), rNew));
+
+        BigDecimal rawNewPrice = base.multiply(BigDecimal.valueOf(1.0 + rNew));
+        long tickUnits = Math.round(rawNewPrice.divide(tickSize, 0, RoundingMode.HALF_UP).doubleValue());
+        BigDecimal newLtp = tickSize.multiply(BigDecimal.valueOf(tickUnits)).setScale(2, RoundingMode.HALF_UP);
+        if (newLtp.compareTo(tickSize) < 0) {
+            newLtp = tickSize;
+        }
+
+        BigDecimal spreadMult = currentRegime.getSpreadMultiplier();
+        long halfSpreadTicks = Math.max(1, Math.round(spreadMult.doubleValue() * 2.0));
+        BigDecimal halfSpread = tickSize.multiply(BigDecimal.valueOf(halfSpreadTicks));
+
+        BigDecimal newBid;
+        BigDecimal newAsk;
+        if (currentRegime == MarketRegime.CRASH) {
+            newBid = newLtp.subtract(halfSpread.multiply(new BigDecimal("1.5"))).setScale(2, RoundingMode.HALF_UP);
+            newAsk = newLtp.add(halfSpread.multiply(new BigDecimal("0.5"))).setScale(2, RoundingMode.HALF_UP);
+        } else {
+            newBid = newLtp.subtract(halfSpread).setScale(2, RoundingMode.HALF_UP);
+            newAsk = newLtp.add(halfSpread).setScale(2, RoundingMode.HALF_UP);
+        }
+        if (newBid.compareTo(BigDecimal.ZERO) <= 0) {
+            newBid = new BigDecimal("0.05");
+        }
+        return new BigDecimal[]{newLtp, newBid, newAsk};
+    }
+
+    /**
      * Executes one discrete simulation tick in the continuous matching engine.
      */
     public void executeSimulationTick() {
         try {
             long currentTick = tickCount.incrementAndGet();
 
-            // 1. Pick instrument (weighted 80% to active equities, 20% to broader catalogue)
+            // 1. Pick primary active instrument (weighted 80% to active equities, 20% to broader catalogue)
             String symbol;
             if (random.nextDouble() < 0.80) {
                 symbol = PRIORITY_SYMBOLS[random.nextInt(PRIORITY_SYMBOLS.length)];
@@ -262,41 +339,18 @@ public class ExchangeMarketSimulator {
             boolean isBuy = random.nextDouble() < currentRegime.getBuyProbability();
             String side = isBuy ? "BUY" : "SELL";
 
-            // 3. Regime-driven price drift & volatility
-            double baseDrift = currentRegime.getPriceDriftMean() + (random.nextGaussian() * currentRegime.getPriceDriftStdDev());
-            double volFactor = currentRegime.getVolatilityFactor().doubleValue();
-            double effectiveDrift = baseDrift * volFactor;
+            // 3. Regime-driven price calculation with mean-reversion toward target return
+            BigDecimal[] quotes = calculateRegimePrice(symbol, currentLtp, tickSize, isBuy);
+            BigDecimal newLtp = quotes[0];
+            BigDecimal newBid = quotes[1];
+            BigDecimal newAsk = quotes[2];
 
-            // In Crash regime, occasionally trigger a mini-flash cascade shock
-            if (currentRegime == MarketRegime.CRASH && random.nextDouble() < 0.12) {
-                effectiveDrift -= (0.015 + random.nextDouble() * 0.035); // additional -1.5% to -5% shock
-            }
-
-            BigDecimal delta = currentLtp.multiply(BigDecimal.valueOf(effectiveDrift));
-            BigDecimal rawNewPrice = currentLtp.add(delta);
-
-            // Align to tick size (e.g. 0.05)
-            long tickUnits = Math.round(rawNewPrice.divide(tickSize, 0, RoundingMode.HALF_UP).doubleValue());
-            BigDecimal newLtp = tickSize.multiply(BigDecimal.valueOf(tickUnits)).setScale(2, RoundingMode.HALF_UP);
-            if (newLtp.compareTo(tickSize) < 0) {
-                newLtp = tickSize;
-            }
-
-            // 4. Spread calculation based on regime spread multiplier
-            BigDecimal spreadMult = currentRegime.getSpreadMultiplier();
-            long halfSpreadTicks = Math.max(1, Math.round(spreadMult.doubleValue() * 2.0));
-            BigDecimal halfSpread = tickSize.multiply(BigDecimal.valueOf(halfSpreadTicks));
-
-            BigDecimal newBid = newLtp.subtract(halfSpread).setScale(2, RoundingMode.HALF_UP);
-            BigDecimal newAsk = newLtp.add(halfSpread).setScale(2, RoundingMode.HALF_UP);
-            if (newBid.compareTo(BigDecimal.ZERO) <= 0) {
-                newBid = new BigDecimal("0.05");
-            }
-
-            // 5. Generate realistic lot quantity
+            // 4. Generate realistic lot quantity
             long quantity;
             if (currentRegime == MarketRegime.CRASH && !isBuy && random.nextDouble() < 0.25) {
                 quantity = (1000 + random.nextInt(9) * 500L); // Institutional panic liquidation block
+            } else if (currentRegime == MarketRegime.BULL && isBuy && random.nextDouble() < 0.30) {
+                quantity = (200 + random.nextInt(10) * 100L); // Institutional accumulation block
             } else {
                 quantity = (25 + random.nextInt(15) * 25L);
             }
@@ -304,7 +358,7 @@ public class ExchangeMarketSimulator {
             String orderType = (currentRegime == MarketRegime.CRASH && !isBuy) ? "MARKET" : (random.nextDouble() < 0.85 ? "LIMIT" : "MARKET");
             String client = CLIENT_DESKS[random.nextInt(CLIENT_DESKS.length)];
 
-            // 6. Update in-memory exchange models
+            // 5. Update in-memory exchange models for primary matched execution
             BigDecimal notional = newLtp.multiply(BigDecimal.valueOf(quantity)).setScale(2, RoundingMode.HALF_UP);
             String ordId = "ORD-" + (System.currentTimeMillis() % 1000000);
             String trdId = "TRD-" + (System.currentTimeMillis() % 1000000);
@@ -321,14 +375,33 @@ public class ExchangeMarketSimulator {
             exchangeService.recordTickExecution(symbol, newLtp, newBid, newAsk, quantity, notional, order, trade);
             tradesCount.incrementAndGet();
 
+            // 6. Simultaneously fluctuate a batch of 3-5 random stocks to keep the entire directory active
+            List<StockRecord> samplePool = exchangeService.getStocks("All", "");
+            if (!samplePool.isEmpty()) {
+                int batchSize = 3 + random.nextInt(3);
+                for (int b = 0; b < batchSize; b++) {
+                    StockRecord rStock = samplePool.get(random.nextInt(samplePool.size()));
+                    if (!rStock.symbol().equalsIgnoreCase(symbol)) {
+                        boolean bgBuy = random.nextDouble() < currentRegime.getBuyProbability();
+                        BigDecimal[] bgQuotes = calculateRegimePrice(rStock.symbol(), rStock.lastTradedPrice(), new BigDecimal("0.05"), bgBuy);
+                        long bgQty = 25 + random.nextInt(8) * 25L;
+                        BigDecimal bgNotional = bgQuotes[0].multiply(BigDecimal.valueOf(bgQty)).setScale(2, RoundingMode.HALF_UP);
+                        exchangeService.updateStockFluctuation(rStock.symbol(), bgQuotes[0], bgQuotes[1], bgQuotes[2], bgQty, bgNotional);
+                    }
+                }
+            }
+
             // 7. Periodic logging and PostgreSQL synchronization
             if (currentTick % 10 == 0) {
                 if (currentRegime == MarketRegime.CRASH && random.nextDouble() < 0.35) {
-                    exchangeService.recordMarketEvent(String.format("CIRCUIT WARNING: %s executing at ₹ %s (-%.2f%%) with spread ₹ %s",
-                            symbol, newLtp, Math.abs(effectiveDrift * 100), newAsk.subtract(newBid)));
+                    exchangeService.recordMarketEvent(String.format("CIRCUIT WARNING: %s executing at ₹ %s with spread ₹ %s (Panic Sell Flow)",
+                            symbol, newLtp, newAsk.subtract(newBid)));
                 } else if (currentRegime == MarketRegime.BULL && isBuy && random.nextDouble() < 0.25) {
                     exchangeService.recordMarketEvent(String.format("BUYING MOMENTUM: %s executed %d shares @ ₹ %s (₹ %s)",
                             symbol, quantity, newLtp, notional));
+                } else if (currentRegime == MarketRegime.BEAR && !isBuy && random.nextDouble() < 0.25) {
+                    exchangeService.recordMarketEvent(String.format("SELLING PRESSURE: %s executed %d shares @ ₹ %s (Bearish Flow)",
+                            symbol, quantity, newLtp));
                 }
 
                 notifyDataChanged();

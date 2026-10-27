@@ -43,12 +43,14 @@ com\lro\frontend\views\BankViews$1.class
 com\lro\frontend\bank\model\BankModels$BalanceSheetRecord.class
 com\lro\frontend\views\BankViews$3.class
 com\lro\frontend\bank\model\BankModels$DepositRecord.class
+com\lro\frontend\exchange\service\ExchangeMarketSimulator$MarketRegime.class
 com\lro\frontend\MainApp$AppMode.class
 com\lro\frontend\lro\model\LroModels$ModelInsight.class
 com\lro\frontend\exchange\model\ExchangeModels$OrderRecord.class
 com\lro\frontend\bank\service\BankService.class
 com\lro\frontend\views\LroViews$4.class
 com\lro\frontend\bank\service\BankTransactionSimulator.class
+com\lro\frontend\exchange\service\ExchangeMarketSimulator.class
 com\lro\frontend\bank\model\BankModels$LoanRecord.class
 com\lro\frontend\bank\model\BankModels.class
 com\lro\frontend\exchange\service\MockExchangeService.class

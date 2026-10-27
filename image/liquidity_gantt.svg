@@ -1,0 +1,388 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1020" width="100%" height="100%" style="background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients & Filters -->
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#f1f5f9"/>
+    </linearGradient>
+    <linearGradient id="parentBarGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#558b2f"/>
+      <stop offset="100%" stop-color="#33691e"/>
+    </linearGradient>
+    <linearGradient id="taskBarGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#42a5f5"/>
+      <stop offset="100%" stop-color="#1976d2"/>
+    </linearGradient>
+    <linearGradient id="milestoneGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ab47bc"/>
+      <stop offset="100%" stop-color="#7b1fa2"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-10%" width="110%" height="125%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#ff9800"/>
+    </marker>
+  </defs>
+
+  <!-- Title Banner -->
+  <rect x="0" y="0" width="1600" height="60" fill="#0f172a"/>
+  <text x="30" y="38" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="0.5">Liquidity Risk Optimizer (LRO) — Project Progress Gantt Chart</text>
+  <text x="960" y="37" font-size="13" font-weight="500" fill="#94a3b8">Timeline: 17 July, 2026 – 16 October, 2026 (13 Weeks • 30% Milestone Deliverables)</text>
+
+  <!-- Grid Layout -->
+  <!-- Left table width: 500px, Right timeline width: 1100px (13 weeks = 84.6px per week) -->
+  <!-- Header row 1: Y=60 to 95 (Month) -->
+  <!-- Header row 2: Y=95 to 130 (Week) -->
+
+  <!-- Left Table Header -->
+  <rect x="0" y="60" width="500" height="70" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="60" y1="60" x2="60" y2="130" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="22" y="100" font-size="13" font-weight="700" fill="#334155">ID</text>
+  <text x="80" y="100" font-size="13" font-weight="700" fill="#334155">Task Name</text>
+
+  <!-- Right Timeline Header: Months -->
+  <!-- July: 3 weeks (W1-W3) -> Width: 3 * 84.615 = 253.85px -> X: 500 to 753.85 -->
+  <!-- August: 4 weeks (W4-W7) -> Width: 4 * 84.615 = 338.46px -> X: 753.85 to 1092.31 -->
+  <!-- September: 4 weeks (W8-W11) -> Width: 4 * 84.615 = 338.46px -> X: 1092.31 to 1430.77 -->
+  <!-- October: 2 weeks (W12-W13) -> Width: 2 * 84.615 = 169.23px -> X: 1430.77 to 1600 -->
+  <rect x="500" y="60" width="253.85" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="605" y="83" font-size="13" font-weight="700" fill="#1e293b" text-anchor="middle">July</text>
+
+  <rect x="753.85" y="60" width="338.46" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="923" y="83" font-size="13" font-weight="700" fill="#1e293b" text-anchor="middle">August</text>
+
+  <rect x="1092.31" y="60" width="338.46" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1261" y="83" font-size="13" font-weight="700" fill="#1e293b" text-anchor="middle">September</text>
+
+  <rect x="1430.77" y="60" width="169.23" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1515" y="83" font-size="13" font-weight="700" fill="#1e293b" text-anchor="middle">October</text>
+
+  <!-- Right Timeline Header: Weeks (W1 to W13) -->
+  <!-- W1: 500, W2: 584.6, W3: 669.2, W4: 753.8, W5: 838.5, W6: 923.1, W7: 1007.7, W8: 1092.3, W9: 1176.9, W10: 1261.5, W11: 1346.2, W12: 1430.8, W13: 1515.4 -->
+  <rect x="500.00" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="542.31" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 1</text>
+  <rect x="584.62" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="626.92" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 2</text>
+  <rect x="669.23" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="711.54" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 3</text>
+  <rect x="753.85" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="796.15" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 4</text>
+  <rect x="838.46" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="880.77" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 5</text>
+  <rect x="923.08" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="965.38" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 6</text>
+  <rect x="1007.69" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1050.00" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 7</text>
+  <rect x="1092.31" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1134.61" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 8</text>
+  <rect x="1176.92" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1219.23" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 9</text>
+  <rect x="1261.54" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1303.84" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 10</text>
+  <rect x="1346.15" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1388.46" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 11</text>
+  <rect x="1430.77" y="95" width="84.61" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1473.07" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 12</text>
+  <rect x="1515.38" y="95" width="84.62" height="35" fill="url(#headerGrad)" stroke="#cbd5e1" stroke-width="1"/>
+  <text x="1557.69" y="117" font-size="11" font-weight="600" fill="#475569" text-anchor="middle">Week 13</text>
+  <rect x="0" y="130" width="1600" height="36" fill="#f1f5f9" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="166" x2="1600" y2="166" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="166" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="202" x2="1600" y2="202" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="202" width="1600" height="36" fill="#ffffff" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="238" x2="1600" y2="238" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="238" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="274" x2="1600" y2="274" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="274" width="1600" height="36" fill="#f1f5f9" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="310" x2="1600" y2="310" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="310" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="346" x2="1600" y2="346" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="346" width="1600" height="36" fill="#ffffff" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="382" x2="1600" y2="382" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="382" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="418" x2="1600" y2="418" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="418" width="1600" height="36" fill="#f1f5f9" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="454" x2="1600" y2="454" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="454" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="490" x2="1600" y2="490" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="490" width="1600" height="36" fill="#ffffff" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="526" x2="1600" y2="526" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="526" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="562" x2="1600" y2="562" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="562" width="1600" height="36" fill="#f1f5f9" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="598" x2="1600" y2="598" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="598" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="634" x2="1600" y2="634" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="634" width="1600" height="36" fill="#ffffff" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="670" x2="1600" y2="670" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="670" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="706" x2="1600" y2="706" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="706" width="1600" height="36" fill="#f1f5f9" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="742" x2="1600" y2="742" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="742" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="778" x2="1600" y2="778" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="778" width="1600" height="36" fill="#ffffff" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="814" x2="1600" y2="814" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="814" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="850" x2="1600" y2="850" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="850" width="1600" height="36" fill="#f1f5f9" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="886" x2="1600" y2="886" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="886" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="922" x2="1600" y2="922" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="922" width="1600" height="36" fill="#ffffff" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="958" x2="1600" y2="958" stroke="#e2e8f0" stroke-width="1"/>
+  <rect x="0" y="958" width="1600" height="36" fill="#f8fafc" stroke="#f1f5f9" stroke-width="0.5"/>
+  <line x1="0" y1="994" x2="1600" y2="994" stroke="#e2e8f0" stroke-width="1"/>
+  <line x1="500.00" y1="130" x2="500.00" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="584.62" y1="130" x2="584.62" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="669.23" y1="130" x2="669.23" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="753.85" y1="130" x2="753.85" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="838.46" y1="130" x2="838.46" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="923.08" y1="130" x2="923.08" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1007.69" y1="130" x2="1007.69" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1092.31" y1="130" x2="1092.31" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1176.92" y1="130" x2="1176.92" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1261.54" y1="130" x2="1261.54" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1346.15" y1="130" x2="1346.15" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1430.77" y1="130" x2="1430.77" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="1515.38" y1="130" x2="1515.38" y2="994" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="2,2"/>
+  <line x1="60" y1="130" x2="60" y2="994" stroke="#cbd5e1" stroke-width="1"/>
+  <line x1="500" y1="130" x2="500" y2="994" stroke="#cbd5e1" stroke-width="1.5"/>
+  <path d="M 630.0 184 L 630.0 216" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 753.85 220 L 753.85 252" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 753.85 256 L 753.85 288" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 753.85 292 L 753.85 324" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 838.46 328 L 838.46 360" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 923.08 364 L 923.08 396" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 923.08 400 L 923.08 432" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 923.08 436 L 923.08 468" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1060.0 472 L 1060.0 504" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1176.92 508 L 1176.92 540" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1176.92 544 L 1176.92 576" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1176.92 580 L 1176.92 612" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1261.54 616 L 1261.54 648" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1346.15 652 L 1346.15 684" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1346.15 688 L 1346.15 720" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1346.15 724 L 1346.15 756" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1430.77 760 L 1430.77 792" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1515.38 796 L 1515.38 828" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1430.77 796 L 1430.77 864" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1430.77 868 L 1430.77 900" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1540.0 904 L 1540.0 936" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 1600.0 940 L 1600.0 972" fill="none" stroke="#ff9800" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="18" y="141.0" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+  <text x="25" y="152.0" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">-</text>
+  <text x="40" y="152.0" font-size="12" font-weight="700" fill="#1e293b">1</text>
+  <text x="80" y="152.0" font-size="12.5" font-weight="700" fill="#0f172a">Planning & Requirement Analysis</text>
+  <g filter="url(#shadow)">
+    <rect x="500.0" y="141.0" width="253.85000000000002" height="14" rx="3" fill="url(#parentBarGrad)"/>
+    <!-- Left and right downward tick ends for summary bar -->
+    <polygon points="500.0,155.0 506.0,155.0 500.0,160.0" fill="#33691e"/>
+    <polygon points="753.85,155.0 747.85,155.0 753.85,160.0" fill="#33691e"/>
+  </g>
+  <text x="508.0" y="139.0" font-size="11" font-weight="700" fill="#2e7d32">Planning & Requirement Analysis</text>
+  <text x="40" y="188.0" font-size="11.5" font-weight="500" fill="#64748b">1.1</text>
+  <text x="80" y="188.0" font-size="11.5" font-weight="400" fill="#334155">Problem Scope & Literature Survey</text>
+  <g filter="url(#shadow)">
+    <rect x="500.0" y="175.0" width="130.0" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="506.0" y="188.0" font-size="10.5" font-weight="600" fill="#ffffff">Problem Scope & Literature Survey</text>
+  <text x="40" y="224.0" font-size="11.5" font-weight="500" fill="#64748b">1.2</text>
+  <text x="80" y="224.0" font-size="11.5" font-weight="400" fill="#334155">Dataset Selection & Requirement Gathering</text>
+  <g filter="url(#shadow)">
+    <rect x="630.0" y="211.0" width="123.85000000000002" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="636.0" y="224.0" font-size="10.5" font-weight="600" fill="#ffffff">Dataset Selection & Requirement Gathering</text>
+  <text x="40" y="260.0" font-size="11.5" font-weight="500" fill="#64748b">1.3</text>
+  <!-- Diamond symbol in table -->
+  <polygon points="76,256.0 81,251.0 86,256.0 81,261.0" fill="#ab47bc"/>
+  <text x="94" y="260.0" font-size="11.5" font-weight="600" fill="#7b1fa2">Project scope and requirements finalized</text>
+  <g filter="url(#shadow)">
+    <polygon points="753.85,247.0 762.85,256.0 753.85,265.0 744.85,256.0" fill="url(#milestoneGrad)" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <text x="741.85" y="245.0" font-size="10.5" font-weight="700" fill="#6a1b9a" text-anchor="end">Project scope and requirements finalized</text>
+  <rect x="18" y="285.0" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+  <text x="25" y="296.0" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">-</text>
+  <text x="40" y="296.0" font-size="12" font-weight="700" fill="#1e293b">2</text>
+  <text x="80" y="296.0" font-size="12.5" font-weight="700" fill="#0f172a">System Design</text>
+  <g filter="url(#shadow)">
+    <rect x="753.85" y="285.0" width="169.23000000000002" height="14" rx="3" fill="url(#parentBarGrad)"/>
+    <!-- Left and right downward tick ends for summary bar -->
+    <polygon points="753.85,299.0 759.85,299.0 753.85,304.0" fill="#33691e"/>
+    <polygon points="923.08,299.0 917.08,299.0 923.08,304.0" fill="#33691e"/>
+  </g>
+  <text x="761.85" y="283.0" font-size="11" font-weight="700" fill="#2e7d32">System Design</text>
+  <text x="40" y="332.0" font-size="11.5" font-weight="500" fill="#64748b">2.1</text>
+  <text x="80" y="332.0" font-size="11.5" font-weight="400" fill="#334155">System Architecture & UML Modeling</text>
+  <g filter="url(#shadow)">
+    <rect x="753.85" y="319.0" width="84.61000000000001" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="759.85" y="332.0" font-size="10.5" font-weight="600" fill="#ffffff">System Architecture & UML Modeling</text>
+  <text x="40" y="368.0" font-size="11.5" font-weight="500" fill="#64748b">2.2</text>
+  <text x="80" y="368.0" font-size="11.5" font-weight="400" fill="#334155">Data Pipeline & Financial Invariants Planning</text>
+  <g filter="url(#shadow)">
+    <rect x="838.46" y="355.0" width="84.62" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="844.46" y="368.0" font-size="10.5" font-weight="600" fill="#ffffff">Data Pipeline & Financial Invariants Planning</text>
+  <text x="40" y="404.0" font-size="11.5" font-weight="500" fill="#64748b">2.3</text>
+  <!-- Diamond symbol in table -->
+  <polygon points="76,400.0 81,395.0 86,400.0 81,405.0" fill="#ab47bc"/>
+  <text x="94" y="404.0" font-size="11.5" font-weight="600" fill="#7b1fa2">System design completed</text>
+  <g filter="url(#shadow)">
+    <polygon points="923.08,391.0 932.08,400.0 923.08,409.0 914.08,400.0" fill="url(#milestoneGrad)" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <text x="911.08" y="389.0" font-size="10.5" font-weight="700" fill="#6a1b9a" text-anchor="end">System design completed</text>
+  <rect x="18" y="429.0" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+  <text x="25" y="440.0" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">-</text>
+  <text x="40" y="440.0" font-size="12" font-weight="700" fill="#1e293b">3</text>
+  <text x="80" y="440.0" font-size="12.5" font-weight="700" fill="#0f172a">Data Preparation & Synthetic Modeling</text>
+  <g filter="url(#shadow)">
+    <rect x="923.08" y="429.0" width="253.84000000000003" height="14" rx="3" fill="url(#parentBarGrad)"/>
+    <!-- Left and right downward tick ends for summary bar -->
+    <polygon points="923.08,443.0 929.08,443.0 923.08,448.0" fill="#33691e"/>
+    <polygon points="1176.92,443.0 1170.92,443.0 1176.92,448.0" fill="#33691e"/>
+  </g>
+  <text x="931.08" y="427.0" font-size="11" font-weight="700" fill="#2e7d32">Data Preparation & Synthetic Modeling</text>
+  <text x="40" y="476.0" font-size="11.5" font-weight="500" fill="#64748b">3.1</text>
+  <text x="80" y="476.0" font-size="11.5" font-weight="400" fill="#334155">Multi-Bank Synthetic Population Generation & Schemas</text>
+  <g filter="url(#shadow)">
+    <rect x="923.08" y="463.0" width="136.91999999999996" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="929.08" y="476.0" font-size="10.5" font-weight="600" fill="#ffffff">Multi-Bank Synthetic Population Generation & ...</text>
+  <text x="40" y="512.0" font-size="11.5" font-weight="500" fill="#64748b">3.2</text>
+  <text x="80" y="512.0" font-size="11.5" font-weight="400" fill="#334155">Financial Instruments Catalogue & Market Feature Eng.</text>
+  <g filter="url(#shadow)">
+    <rect x="1060.0" y="499.0" width="116.92000000000007" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1066.0" y="512.0" font-size="10.5" font-weight="600" fill="#ffffff">Financial Instruments Catalogue & Market Feat...</text>
+  <text x="40" y="548.0" font-size="11.5" font-weight="500" fill="#64748b">3.3</text>
+  <!-- Diamond symbol in table -->
+  <polygon points="76,544.0 81,539.0 86,544.0 81,549.0" fill="#ab47bc"/>
+  <text x="94" y="548.0" font-size="11.5" font-weight="600" fill="#7b1fa2">Dataset ready for training</text>
+  <g filter="url(#shadow)">
+    <polygon points="1176.92,535.0 1185.92,544.0 1176.92,553.0 1167.92,544.0" fill="url(#milestoneGrad)" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <text x="1164.92" y="533.0" font-size="10.5" font-weight="700" fill="#6a1b9a" text-anchor="end">Dataset ready for training</text>
+  <rect x="18" y="573.0" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+  <text x="25" y="584.0" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">-</text>
+  <text x="40" y="584.0" font-size="12" font-weight="700" fill="#1e293b">4</text>
+  <text x="80" y="584.0" font-size="12.5" font-weight="700" fill="#0f172a">Model Development</text>
+  <g filter="url(#shadow)">
+    <rect x="1176.92" y="573.0" width="169.23000000000002" height="14" rx="3" fill="url(#parentBarGrad)"/>
+    <!-- Left and right downward tick ends for summary bar -->
+    <polygon points="1176.92,587.0 1182.92,587.0 1176.92,592.0" fill="#33691e"/>
+    <polygon points="1346.15,587.0 1340.15,587.0 1346.15,592.0" fill="#33691e"/>
+  </g>
+  <text x="1184.92" y="571.0" font-size="11" font-weight="700" fill="#2e7d32">Model Development</text>
+  <text x="40" y="620.0" font-size="11.5" font-weight="500" fill="#64748b">4.1</text>
+  <text x="80" y="620.0" font-size="11.5" font-weight="400" fill="#334155">Model 1: Short-Horizon Equity Momentum Architecture</text>
+  <g filter="url(#shadow)">
+    <rect x="1176.92" y="607.0" width="84.61999999999989" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1182.92" y="620.0" font-size="10.5" font-weight="600" fill="#ffffff">Model 1: Short-Horizon Equity Momentum Archit...</text>
+  <text x="40" y="656.0" font-size="11.5" font-weight="500" fill="#64748b">4.2</text>
+  <text x="80" y="656.0" font-size="11.5" font-weight="400" fill="#334155">Model 2: Execution Cost & Liquidity Slippage Training</text>
+  <g filter="url(#shadow)">
+    <rect x="1261.54" y="643.0" width="84.61000000000013" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1267.54" y="656.0" font-size="10.5" font-weight="600" fill="#ffffff">Model 2: Execution Cost & Liquidity Slippage ...</text>
+  <text x="40" y="692.0" font-size="11.5" font-weight="500" fill="#64748b">4.3</text>
+  <!-- Diamond symbol in table -->
+  <polygon points="76,688.0 81,683.0 86,688.0 81,693.0" fill="#ab47bc"/>
+  <text x="94" y="692.0" font-size="11.5" font-weight="600" fill="#7b1fa2">Baseline model trained successfully</text>
+  <g filter="url(#shadow)">
+    <polygon points="1346.15,679.0 1355.15,688.0 1346.15,697.0 1337.15,688.0" fill="url(#milestoneGrad)" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <text x="1334.15" y="677.0" font-size="10.5" font-weight="700" fill="#6a1b9a" text-anchor="end">Baseline model trained successfully</text>
+  <rect x="18" y="717.0" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+  <text x="25" y="728.0" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">-</text>
+  <text x="40" y="728.0" font-size="12" font-weight="700" fill="#1e293b">5</text>
+  <text x="80" y="728.0" font-size="12.5" font-weight="700" fill="#0f172a">Evaluation & Testing</text>
+  <g filter="url(#shadow)">
+    <rect x="1346.15" y="717.0" width="169.23000000000002" height="14" rx="3" fill="url(#parentBarGrad)"/>
+    <!-- Left and right downward tick ends for summary bar -->
+    <polygon points="1346.15,731.0 1352.15,731.0 1346.15,736.0" fill="#33691e"/>
+    <polygon points="1515.38,731.0 1509.38,731.0 1515.38,736.0" fill="#33691e"/>
+  </g>
+  <text x="1354.15" y="715.0" font-size="11" font-weight="700" fill="#2e7d32">Evaluation & Testing</text>
+  <text x="40" y="764.0" font-size="11.5" font-weight="500" fill="#64748b">5.1</text>
+  <text x="80" y="764.0" font-size="11.5" font-weight="400" fill="#334155">Model Evaluation & Benchmark Comparison</text>
+  <g filter="url(#shadow)">
+    <rect x="1346.15" y="751.0" width="84.61999999999989" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1352.15" y="764.0" font-size="10.5" font-weight="600" fill="#ffffff">Model Evaluation & Benchmark Comparison</text>
+  <text x="40" y="800.0" font-size="11.5" font-weight="500" fill="#64748b">5.2</text>
+  <text x="80" y="800.0" font-size="11.5" font-weight="400" fill="#334155">System Testing & Financial Invariant Validation</text>
+  <g filter="url(#shadow)">
+    <rect x="1430.77" y="787.0" width="84.61000000000013" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1436.77" y="800.0" font-size="10.5" font-weight="600" fill="#ffffff">System Testing & Financial Invariant Validati...</text>
+  <text x="40" y="836.0" font-size="11.5" font-weight="500" fill="#64748b">5.3</text>
+  <!-- Diamond symbol in table -->
+  <polygon points="76,832.0 81,827.0 86,832.0 81,837.0" fill="#ab47bc"/>
+  <text x="94" y="836.0" font-size="11.5" font-weight="600" fill="#7b1fa2">Final baseline model validated</text>
+  <g filter="url(#shadow)">
+    <polygon points="1515.38,823.0 1524.38,832.0 1515.38,841.0 1506.38,832.0" fill="url(#milestoneGrad)" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <text x="1503.38" y="821.0" font-size="10.5" font-weight="700" fill="#6a1b9a" text-anchor="end">Final baseline model validated</text>
+  <rect x="18" y="861.0" width="14" height="14" rx="2" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1"/>
+  <text x="25" y="872.0" font-size="12" font-weight="700" fill="#475569" text-anchor="middle">-</text>
+  <text x="40" y="872.0" font-size="12" font-weight="700" fill="#1e293b">6</text>
+  <text x="80" y="872.0" font-size="12.5" font-weight="700" fill="#0f172a">Implementation & Deployment (30% Deliverables)</text>
+  <g filter="url(#shadow)">
+    <rect x="1430.77" y="861.0" width="169.23000000000002" height="14" rx="3" fill="url(#parentBarGrad)"/>
+    <!-- Left and right downward tick ends for summary bar -->
+    <polygon points="1430.77,875.0 1436.77,875.0 1430.77,880.0" fill="#33691e"/>
+    <polygon points="1600.0,875.0 1594.0,875.0 1600.0,880.0" fill="#33691e"/>
+  </g>
+  <text x="1438.77" y="859.0" font-size="11" font-weight="700" fill="#2e7d32">Implementation & Deployment (30% Deliverables)</text>
+  <text x="40" y="908.0" font-size="11.5" font-weight="500" fill="#64748b">6.1</text>
+  <text x="80" y="908.0" font-size="11.5" font-weight="400" fill="#334155">API Backend & Frontend UI Integration</text>
+  <g filter="url(#shadow)">
+    <rect x="1430.77" y="895.0" width="109.23000000000002" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1436.77" y="908.0" font-size="10.5" font-weight="600" fill="#ffffff">API Backend & Frontend UI Integration</text>
+  <text x="40" y="944.0" font-size="11.5" font-weight="500" fill="#64748b">6.2</text>
+  <text x="80" y="944.0" font-size="11.5" font-weight="400" fill="#334155">Real-time Verification & 30% Progress Report</text>
+  <g filter="url(#shadow)">
+    <rect x="1540.0" y="931.0" width="60.0" height="18" rx="4" fill="url(#taskBarGrad)"/>
+  </g>
+  <!-- Task label inside or beside bar -->
+  <text x="1546.0" y="944.0" font-size="10.5" font-weight="600" fill="#ffffff">Real-time Verification & 30% Progress Report</text>
+  <text x="40" y="980.0" font-size="11.5" font-weight="500" fill="#64748b">6.3</text>
+  <!-- Diamond symbol in table -->
+  <polygon points="76,976.0 81,971.0 86,976.0 81,981.0" fill="#ab47bc"/>
+  <text x="94" y="980.0" font-size="11.5" font-weight="600" fill="#7b1fa2">Project completed and demonstrated (30% Milestone)</text>
+  <g filter="url(#shadow)">
+    <polygon points="1600.0,967.0 1609.0,976.0 1600.0,985.0 1591.0,976.0" fill="url(#milestoneGrad)" stroke="#ffffff" stroke-width="1.5"/>
+  </g>
+  <text x="1588.0" y="965.0" font-size="10.5" font-weight="700" fill="#6a1b9a" text-anchor="end">Project completed and demonstrated (30% Milestone)</text>
+  <rect x="0" y="994" width="1600" height="26" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+  <!-- Legend -->
+  <rect x="520" y="1002" width="16" height="10" rx="2" fill="#33691e"/>
+  <text x="542" y="1011" font-size="11" font-weight="600" fill="#475569">Parent Phase Bar</text>
+
+  <rect x="680" y="1002" width="16" height="10" rx="2" fill="#1976d2"/>
+  <text x="702" y="1011" font-size="11" font-weight="600" fill="#475569">Deliverable Task</text>
+
+  <polygon points="840,1007 845,1002 850,1007 845,1012" fill="#7b1fa2"/>
+  <text x="858" y="1011" font-size="11" font-weight="600" fill="#475569">Completion Milestone</text>
+
+  <line x1="1020" y1="1007" x2="1040" y2="1007" stroke="#ff9800" stroke-width="2"/>
+  <polygon points="1042,1007 1038,1004 1038,1010" fill="#ff9800"/>
+  <text x="1048" y="1011" font-size="11" font-weight="600" fill="#475569">Finish-to-Start Dependency</text>
+
+  <text x="1350" y="1011" font-size="11" font-weight="600" fill="#0284c7">Status: 100% Complete (30% Milestone Delivered)</text>
+</svg>
